@@ -8,12 +8,11 @@ class ObjetoController extends BaseController
 	protected $layout = 'layouts.layout';
 
 	public function ObjetosIndex(){
-		return "hola mundo 1";
-		/*$objetos = DB::table('objetos')
+		$objetos = DB::table('objetos')
 						->orderBy('created_at', 'desc')
 						->take(5)
 						->get();
-		return View::make('objetos.index')->with('objetos', $objetos);*/
+		return View::make('objetos.index')->with('objetos', $objetos);
 	}
     
     public function post_index()
