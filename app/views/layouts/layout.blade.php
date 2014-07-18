@@ -60,11 +60,17 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container">
-              <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+              @if(Auth::check())
+                <p class="pull-right" style="color: white;"> Bienvenido {{ Auth::user()->usuario }}- {{ HTML::link('users/update/'.Auth::user()->id,'Editar Usuario',array( 'type' => 'button', 'class' => 'btn btn-default')) }} - {{ HTML::link('logout','Logout',array( 'type' => 'button', 'class' => 'btn btn-default')) }}</p>
+            @else
+            {{ Form::open(array('url' => 'login'))  }}
+            <div class="pull-right">
+              <input class="span2" name="email" type="text" placeholder="Email">
+              <input class="span2" name="password" type="password" placeholder="Password">
+              <button type="submit" class="btn">Sign in</button>
+            </div>
+            {{ Form::close() }}
+            @endif
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active">{{ HTML::link('home','Volver al sitio') }}</li>
@@ -77,7 +83,11 @@
               @if(Auth::check())
               <li>{{ HTML::link('examenes/listaexamenes','Examenes') }}</li>
               @endif
+              <li>
+              
+              </li>
             </ul>
+             
               </div><!--/.nav-collapse -->
             </div>
             </div>

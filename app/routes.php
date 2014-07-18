@@ -11,14 +11,32 @@
 |
 */
 
-//RUTA DEL HOME
+/************ RUTA DE HOME ***************/
+
 Route::get('/', 'ObjetoController@ObjetosIndex');
 
-//RUTA DE USUARIOS
+
+
+
+/************ RUTA DE USUARIO ***************/
+
+//Ruta Login
+Route::post('login','HomeController@post_login');
+//Ruta Logout
+Route::get('logout','HomeController@get_logout');
+//AUTH
+Route::filter('auth', function()
+{
+	if (Auth::guest()) return Redirect::to('login');
+});
+//lista de usuarios
 Route::get('usuarios/', 'UsuarioController@ListaUsuarios');
+//mostrar profile de un usuario
 Route::get('usuarios/{id}', 'UsuarioController@showProfile');
 
-// RUTA DE OBJETOS
+
+/************ RUTA DE OBJETOS ***************/
+
 Route::get('objetos/', function()
 {
 	
@@ -57,7 +75,7 @@ Route::get('objetos/', function()
 	
 });
 
-Route::post('/objetos', function()
+Route::post('objetos/', function()
 {
 	if(Request::ajax()){
 		
