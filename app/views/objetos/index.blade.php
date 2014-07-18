@@ -59,17 +59,17 @@ Missing
 			google.maps.event.addListener(map, 'rightclick', function(event) {
 				//Edit form to be displayed with new marker
 				var EditForm = '<p><div class="marker-edit">'+
-				'<form action="ajax-save.php" method="POST" name="SaveMarker" id="SaveMarker">'+
+				'<form action="ajax-save.php" method="POST" enctype="multipart/form-data" name="SaveMarker" id="SaveMarker">'+
 				'<label for="pName"><span>Nombre :</span><input type="text" name="pName" class="save-name" placeholder="Ingresar Nombre" maxlength="40" /></label>'+
 				'<label for="pDesc"><span>Descripci&oacute;n :</span><textarea name="pDesc" class="save-desc" placeholder="Ingresar Descripci&oacute;n" maxlength="150"></textarea></label>'+
 				'<label for="pType"><span>Tipo :</span> <select name="pType" class="save-type"><option value="1">Objeto</option><option value="2">Animal</option><option value="3">Persona</option>'+
 				'</select></label>'+
-				'<label for="pImage"><span>Imagen :</span><input type="file" class="save-image" data-filename-placement="inside"></label>'+
+				'<label for="pImage"><span>Imagen :</span><input type="file" class="save-image"></label>'+
 				'</form>'+
-				'</div></p><button name="save-marker" class="save-marker">Save Marker Details</button>';
+				'</div></p><button name="save-marker" class="save-marker btn btn-default">Guardar Objeto</button>';
 
 				//Drop a new Marker with our Edit Form
-				create_marker(event.latLng, 'Datos perdida', EditForm, true, true, true, "{{ asset('img/pin_green.png') }}");
+				create_marker(event.latLng, 'Datos Missing', EditForm,'', true, true, true, "{{ asset('img/pin_green.png') }}");
 			});
 										
 	}
@@ -79,7 +79,7 @@ Missing
 	
 	
 	//############### Create Marker Function ##############
-	function create_marker(MapPos, MapTitle, MapPath,  MapDesc,  InfoOpenDefault, DragAble, Removable, iconPath)
+	function create_marker(MapPos, MapTitle, Info,  MapDesc,  InfoOpenDefault, DragAble, Removable, iconPath)
 	{	  	  		  
 		
 		//new marker
@@ -91,17 +91,27 @@ Missing
 			title:"Hello World!",
 			icon: iconPath
 		});
-		
+		var contentString = '';
+		if(Removable == false)
+		{
 		//Content structure of info Window for the Markers
-		var contentString = $('<div class="marker-info-win">'+
+		contentString = $('<div class="marker-info-win">'+
 		'<div class="marker-inner-win"><span class="info-content">'+
 		'<h1 class="marker-heading">'+MapTitle+'</h1>'+
-		MapDesc+
-		'<img src = "{{ asset("uploads/'+MapPath+'") }}" '+
-         'alt = "'+MapTitle +'" />'+
-		'</span><button name="remove-marker" class="remove-marker" title="Remove Marker">Remove Marker</button>'+
+		'<img src ="{{ asset("uploads/'+Info+'") }}" alt="'+MapTitle+'" height="70" width="70" />'+
+		'</span><button name="remove-marker" class="remove-marker btn btn-default" title="Borrar Missing">Borrar Missing</button>'+
 		'</div></div>');	
+		}else
+		{
+		//Content structure of info Window for the Markers
+		contentString = $('<div class="marker-info-win">'+
+		'<div class="marker-inner-win"><span class="info-content">'+
+		'<h1 class="marker-heading">'+MapTitle+'</h1>'+
+		Info+
+		'</span><button name="remove-marker" class="remove-marker btn btn-default" title="Borrar Missing">Borrar Missing</button>'+
+		'</div></div>');
 
+		}
 		
 		//Create an infoWindow
 		var infowindow = new google.maps.InfoWindow();
@@ -126,12 +136,12 @@ Missing
 				var mDesc  = contentString.find('textarea.save-desc')[0].value; //description input field value
 				var mType = contentString.find('select.save-type')[0].value; //type of marker
 				var mImage = contentString.find('input.save-image')[0].value; //image input field value
-				
+				alert(mImage);
 				if(mName =='' || mDesc =='')
 				{
 					alert("Please enter Name and Description!");
 				}else{
-					save_marker(marker, mName, mDesc, mType, mReplace, mImage); //call save marker function
+					//save_marker(marker, mName, mDesc, mType, mReplace, mImage); //call save marker function
 				}
 			});
 		}
@@ -211,28 +221,6 @@ function buscaMissing(lat,lng)
 }
 
 </script>
-
-<style type="text/css">
-h1.heading{padding:0px;margin: 0px 0px 10px 0px;text-align:center;font: 18px Georgia, "Times New Roman", Times, serif;}
-
-/* width and height of google map */
-#google_map {width: 90%; height: 500px;margin-top:0px;margin-left:auto;margin-right:auto;}
-
-/* Marker Edit form */
-.marker-edit label{display:block;margin-bottom: 5px;}
-.marker-edit label span {width: 100px;float: left;}
-.marker-edit label input, .marker-edit label select{height: 24px;}
-.marker-edit label textarea{height: 60px;}
-.marker-edit label input, .marker-edit label select, .marker-edit label textarea {width: 60%;margin:0px;padding-left: 5px;border: 1px solid #DDD;border-radius: 3px;}
-
-/* Marker Info Window */
-h1.marker-heading{color: #585858;margin: 0px;padding: 0px;font: 18px "Trebuchet MS", Arial;border-bottom: 1px dotted #D8D8D8;}
-div.marker-info-win {max-width: 300px;margin-right: -20px;}
-div.marker-info-win p{padding: 0px;margin: 10px 0px 10px 0;}
-div.marker-inner-win{padding: 5px;}
-button.save-marker, button.remove-marker{border: none;background: rgba(0, 0, 0, 0);color: #00F;padding: 0px;text-decoration: underline;margin-right: 10px;cursor: pointer;
-}
-</style>
 @stop
 @section('sidebar')
     @parent
