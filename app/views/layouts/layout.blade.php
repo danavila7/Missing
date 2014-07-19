@@ -7,22 +7,9 @@
   <meta name="author" content="">
 
   <title>@yield('titulo')</title>
-    {{ HTML::script('bootstrap-3.2.0/js/jquery.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-transition.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-alert.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-modal.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-dropdown.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-scrollspy.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-tab.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-tooltip.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-popover.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-button.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-collapse.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-carousel.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/bootstrap-typeahead.js') }}
+    {{ HTML::script('js/jquery.js') }}
     {{ HTML::script('bootstrap-3.2.0/js/bootstrap-fileinput.js') }}
-    {{ HTML::script('bootstrap-3.2.0/js/holder.js') }}
-  @section('headMap')
+  @section('head')
   <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
@@ -74,7 +61,8 @@ button.save-marker, button.remove-marker{border: none;background: rgba(0, 0, 0, 
    
 
 </head>
-    <body>
+    <body class="@yield('body')">
+      <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
         @section('sidebar')
         <div class="navbar navbar-inverse navbar-fixed-top">
           <div class="navbar-inner">

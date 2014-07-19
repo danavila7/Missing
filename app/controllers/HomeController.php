@@ -2,9 +2,11 @@
 
 class HomeController extends BaseController {
 	protected $layout = 'layouts.layout';
+    protected $class = 'home';
 
 	public function showHome()
 	{
+        View::share('title', $class);
 		$this->layout->content = View::make('objetos.index');
 	}
 
@@ -26,8 +28,6 @@ class HomeController extends BaseController {
         else
         {
         	return Redirect::to('/');
-		//echo 'alo2';
-            //return Redirect::back()->with_input();
         }   
     }
     
