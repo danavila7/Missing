@@ -128,12 +128,12 @@
 				var mDesc  = contentString.find('textarea.save-desc')[0].value; //description input field value
 				var mType = contentString.find('select.save-type')[0].value; //type of marker
 				var mImage = contentString.find('input.save-image')[0].value; //image input field value
-				alert(mImage);
+				//alert(mImage);
 				if(mName =='' || mDesc =='')
 				{
 					alert("Please enter Name and Description!");
 				}else{
-					//save_marker(marker, mName, mDesc, mType, mReplace, mImage); //call save marker function
+					save_marker(marker, mName, mDesc, mType, mReplace, mImage); //call save marker function
 				}
 			});
 		}
@@ -192,7 +192,6 @@
 		 url: $('#baseurl').val()+"/objetos",
 		 data: myData,
 		  success:function(data){
-			  alert(data.latlang);
 				 replaceWin.html(data); //replace info window with new html
 				 Marker.setDraggable(false); //set marker to fixed
 				 Marker.setIcon('../img/pin_blue.png'); //replace icon

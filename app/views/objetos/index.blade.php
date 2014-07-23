@@ -20,7 +20,20 @@ home
       <div class="span2">
      	Missing Recientes
       <table class="table table-hover">
-     	@foreach($objetos as $objeto)
+     	@foreach($data[0] as $objeto)
+     	<tr onclick="buscaMissing({{$objeto->latitud_objeto}},{{$objeto->longitud_objeto}})">
+     	<td>
+     	{{ $objeto->nombre_objeto }} {{ HTML::link('#', 'Ir al Missing', array('onclick' => 'buscaMissing( '.$objeto->latitud_objeto.' , '.$objeto->longitud_objeto.' )')) }}
+     	</td>
+     	</tr>
+       @endforeach
+     </table>
+      </div>
+      @if(Auth::check())
+      <div class="span2">
+     	Mis Missing Recientes
+      <table class="table table-hover">
+     	@foreach($data[1] as $objeto)
      	<tr>
      	<td>
      	{{ $objeto->nombre_objeto }} {{ HTML::link('#', 'Ir al Missing', array('onclick' => 'buscaMissing( '.$objeto->latitud_objeto.' , '.$objeto->longitud_objeto.' )')) }}
@@ -29,7 +42,8 @@ home
        @endforeach
      </table>
       </div>
-      
+      @endif
+      {{ URL::to('/') }}
     </div>
   </div>
 </div> 

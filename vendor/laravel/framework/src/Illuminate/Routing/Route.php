@@ -8,7 +8,7 @@ use Illuminate\Routing\Matching\MethodValidator;
 use Illuminate\Routing\Matching\SchemeValidator;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
-class Route {
+class Route{
 
 	/**
 	 * The URI pattern the route responds to.

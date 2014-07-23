@@ -8,11 +8,30 @@ class ObjetoController extends BaseController
 	protected $layout = 'layouts.layout';
 
 	public function ObjetosIndex(){
-		$objetos = DB::table('objetos')
+		
+		$data = array();
+
+		$Ultimos5Missing = DB::table('objetos')
 						->orderBy('created_at', 'desc')
 						->take(5)
 						->get();
-		return View::make('objetos.index')->with('objetos', $objetos);
+		$data[] =  $Ultimos5Missing;
+
+		$Ultimos5MissingPorUsuario  = array();
+		if (Auth::check())
+		{
+		$id = Auth::id();
+    	$Ultimos5MissingPorUsuario = DB::table('objetos')
+                    ->where('usuario_id', $id)
+                    ->get();
+		}
+		$data[] = $Ultimos5MissingPorUsuario;
+		return View::make('objetos.index')->with('data', $data);
+	}
+
+	public function ObjetosDiseñoIndex(){
+		$data = array();
+		return View::make('objetos.diseño');
 	}
     
     public function post_index()

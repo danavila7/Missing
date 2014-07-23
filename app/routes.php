@@ -1,5 +1,14 @@
 <?php
-
+use Facebook\FacebookRequest;
+use Facebook\FacebookResponse;
+use Facebook\FacebookSession;
+use Facebook\FacebookRedirectLoginHelper;
+use Facebook\GraphObject;
+use Facebook\GraphUser;
+use Facebook\GraphLocation;
+use Facebook\FacebookAuthorizationException;
+use Facebook\GraphSessionInfo;
+session_start();
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,7 +23,7 @@
 /************ RUTA DE HOME ***************/
 
 Route::get('/', 'ObjetoController@ObjetosIndex');
-
+Route::get('diseño/', 'ObjetoController@ObjetosDiseñoIndex');
 
 
 
@@ -33,6 +42,59 @@ Route::filter('auth', function()
 Route::get('usuarios/', 'UsuarioController@ListaUsuarios');
 //mostrar profile de un usuario
 Route::get('usuarios/{id}', 'UsuarioController@showProfile');
+
+//facebook
+Route::get('login/fb', function() {
+	//Config::get('facebook.secret')
+	$url = URL::to('/login/fb/callback');
+	FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+	//$facebook = new Facebook(Config::get('facebook'));
+	//$helper = new FacebookRedirectLoginHelper('your redirect URL here');
+    $helper = new FacebookRedirectLoginHelper($url);
+    $loginUrl = $helper->getLoginUrl();
+    return Redirect::to($loginUrl);
+});
+
+Route::get('/login/fb/callback', function(){
+$url = URL::to('/login/fb/callback');
+FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+$helper = new FacebookRedirectLoginHelper($url);
+try {
+    $session = $helper->getSessionFromRedirect();
+} catch(FacebookRequestException $ex) {
+    // When Facebook returns an error
+    return 'facebook error '.$ex->getMessage();
+} catch(\Exception $ex) {
+    // When validation fails or other local issues
+    // return 'validation fails '.$ex->getMessage();
+}
+if(isset($_SESSION['token'])){
+	$session  = new FacebookSession($_SESSION['token']);
+
+	try{
+		$session->Validate('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+
+	}catch(FacebookAuthorizationException $ex){
+		$session = '';
+
+	}
+
+}
+if ($session) {
+	$_SESSION['token'] = $session->getToken();
+	$request = new FacebookRequest($session, 'GET', '/me');
+	$response = $request->execute();
+
+// Get the response typed as a GraphUser
+$user = $response->getGraphObject(GraphUser::className());
+// or convert the base object previously accessed
+// $user = $object->cast(GraphUser::className());
+
+// Get the response typed as a GraphLocation
+$loc = $response->getGraphObject(GraphLocation::className());
+return "Login User ->".$user->getName()." pais ".$loc->getCountry();
+}
+});
 
 
 /************ RUTA DE OBJETOS ***************/
@@ -99,7 +161,7 @@ Route::post('objetos/', function()
 		
 		$objeto->nombre_objeto = (Input::get('name'));
 		$objeto->descripcion_objeto = (Input::get('address'));
-		$objeto->tipoobjeto_id = (Input::get('type'));;
+		$objeto->tipoobjeto_id = (Input::get('type'));
 		$objeto->latitud_objeto = $lat;
 		$objeto->longitud_objeto = $long;
 		$objeto->tipopublicacion_id = 1;
@@ -109,13 +171,13 @@ Route::post('objetos/', function()
 		$LastInsertId = $objeto->id;
 		
 		//ingresar una imagen (mejorar el metodo)
-		$file = Input::file('image');
+		//$file = Input::file('image');
 		$destinationPath = 'uploads';
 		// If the uploads fail due to file system, you can try doing public_path().'/uploads' 
 		$filename = $objeto->nombre_objeto.'_'.$objeto->id;
 		//$filename = $file->getClientOriginalName();
 		//$extension =$file->getClientOriginalExtension(); 
-		$upload_success = Input::file('image')->move($destinationPath, $filename);
+		//$upload_success = Input::file('image')->move($destinationPath, $filename);
 		if( $upload_success ) {
 		echo "Objeto ".$objeto->nombre_objeto." tipo ".$objeto->tipoobjeto_id." Creado con exito.";
 		}else{

@@ -2,11 +2,9 @@
 
 class HomeController extends BaseController {
 	protected $layout = 'layouts.layout';
-    protected $class = 'home';
 
 	public function showHome()
 	{
-        View::share('title', $class);
 		$this->layout->content = View::make('objetos.index');
 	}
 

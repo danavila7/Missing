@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a8c9bc04a5706bf54f2a6d2e62168e90",
+    "hash": "5bd9b5b39fbd1e996957f1d5153729ea",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -86,6 +86,55 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "time": "2014-01-17 12:21:18"
+        },
+        {
+            "name": "facebook/php-sdk-v4",
+            "version": "4.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
+                "reference": "a20dc24e0536ba7332f79b74c5a4deb45fa998f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/a20dc24e0536ba7332f79b74c5a4deb45fa998f8",
+                "reference": "a20dc24e0536ba7332f79b74c5a4deb45fa998f8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "~4.0",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\": "src/Facebook/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Facebook Platform"
+            ],
+            "authors": [
+                {
+                    "name": "Facebook",
+                    "homepage": "https://github.com/facebook/facebook-php-sdk-v4/contributors"
+                }
+            ],
+            "description": "Facebook SDK for PHP",
+            "homepage": "https://github.com/facebook/facebook-php-sdk-v4",
+            "keywords": [
+                "facebook",
+                "sdk"
+            ],
+            "time": "2014-06-27 11:59:52"
         },
         {
             "name": "filp/whoops",
