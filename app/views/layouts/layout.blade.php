@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,8 @@
   <meta name="author" content="">
 
   <title>@yield('titulo')</title>
+    {{ HTML::script('js/angular.min.js') }}
+    {{ HTML::script('js/app.js') }}
     {{ HTML::script('js/jquery.js') }}
     {{ HTML::script('bootstrap-3.2.0/js/bootstrap-fileinput.js') }}
   @section('head')
@@ -61,7 +63,7 @@ button.save-marker, button.remove-marker{border: none;background: rgba(0, 0, 0, 
    
 
 </head>
-    <body class="@yield('body')">
+    <body>
       <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
         @section('sidebar')
         <div class="navbar navbar-inverse navbar-fixed-top">

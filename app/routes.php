@@ -22,12 +22,28 @@ session_start();
 
 /************ RUTA DE HOME ***************/
 
-Route::get('/', 'ObjetoController@ObjetosIndex');
+//Route::get('/', 'ObjetoController@ObjetosIndex');
 Route::get('diseño/', 'ObjetoController@ObjetosDiseñoIndex');
 
 
 
 /************ RUTA DE USUARIO ***************/
+
+//angular JS
+
+Route::get("/", function()
+{
+    return View::make("home");
+});
+ 
+Route::get("obtenerObjetos", function()
+{
+    $objetos = Objeto::all();
+    return Response::json(array(
+        "objetos"        =>        $objetos
+    ));
+});
+//angular JS FIN
 
 //Ruta Login
 Route::post('login','HomeController@post_login');

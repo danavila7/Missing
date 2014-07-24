@@ -2,9 +2,6 @@
 @section('titulo')
 Missing
 @stop
-@section('body')
-home
-@stop
 @section('head')
 @parent
 {{ HTML::script('js/page/objetos_index.js') }}

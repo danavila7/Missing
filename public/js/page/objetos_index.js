@@ -1,7 +1,11 @@
 	var map;
-	$(document).ready(function() {
-	$('input[type=file]').bootstrapFileInput();
-	
+	jQuery(document).ready(function() {
+	$(document).on("click", ".buscamissing", function() {
+  		var lat = $(this).attr('data-lat');
+		var lng = $(this).attr('data-lng');
+		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: 'my 2nd title'});
+		map.panTo(marker2.getPosition());
+	});
 	if(navigator.geolocation) {
     browserSupportFlag = true;
     	navigator.geolocation.getCurrentPosition(function(position) {
@@ -15,11 +19,10 @@
 	var mapCenter = new google.maps.LatLng(-33.437118,-70.650544); //Google map Coordinates
 
 	
-	map_initialize(mapCenter); // initialize google map
+	//map_initialize(mapCenter); // initialize google map
 	
 	//############### Google Map Initialize ##############
-	function map_initialize(mapCenter)
-	{
+	function map_initialize(mapCenter){
 			var googleMapOptions = 
 			{ 
 				center: mapCenter, // map center
@@ -33,14 +36,27 @@
 				mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
 			};
 		
-		   	map = new google.maps.Map(document.getElementById("google_map"), googleMapOptions);			
+		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);			
 			//Load Markers from the XML File, Check (map_process.php)
-			$.get($('#baseurl').val()+"/objetos", function (data) {
-				$(data).find("marker").each(function () {
+			jQuery.get(jQuery('#baseurl').val()+"/obtenerObjetos", function (data) {
+				//json
+				jsondata = eval(data);
+				for(i=0; i< jsondata['objetos'].length;i++){
+					info = eval(jsondata['objetos'][0]);
+					  var name 		= info.name;
+					  var address 	= '<p>'+ info.address +'</p>';
+					  var type 		= info.type;
+					  var path      =  info.path;
+					  var point 	= new google.maps.LatLng(parseFloat(info.lat),parseFloat(info.lng));
+					  create_marker(point, name, path, address, false, false, false, $('#baseurl').val()+"/img/pin_blue.png");
+				}
+			});
+			jQuery.get(jQuery('#baseurl').val()+"/objetos", function (data) {
+				jQuery(data).find("marker").each(function () {
 					  var name 		= $(this).attr('name');
 					  var address 	= '<p>'+ $(this).attr('address') +'</p>';
 					  var type 		= $(this).attr('type');
-					  var path      =  $(this).attr('path');
+					  var path      =  '';//$(this).attr('path');
 					  var point 	= new google.maps.LatLng(parseFloat($(this).attr('lat')),parseFloat($(this).attr('lng')));
 					  create_marker(point, name, path, address, false, false, false, $('#baseurl').val()+"/img/pin_blue.png");
 				});
@@ -201,13 +217,11 @@
              }
 		 });
 	}
+
+
+
 });
 
-function buscaMissing(lat,lng)
-{
-	var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: 'my 2nd title'});
-	map.panTo(marker2.getPosition());
-}
 
 
 
