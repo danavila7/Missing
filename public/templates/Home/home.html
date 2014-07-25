@@ -1,12 +1,13 @@
 <link rel="stylesheet" href="../css/marker.css">
 <!--Script&Style de la pagina-->
 <div class="row">
-    <div id="map"></div>
-    <div class="large-12 columns">
+
+    <div  class="large-9 columns">
+            <div id="map"></div>
+    </div>
+    <div class="large-3 columns">
         <label>Filtra tu búsqueda: </label>
         <input type="text" ng-model="buscador" />
-    </div>
-    <div class="large-12 columns">
         <label>Establece un orden: </label>
         <select ng-model="tipoOrden">
             <option value="">Ordena por Id</option>
@@ -14,15 +15,18 @@
             <option value="-id">Descendente</option>
         </select>
     </div>
-</div>
-<div class="row">
+    <div class="large-3 columns">
     <h1 class="subheader">Buscar Missing</h1>
-    <ul>
-        <li  ng-repeat="data in datos|filter:buscador|orderBy:tipoOrden" class="panel callout radius">
+    <ul class="side-nav">
+        <li  ng-repeat="data in datos|filter:buscador|orderBy:tipoOrden" class="callout radius">
             <a class="buscamissing" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}">
-            <p>Nombre: {{ data.nombre_objeto }}</p> 
-            <p>Descripcion: {{ data.descripcion_objeto }}</p>
+            <p>Nombre: {{ data.nombre_objeto }}</p>
+            <!--<p>Descripcion: {{ data.descripcion_objeto }}</p>-->
             </a>
         </li>
     </ul>
+    </div>
+</div>
+<div class="row">
+    
 </div>

@@ -40,15 +40,18 @@ Route::get("obtenerObjetos", function()
 {
     $objetos = Objeto::all();
     return Response::json(array(
-        "objetos"        =>        $objetos
+        "objetos"=>$objetos
     ));
 });
-//angular JS FIN
 
 //Ruta Login
-Route::post('login','HomeController@post_login');
+Route::post('/login','UsuarioController@post_login');
 //Ruta Logout
-Route::get('logout','HomeController@get_logout');
+Route::get('/logout','UsuarioController@get_logout');
+
+//angular JS FIN
+
+
 //AUTH
 Route::filter('auth', function()
 {

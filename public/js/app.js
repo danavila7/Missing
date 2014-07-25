@@ -9,7 +9,7 @@ app.config(function($routeProvider)
         controller : "homeController"
     })
     .when("/login", {
-        templateUrl : "login.html",
+        templateUrl : "templates/Login/login.html",
         controller : "loginController"
     })
     .otherwise({ reditrectTo : "/" });

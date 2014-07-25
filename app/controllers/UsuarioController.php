@@ -9,6 +9,31 @@ class UsuarioController extends BaseController
     /**
      * Show the profile for the given user.
      */
+
+    public function get_login()
+    {
+        return View::make('auth.login');
+    }
+    
+    public function post_login()
+    {
+        $credentials = array(
+        'usuario' => Input::json('email'),
+        'password' => Input::json('password'));
+        if(Auth::attempt($credentials)){
+            return Response::json(array('msg'=>'funko', Auth::user()));
+        }else{
+        	return Response::json(array('msg'=>'Login Invalido!', 500));
+        }   
+    }
+    
+    public function get_logout()
+    {
+        Auth::logout();
+        return Response::json(array('msg'=>'Logout'));
+    }
+
+
     public function showProfile($id)
     {
         $user = Usuario::find($id);

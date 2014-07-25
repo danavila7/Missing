@@ -5,9 +5,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Missing Angular</title>
     <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
+      #map { height: 100% }
     </style>
     <style type="text/css">
 
@@ -22,16 +20,48 @@
   {{ HTML::script('js/app.js') }}
   {{ HTML::script('js/controllers.js') }}
   {{ HTML::script('js/lib/jquery.js') }}
-      <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
   </script>
-  <script src="../js/page/objetos_index.js"></script>
-    <!-- style -->
+ <script src="../js/page/objetos_index.js"></script>
+ <!--   style -->
   {{ HTML::style('css/fundation.css'); }}
   {{ HTML::style('css/normalize.css'); }}
   <!--{{ HTML::style('css/bootstrap.css'); }}-->
     
 </head>
-    <body>
+<body>
+  <nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="{{ URL::to('/');}}">MISSING beta</a></h1>
+    </li>
+     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+      @if(Auth::check())
+        <li>
+        <p style="color: white;"> Bienvenido {{ Auth::user()->usuario }}</p>
+      </li>
+        <li class="active"><a href="{{ URL::to('/#/logout');}}">Logout</a></li>
+      @else
+      <li class="active"><a href="{{ URL::to('/#/login');}}">Login</a></li>
+      @endif
+      <!--<li class="has-dropdown">
+        <a href="#">Right Button Dropdown</a>
+        <ul class="dropdown">
+          <li><a href="#">First link in dropdown</a></li>
+        </ul>
+      </li>-->
+    </ul>
+    <!-- Left Nav Section -->
+    <ul class="left">
+      <!--<li><a href="#">Left Nav Button</a></li>-->
+    </ul>
+  </section>
+</nav>
       <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
