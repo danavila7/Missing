@@ -41,13 +41,14 @@
   <section class="top-bar-section">
     <!-- Right Nav Section -->
     <ul class="right">
+
       @if(Auth::check())
         <li>
         <p style="color: white;"> Bienvenido {{ Auth::user()->usuario }}</p>
       </li>
         <li class="active"><a href="{{ URL::to('/#/logout');}}">Logout</a></li>
       @else
-      <li class="active"><a href="{{ URL::to('/#/login');}}">Login</a></li>
+      <li class="active"><a href="{{ URL::to('/#/login');}}">Login ahns</a></li>
       @endif
       <!--<li class="has-dropdown">
         <a href="#">Right Button Dropdown</a>
