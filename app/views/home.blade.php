@@ -41,16 +41,25 @@
   </ul>
   <section class="top-bar-section">
     <!-- Right Nav Section -->
-    <ul class="right">
-      <li>
-      <p id="username" style="color: white;"></p>
-      </li>
-       <!--<li class="has-dropdown">
-        <a href="#">Right Button Dropdown</a>
-        <ul class="dropdown">
-          <li><a href="#">First link in dropdown</a></li>
-        </ul>
-      </li>-->
+      <ul class="right login-home" ng-controller="loginController">
+        <form ng-submit="login()">
+        <li>
+        <p id="flash" class="alert-box alert"ng-show="flash"></p>
+        </li>
+        <li>
+          <input type="text" name="email" placeholder="Ingresar el correo" ng-model="credentials.email" required/>
+        </li>
+        <li>
+        <input type="password" name="password" placeholder="Ingresar el password" ng-model="credentials.password" required/>
+        </li>
+        <li>
+        <button type="submit" class="button large expand">Login</button>
+        </li>
+        </form> 
+    </ul>
+    <ul class="rigth" ng-controller="loginController">
+      <p id="username" style="color: white"></p>
+      <button ng-click="logout()" class="button">logout</button>
     </ul>
     <!-- Left Nav Section -->
     <ul class="left">

@@ -38,6 +38,7 @@ app.factory("FlashService", function($rootScope){
 			$rootScope.flash = message;
 		},
 		showuser: function(message){
+			jQuery('.login-home').hide();
 			jQuery('#username').html(message);
 		},
 		clear: function(){
@@ -45,6 +46,7 @@ app.factory("FlashService", function($rootScope){
 		},
 		clearuser: function(){
 			jQuery('#username').html("");
+			$rootScope.flash = message;
 		}
 	}
 });
