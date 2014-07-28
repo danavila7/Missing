@@ -3,7 +3,7 @@
 <html ng-app="app">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Missing Angular</title>
+  <title>Missing</title>
     <style type="text/css">
       #map { height: 100% }
     </style>
@@ -15,6 +15,7 @@
  cdn con el modulo ngRoute de angular-->
  <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
   archivo app.js, donde hemos definido nuestro modulo app-->
+  {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
   {{ HTML::script('js/AngularJS/angular-route.js') }}
   {{ HTML::script('js/app.js') }}
@@ -41,16 +42,10 @@
   <section class="top-bar-section">
     <!-- Right Nav Section -->
     <ul class="right">
-
-      @if(Auth::check())
-        <li>
-        <p style="color: white;"> Bienvenido {{ Auth::user()->usuario }}</p>
+      <li>
+      <p id="username" style="color: white;"></p>
       </li>
-        <li class="active"><a href="{{ URL::to('/#/logout');}}">Logout</a></li>
-      @else
-      <li class="active"><a href="{{ URL::to('/#/login');}}">Login ahns</a></li>
-      @endif
-      <!--<li class="has-dropdown">
+       <!--<li class="has-dropdown">
         <a href="#">Right Button Dropdown</a>
         <ul class="dropdown">
           <li><a href="#">First link in dropdown</a></li>
@@ -66,7 +61,9 @@
       <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
-    <div class="row" ng-view></div>
+    <div class="row" ng-view>
+
+    </div>
 
     </body>
 </html>

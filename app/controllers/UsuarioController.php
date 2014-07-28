@@ -21,9 +21,9 @@ class UsuarioController extends BaseController
         'usuario' => Input::json('email'),
         'password' => Input::json('password'));
         if(Auth::attempt($credentials)){
-            return Response::json(array('msg'=>'funko', Auth::user()));
+            return Response::json(array('flash'=>Auth::user()->usuario));
         }else{
-        	return Response::json(array('msg'=>'Login Invalido!', 500));
+        	return Response::json(array('flash'=>'Login Invalido!'),500);
         }   
     }
     
