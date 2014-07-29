@@ -3,6 +3,10 @@
 	$(document).on("click", ".buscamissing", function() {
   		var lat = $(this).attr('data-lat');
 		var lng = $(this).attr('data-lng');
+		$(".buscamissing").each(function( index ) {
+			$(this).removeClass('active');
+		});
+		$(this).addClass('active');
 		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: 'my 2nd title'});
 		map.panTo(marker2.getPosition());
 	});

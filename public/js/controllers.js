@@ -32,28 +32,53 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 });
 
 app.factory("FlashService", function($rootScope){
+	//Solo para el login
 	return{
 		show: function(message){
 			jQuery('#flash').html(message);
 			$rootScope.flash = message;
 		},
-		showuser: function(message){
-			jQuery('.login-home').hide();
-			jQuery('#username').html(message);
-		},
 		clear: function(){
 			$rootScope.flash = "";
-		},
-		clearuser: function(){
-			jQuery('#username').html("");
-			$rootScope.flash = message;
 		}
 	}
 });
 
-app.run(function($rootScope, $location, AuthenticationService){
+app.factory("ShowService", function($rootScope){
+	return{
+		showDataUser: function(message){
+			//muestra nombre de usuario
+			jQuery('#username').html("Bienvenido "+message);
+			//Mostrar el logout
+			//debugger;
+			jQuery('.logout-home').removeClass('hide');
+			//Cargar lista con missing del usuario
 
-	var routasThatRequireAuth = ['/'];
+			//esconder el login
+			jQuery('.login-home').addClass('hide');
+		},
+		showDataLogin: function(){
+			//mostrar el login
+			jQuery('.logout-home').addClass('hide');
+			jQuery('.login-home').removeClass('hide');
+		},
+		errorLogin: function(){
+			jQuery('#login-error').fadeIn( "slow" );
+		}
+	}
+});
+
+app.run(function($rootScope, $location, AuthenticationService, ShowService, SessionService){
+
+	var routasThatRequireAuth = ['/usuarios'];
+
+	$rootScope.$on('$viewContentLoaded', function() {
+    	if(AuthenticationService.isLoggedIn()){
+    		ShowService.showDataUser(SessionService.get('username'));
+    	}else{
+    		ShowService.showDataLogin();
+    	}
+	});
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
 		//debugger;
@@ -71,24 +96,33 @@ app.factory("SessionService", function(){
 		set: function(key, val){
 			return sessionStorage.setItem(key, val);
 		},
+		setuser: function(key, val){
+			return sessionStorage.setItem(key, val);
+		},
 		unset: function(key){
+			return sessionStorage.removeItem(key);
+		},
+		unsetuser: function(key){
 			return sessionStorage.removeItem(key);
 		},
 	};
 });
 
-app.factory("AuthenticationService", function($http, $location, SessionService, FlashService){
-	var cacheSession = function(){
+app.factory("AuthenticationService", function($http, $location, SessionService, FlashService, ShowService){
+	var cacheSession = function(response){
 		SessionService.set('authenticated', true);
+		SessionService.setuser('username', response.flash);
 	};
 	var uncacheSession = function(){
 		SessionService.unset('authenticated');
+		SessionService.unset('username');
 	};
 	var loginError = function(response){
+		ShowService.errorLogin();
 		FlashService.show(response.flash);
 	}
 	var loginSuccess = function(response){
-		FlashService.showuser(response.flash);
+		ShowService.showDataUser(response.flash);
 	}
 
 	return{
@@ -104,7 +138,7 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 		logout: function (){
 			var logout = $http.get("/logout");
 			logout.success(uncacheSession);
-			logout.success(FlashService.clearuser);
+			logout.success(ShowService.showDataLogin);
 			return logout;
 
 		},
