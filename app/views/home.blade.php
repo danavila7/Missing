@@ -51,6 +51,7 @@
         <button type="submit" class="btn btn-default">Buscar</button>
       </form>
       <ul class="nav navbar-nav navbar-right login-home hide" ng-controller="loginController">
+        <li><button ng-click="loginFacebook()" class="btn btn-primary">Login with Facebook</button></li>
        <form class="navbar-form navbar-left" ng-submit="login()">
         <div class="form-group">
           <input type="text" name="email" class="form-control" placeholder="Ingresar el correo" ng-model="credentials.email" required/>

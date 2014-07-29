@@ -203,6 +203,7 @@
 	//############### Save Marker Function ##############
 	function save_marker(Marker, mName, mAddress, mType, replaceWin, mImage)
 	{
+		alert('lala')
 		//Save new marker using jQuery Ajax
 		 var mLatLang = Marker.getPosition().toUrlValue(); //get marker position
 		 var myData = {name : mName, address : mAddress, latlang : mLatLang, type : mType }; //post variables

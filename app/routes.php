@@ -57,6 +57,7 @@ Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::to('login');
 });
+
 //lista de usuarios
 Route::get('usuarios/', 'UsuarioController@ListaUsuarios');
 //mostrar profile de un usuario
@@ -64,9 +65,10 @@ Route::get('usuarios/{id}', 'UsuarioController@showProfile');
 
 //facebook
 Route::get('login/fb', function() {
+	//return Config::get('facebook.secret');
 	//Config::get('facebook.secret')
 	$url = URL::to('/login/fb/callback');
-	FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+	FacebookSession::setDefaultApplication(Config::get('facebook.appId'), Config::get('facebook.secret'));
 	//$facebook = new Facebook(Config::get('facebook'));
 	//$helper = new FacebookRedirectLoginHelper('your redirect URL here');
     $helper = new FacebookRedirectLoginHelper($url);
@@ -76,7 +78,7 @@ Route::get('login/fb', function() {
 
 Route::get('/login/fb/callback', function(){
 $url = URL::to('/login/fb/callback');
-FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+FacebookSession::setDefaultApplication(Config::get('facebook.appId'), Config::get('facebook.secret'));
 $helper = new FacebookRedirectLoginHelper($url);
 try {
     $session = $helper->getSessionFromRedirect();
@@ -89,15 +91,12 @@ try {
 }
 if(isset($_SESSION['token'])){
 	$session  = new FacebookSession($_SESSION['token']);
-
 	try{
-		$session->Validate('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+		$session->Validate(Config::get('facebook.appId'), Config::get('facebook.secret'));
 
 	}catch(FacebookAuthorizationException $ex){
 		$session = '';
-
 	}
-
 }
 if ($session) {
 	$_SESSION['token'] = $session->getToken();
@@ -172,8 +171,6 @@ Route::post('objetos/', function()
 			echo "Eliminado con exito.";
 		}else{
 		
-			
-			
 		$objeto = new Objeto;
 		list($lat, $long) = explode(",", (Input::get('latlang')));
 		
@@ -188,7 +185,8 @@ Route::post('objetos/', function()
 		
 		$objeto->save();
 		$LastInsertId = $objeto->id;
-		
+		echo "Objeto ".$objeto->nombre_objeto." tipo ".$objeto->tipoobjeto_id." Creado con exito.";
+		/*
 		//ingresar una imagen (mejorar el metodo)
 		//$file = Input::file('image');
 		$destinationPath = 'uploads';
@@ -198,10 +196,10 @@ Route::post('objetos/', function()
 		//$extension =$file->getClientOriginalExtension(); 
 		//$upload_success = Input::file('image')->move($destinationPath, $filename);
 		if( $upload_success ) {
-		echo "Objeto ".$objeto->nombre_objeto." tipo ".$objeto->tipoobjeto_id." Creado con exito.";
+		
 		}else{
 		echo "Quedo la caga";	
-		}
+		}*/
 		}
 	}
 });

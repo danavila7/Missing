@@ -14,6 +14,10 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 			$location.path("/login");
 		});
 	 }
+
+	 $scope.loginFacebook = function(){
+			$location.path("public/login/fb");
+	 }
 });
  
 app.controller("loginController", function($scope, $location, AuthenticationService){
@@ -28,6 +32,10 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 	 	AuthenticationService.logout().success(function(){
 			$location.path("/");
 		});
+	 }
+
+	 $scope.loginFacebook = function(){
+			$location.path("public/login/fb");
 	 }
 });
 
