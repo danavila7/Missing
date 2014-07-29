@@ -15,9 +15,11 @@
                     <ul class="dropdown-menu" role="menu" ng-repeat="data in datos|filter:buscador|orderBy:tipoOrden">
                           <li><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a></li>
                     </ul>
-                    <div class="list-group" id="lista-missing" ng-repeat="data in datos|filter:buscador|orderBy:tipoOrden" >
-                        <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a>
-                    </div>
+                    <table class="table table-hover" id="lista-missing" >
+                        <tr ng-repeat="data in datos|filter:buscador|orderBy:tipoOrden">
+                            <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
     </div>

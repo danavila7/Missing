@@ -5,7 +5,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Missing</title>
     <style type="text/css">
-      body { background: #939393 !important;}
+      body { background: #D5D0D0 !important;}
       #map { height: 100% }
     </style>
     <style type="text/css">
@@ -32,7 +32,7 @@
     
 </head>
 <body>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
