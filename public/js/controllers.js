@@ -16,7 +16,8 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 }
 
 	 $scope.loginFacebook = function(){
-			$location.path("public/login/fb");
+	 		$window.open('//facebook.com');
+			//$location.path("/login/fb");
 	 }
 });
  
@@ -35,7 +36,8 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 	 }
 
 	 $scope.loginFacebook = function(){
-			$location.path("public/login/fb");
+	 	$window.open('//facebook.com');
+			//$location.path("/login/fb");
 	 }
 });
 
@@ -52,7 +54,7 @@ app.factory("FlashService", function($rootScope){
 	}
 });
 
-app.factory("ShowService", function($rootScope){
+app.factory("ShowService", function($rootScope, $http){
 	return{
 		showDataUser: function(message){
 			//muestra nombre de usuario
@@ -61,7 +63,9 @@ app.factory("ShowService", function($rootScope){
 			//debugger;
 			jQuery('.logout-home').removeClass('hide');
 			//Cargar lista con missing del usuario
-
+			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
+			$rootScope.misDatos = data.Missing;
+   			});
 			//esconder el login
 			jQuery('.login-home').addClass('hide');
 		},
@@ -69,6 +73,7 @@ app.factory("ShowService", function($rootScope){
 			//mostrar el login
 			jQuery('.logout-home').addClass('hide');
 			jQuery('.login-home').removeClass('hide');
+			$rootScope.misDatos ='';
 		},
 		errorLogin: function(){
 			jQuery('#login-error').fadeIn( "slow" );
@@ -76,12 +81,28 @@ app.factory("ShowService", function($rootScope){
 	}
 });
 
-app.run(function($rootScope, $location, AuthenticationService, ShowService, SessionService){
+app.run(function($rootScope, $http, $location, AuthenticationService, ShowService, SessionService){
 
 	var routasThatRequireAuth = ['/usuarios'];
 
+	var rutasObjetos = ['/'];
+
 	$rootScope.$on('$viewContentLoaded', function() {
-    	if(AuthenticationService.isLoggedIn()){
+		
+		if(_(rutasObjetos).contains($location.path())){
+			//debo ir a buscar si existe un usuario logiado dentro de laravel
+			$http.get(jQuery('#baseurl').val()+'/isLoggedIn').success(function(data){
+				if(data.isloggin != 'false'){
+        			SessionService.set('authenticated', true);
+					SessionService.setuser('username', data.isloggin);
+					ShowService.showDataUser(data.isloggin);
+				}
+   			});
+
+			//loading del mapa
+			jQuery('#loading').attr('src', jQuery('#baseurl').val()+'/img/ajax-loader.gif');
+		}
+    	if(!_(routasThatRequireAuth).contains($location.path()) && AuthenticationService.isLoggedIn()){
     		ShowService.showDataUser(SessionService.get('username'));
     	}else{
     		ShowService.showDataLogin();

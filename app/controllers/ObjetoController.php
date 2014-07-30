@@ -7,33 +7,6 @@ class ObjetoController extends BaseController
 	//$restful get y post
 	protected $layout = 'layouts.layout';
 
-	public function ObjetosIndex(){
-		
-		$data = array();
-
-		$Ultimos5Missing = DB::table('objetos')
-						->orderBy('created_at', 'desc')
-						->take(5)
-						->get();
-		$data[] =  $Ultimos5Missing;
-
-		$Ultimos5MissingPorUsuario  = array();
-		if (Auth::check())
-		{
-		$id = Auth::id();
-    	$Ultimos5MissingPorUsuario = DB::table('objetos')
-                    ->where('usuario_id', $id)
-                    ->get();
-		}
-		$data[] = $Ultimos5MissingPorUsuario;
-		return View::make('objetos.index')->with('data', $data);
-	}
-
-	public function ObjetosDiseñoIndex(){
-		$data = array();
-		return View::make('objetos.diseño');
-	}
-    
     public function post_index()
     {
         $credentials = array(

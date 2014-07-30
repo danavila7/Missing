@@ -22,34 +22,25 @@ session_start();
 
 /************ RUTA DE HOME ***************/
 
-//Route::get('/', 'ObjetoController@ObjetosIndex');
-Route::get('diseño/', 'ObjetoController@ObjetosDiseñoIndex');
-
 
 
 /************ RUTA DE USUARIO ***************/
-
-//angular JS
 
 Route::get("/", function()
 {
     return View::make("home");
 });
  
-Route::get("obtenerObjetos", function()
-{
-    $objetos = Objeto::all();
-    return Response::json(array(
-        "objetos"=>$objetos
-    ));
-});
+Route::get("obtenerObjetos", 'HomeController@ObtenerMissing');
+
+Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
 
 //Ruta Login
 Route::post('/login','UsuarioController@post_login');
 //Ruta Logout
 Route::get('/logout','UsuarioController@get_logout');
-
-//angular JS FIN
+//Esta logeado?
+Route::get('/isLoggedIn','UsuarioController@isLoggedIn');
 
 
 //AUTH
@@ -106,11 +97,48 @@ if ($session) {
 // Get the response typed as a GraphUser
 $user = $response->getGraphObject(GraphUser::className());
 // or convert the base object previously accessed
-// $user = $object->cast(GraphUser::className());
+ //$user = $object->cast(GraphUser::className());
 
 // Get the response typed as a GraphLocation
 $loc = $response->getGraphObject(GraphLocation::className());
-return "Login User ->".$user->getName()." pais ".$loc->getCountry();
+
+//debo preguntar si existe el id de facebook del usuario
+//si existe
+$perfil = Perfiles::where('idFacebook' , '=', $user->getId())->first();
+if(isset($perfil)){
+	 $user = Usuario::find($perfil->usuario_id);
+	 Auth::loginUsingId($user->id);
+	 return Redirect::to('');
+}else{
+
+	$usuario = new Usuario;
+		
+	$usuario->usuario = $user->getName();
+	$usuario->email = '';
+	$usuario->password = '';
+
+	$usuario->save();
+	$LastInsertId = $usuario->id;
+
+	$perfil = new Perfiles;
+	$perfil->usuario_id = $LastInsertId;
+	$perfil->username = $user->getFirstName();
+	$perfil->idFacebook =  $user->getId();
+	$perfil->link = $user->getLink();
+	$perfil->birthday = $user->getBirthday();
+		
+		
+	$perfil->save();
+
+	return Redirect::to('');
+}
+//obtengo el id y voy a login para iniciar session
+//si no existe guardo los datos en el perfil e inicio session
+//(String)$user.getProperty("email")
+//return "Login User ->".$user->getMiddleName();
+
+
+
 }
 });
 

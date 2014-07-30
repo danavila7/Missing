@@ -1,6 +1,16 @@
 	var map;
 	jQuery(document).ready(function() {
-	$(document).on("click", ".buscamissing", function() {
+
+		//Login con Facebook
+
+
+		$('#facelogin').click(function(){
+			var url = jQuery('#baseurl').val()+"/login/fb/callback";
+			window.location.href = url;
+		});
+
+		/***** click y buscar en el mapa ***/
+		$(document).on("click", ".buscamissing", function() {
   		var lat = $(this).attr('data-lat');
 		var lng = $(this).attr('data-lng');
 		$(".buscamissing").each(function( index ) {
@@ -9,7 +19,31 @@
 		$(this).addClass('active');
 		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: 'my 2nd title'});
 		map.panTo(marker2.getPosition());
-	});
+		});
+
+
+		/****Auto complete de lugares en el buscador ***/
+		autocomplete = new google.maps.places.Autocomplete(
+			      (document.getElementById('buscalugar')),
+			      {});
+		//selecciono un lugar de la lista
+		google.maps.event.addListener(autocomplete, 'place_changed', onPlaceChanged);
+
+		
+		function onPlaceChanged() {	
+			//obtengo el address by Geocoder
+			var geocoder = new google.maps.Geocoder();
+			  var place = autocomplete.getPlace();
+			  if (place.geometry) {
+				  lat = place.geometry.location.lat();
+				  lng = place.geometry.location.lng();
+			  	var mapCenter = new google.maps.LatLng(lat,lng); //Google map Coordinates
+				map_initialize(mapCenter); // initialize google map
+			  }
+
+			}
+
+	/**** si el usuario permite la localidad del navegador ****/
 	if(navigator.geolocation) {
     browserSupportFlag = true;
     	navigator.geolocation.getCurrentPosition(function(position) {
@@ -65,6 +99,9 @@
 					  create_marker(point, name, path, address, false, false, false, $('#baseurl').val()+"/img/pin_blue.png");
 				});
 			});	
+
+			//escondemos el loader
+			jQuery('.loader').hide();
 			
 			//Right Click to Drop a New Marker
 			google.maps.event.addListener(map, 'rightclick', function(event) {

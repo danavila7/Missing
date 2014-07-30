@@ -26,6 +26,15 @@ class UsuarioController extends BaseController
         	return Response::json(array('flash'=>'Login Invalido!'),500);
         }   
     }
+
+    public function isLoggedIn()
+    {
+        if(Auth::check()){
+            return Response::json(array('isloggin'=>Auth::user()->usuario));
+        }else{
+        	return Response::json(array('isloggin'=>'false'));
+        }   
+    }
     
     public function get_logout()
     {
