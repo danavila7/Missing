@@ -30,10 +30,12 @@ Route::get("/", function()
 {
     return View::make("home");
 });
- 
+ //Obtiene los ultimos Missing
 Route::get("obtenerObjetos", 'HomeController@ObtenerMissing');
-
+//Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
+//Muestra datos de un Objeto
+Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 
 //Ruta Login
 Route::post('/login','UsuarioController@post_login');
@@ -69,14 +71,16 @@ Route::get('login/fb', function() {
 
 Route::get('/login/fb/callback', function(){
 $url = URL::to('/login/fb/callback');
-FacebookSession::setDefaultApplication(Config::get('facebook.appId'), Config::get('facebook.secret'));
+FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
 $helper = new FacebookRedirectLoginHelper($url);
 try {
     $session = $helper->getSessionFromRedirect();
+    //return "sessq->".$session;
 } catch(FacebookRequestException $ex) {
     // When Facebook returns an error
     return 'facebook error '.$ex->getMessage();
 } catch(\Exception $ex) {
+	//return 'facebook error '.$ex->getMessage();
     // When validation fails or other local issues
     // return 'validation fails '.$ex->getMessage();
 }
@@ -89,6 +93,7 @@ if(isset($_SESSION['token'])){
 		$session = '';
 	}
 }
+
 if ($session) {
 	$_SESSION['token'] = $session->getToken();
 	$request = new FacebookRequest($session, 'GET', '/me');
@@ -132,6 +137,7 @@ if(isset($perfil)){
 
 	return Redirect::to('');
 }
+return Redirect::to('');
 //obtengo el id y voy a login para iniciar session
 //si no existe guardo los datos en el perfil e inicio session
 //(String)$user.getProperty("email")
@@ -140,6 +146,7 @@ if(isset($perfil)){
 
 
 }
+return Redirect::to('');
 });
 
 
@@ -165,7 +172,8 @@ Route::get('objetos/', function()
 	
 	// Iterate through the rows, adding XML nodes for each
 	foreach($objetos as $objeto)
-	{
+	{	
+		$obj = new Objeto;
 		$node = $dom->createElement("marker");
 		$newnode = $parnode->appendChild($node);
 		$newnode->setAttribute("id", $objeto->id);
@@ -173,8 +181,14 @@ Route::get('objetos/', function()
 		$newnode->setAttribute("address", $objeto->descripcion_objeto);
 		$newnode->setAttribute("lat", $objeto->latitud_objeto);
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
-		$newnode->setAttribute("type", $objeto->tipoobjeto_id);
-		$newnode->setAttribute("path", $objeto->nombre_objeto."_".$objeto->id.".jpg");
+		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
+		if(isset($objeto->foto_objeto)){
+			$newnode->setAttribute("path", $objeto->foto_objeto);
+		}else{
+			$newnode->setAttribute("path", "default.png");
+		}
+
+		
 	}
 	
 	echo $dom->saveXML();
@@ -209,6 +223,7 @@ Route::post('objetos/', function()
 		$objeto->latitud_objeto = $lat;
 		$objeto->longitud_objeto = $long;
 		$objeto->tipopublicacion_id = 1;
+		$objeto->foto_objeto = '';
 		$objeto->usuario_id = Auth::user()->id;
 		
 		$objeto->save();

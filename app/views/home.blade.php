@@ -16,12 +16,15 @@
   {{ HTML::script('js/AngularJS/angular-route.js') }}
   {{ HTML::script('js/app.js') }}
   {{ HTML::script('js/controllers.js') }}
+
   {{ HTML::script('js/lib/jquery.js') }}
+  {{ HTML::script('js/lib/bootstrap.js') }}
   {{ HTML::script('js/page/home.js') }}
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
- <script src="../js/page/objetos.js"></script>
+  {{ HTML::style('css/marker.css'); }}
+  {{ HTML::script('js/page/objetos.js') }}
  <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
   <!--{{ HTML::style('css/bootstrap.css'); }}-->
@@ -79,5 +82,6 @@
 
     </div>
     <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
+    <input type="hidden" id="isLoggin" value="false" />
     </body>
 </html>

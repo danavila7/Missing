@@ -16,6 +16,26 @@ class Objeto extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $table = 'objetos';
 
+	public function GetType($type_id){
+
+    	switch ($type_id) {
+    		case '1':
+    			return "Objeto";
+    			break;
+    		case '2':
+    			return "Animal";
+    			break;
+    		case '3':
+    			return "Persona";
+    			break;
+    		
+    		default:
+    			return "Objeto";
+    			break;
+    	}
+
+    }
+
 	
 }
 

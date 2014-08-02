@@ -14,11 +14,6 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 			$location.path("/login");
 		});
 	 }
-
-	 $scope.loginFacebook = function(){
-	 		$window.open('//facebook.com');
-			//$location.path("/login/fb");
-	 }
 });
  
 app.controller("loginController", function($scope, $location, AuthenticationService){
@@ -33,11 +28,6 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 	 	AuthenticationService.logout().success(function(){
 			$location.path("/");
 		});
-	 }
-
-	 $scope.loginFacebook = function(){
-	 	$window.open('//facebook.com');
-			//$location.path("/login/fb");
 	 }
 });
 
@@ -62,17 +52,21 @@ app.factory("ShowService", function($rootScope, $http){
 			//Mostrar el logout
 			//debugger;
 			jQuery('.logout-home').removeClass('hide');
+			
 			//Cargar lista con missing del usuario
 			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
 			$rootScope.misDatos = data.Missing;
    			});
 			//esconder el login
 			jQuery('.login-home').addClass('hide');
+			jQuery('#isLoggin').val(true);
+			jQuery('#modal-login').modal('hide')
 		},
 		showDataLogin: function(){
 			//mostrar el login
 			jQuery('.logout-home').addClass('hide');
 			jQuery('.login-home').removeClass('hide');
+			jQuery('#isLoggin').val(false);
 			$rootScope.misDatos ='';
 		},
 		errorLogin: function(){
@@ -96,6 +90,9 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
         			SessionService.set('authenticated', true);
 					SessionService.setuser('username', data.isloggin);
 					ShowService.showDataUser(data.isloggin);
+					jQuery('#isLoggin').val(true);
+				}else{
+					jQuery('#isLoggin').val(false);
 				}
    			});
 

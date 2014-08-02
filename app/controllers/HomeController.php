@@ -16,6 +16,7 @@ class HomeController extends BaseController {
     	$Ultimos5MissingPorUsuario = DB::table('objetos')
                     ->where('usuario_id', $id)
                     ->take(5)
+                    ->orderBy('created_at', 'desc')
                     ->get();
 		}
 		return Response::json(array('Missing'=>$Ultimos5MissingPorUsuario));
@@ -24,9 +25,16 @@ class HomeController extends BaseController {
 	public function ObtenerMissing(){
 		$objetos = DB::table('objetos')
 					->take(5)
+					->orderBy('created_at', 'desc')
                     ->get();
     	return Response::json(array(
         "objetos"=>$objetos
     	));
+	}
+
+	public function ObtieneMissingPorId($id){
+		$objeto = Objeto::find($id);
+		return Response::json(array('missing'=>$objeto));
+
 	}
 }
