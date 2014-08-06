@@ -9,7 +9,6 @@
       #map { height: 100% }
     </style>
     <style type="text/css">
-
 </style>
   {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
@@ -24,6 +23,7 @@
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
   {{ HTML::style('css/marker.css'); }}
+  {{ HTML::style('css/home.css'); }}
   {{ HTML::script('js/page/objetos.js') }}
  <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
@@ -53,17 +53,17 @@
         </form>
         </li>
       </ul>
+      <!--<ul class="nav navbar-nav navbar-right login-home hide" ng-controller="loginController">
+        <li><button class="btn btn-primary facelogin">Login with Facebook</button></li>
+      </ul>-->
       <ul class="nav navbar-nav navbar-right login-home hide" ng-controller="loginController">
-        <li><button id="facelogin" class="btn btn-primary">Login with Facebook</button></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right login-home hide" ng-controller="loginController">
-       <form class="navbar-form navbar-left" ng-submit="login()">
+       <!--<form class="navbar-form navbar-left" ng-submit="login()">
         <div class="form-group">
           <input type="text" name="email" class="form-control" placeholder="Ingresar el correo" ng-model="credentials.email" required/>
           <input type="password" name="password" class="form-control" placeholder="Ingresar el password" ng-model="credentials.password" required/>
         </div>
-        <button type="submit" class="btn btn-default">Login</button>
-      </form>
+      </form>-->
+       <li><a href="#" class="iniciar-sesion">Iniciar Sesión</a></li>
       <div class="alert alert-danger" id="login-error" style="display:none;">
         <button type="button" class="close">×</button>
         Login Invalido... Vuelve a intentarlo.
@@ -71,6 +71,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right logout-home hide" ng-controller="loginController">
         <li><a href="#" id="username" ></a></li>
+        <li><a class="brand" href="#"> <img class="avatar img-circle" src="img/avatar-default.jpeg" height="25px" width="25px"></a></li>
+         <!--<li><a href="#" ng-click="logout()">Logout</a></li>-->
         <li><button ng-click="logout()" class="btn btn-default">Logout</button></li>
       </ul>
     </div><!-- /.navbar-collapse -->

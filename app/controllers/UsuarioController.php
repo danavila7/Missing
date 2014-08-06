@@ -30,7 +30,10 @@ class UsuarioController extends BaseController
     public function isLoggedIn()
     {
         if(Auth::check()){
-            return Response::json(array('isloggin'=>Auth::user()->usuario));
+            $perfil = DB::table('perfiles')
+                    ->where('usuario_id', Auth::user()->id)
+                    ->first();
+            return Response::json(array('isloggin'=>Auth::user()->usuario,'avatar'=>$perfil->avatar_path));
         }else{
         	return Response::json(array('isloggin'=>'false'));
         }   

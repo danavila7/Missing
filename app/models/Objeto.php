@@ -28,7 +28,6 @@ class Objeto extends Eloquent implements UserInterface, RemindableInterface {
     		case '3':
     			return "Persona";
     			break;
-    		
     		default:
     			return "Objeto";
     			break;

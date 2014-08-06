@@ -46,9 +46,10 @@ app.factory("FlashService", function($rootScope){
 
 app.factory("ShowService", function($rootScope, $http){
 	return{
-		showDataUser: function(message){
+		showDataUser: function(message, avatar){
 			//muestra nombre de usuario
 			jQuery('#username').html("Bienvenido "+message);
+			jQuery('.avatar').attr('src', avatar);
 			//Mostrar el logout
 			//debugger;
 			jQuery('.logout-home').removeClass('hide');
@@ -89,7 +90,7 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
 				if(data.isloggin != 'false'){
         			SessionService.set('authenticated', true);
 					SessionService.setuser('username', data.isloggin);
-					ShowService.showDataUser(data.isloggin);
+					ShowService.showDataUser(data.isloggin, data.avatar);
 					jQuery('#isLoggin').val(true);
 				}else{
 					jQuery('#isLoggin').val(false);

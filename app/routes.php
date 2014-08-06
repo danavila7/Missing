@@ -71,7 +71,7 @@ Route::get('login/fb', function() {
 
 Route::get('/login/fb/callback', function(){
 $url = URL::to('/login/fb/callback');
-FacebookSession::setDefaultApplication('1476123785965298', '367198c9c03672b99e5b206e7756ddfc');
+FacebookSession::setDefaultApplication(Config::get('facebook.appId'), Config::get('facebook.secret'));
 $helper = new FacebookRedirectLoginHelper($url);
 try {
     $session = $helper->getSessionFromRedirect();
@@ -96,20 +96,25 @@ if(isset($_SESSION['token'])){
 
 if ($session) {
 	$_SESSION['token'] = $session->getToken();
-	$request = new FacebookRequest($session, 'GET', '/me');
+	$request = new FacebookRequest($session, 'GET', '/me?fields=id,first_name,email,gender,birthday,picture.url');
 	$response = $request->execute();
+	
+	$array = $response->getResponse();
+	//Foto
+	$pic = $array->picture->data->url;
 
 // Get the response typed as a GraphUser
 $user = $response->getGraphObject(GraphUser::className());
 // or convert the base object previously accessed
- //$user = $object->cast(GraphUser::className());
-
+  $email = $response->getGraphObject()->getProperty('email');
+  $sex = $response->getGraphObject()->getProperty('gender');
+  $bday = $response->getGraphObject()->getProperty('birthday');
 // Get the response typed as a GraphLocation
 $loc = $response->getGraphObject(GraphLocation::className());
 
 //debo preguntar si existe el id de facebook del usuario
 //si existe
-$perfil = Perfiles::where('idFacebook' , '=', $user->getId())->first();
+$perfil = Perfiles::where('username', '=', $user->getId())->first();
 if(isset($perfil)){
 	 $user = Usuario::find($perfil->usuario_id);
 	 Auth::loginUsingId($user->id);
@@ -118,8 +123,8 @@ if(isset($perfil)){
 
 	$usuario = new Usuario;
 		
-	$usuario->usuario = $user->getName();
-	$usuario->email = '';
+	$usuario->usuario = $user->getFirstName().' '.$user->getMiddleName().' '.$user->getLastName();
+	$usuario->email = $email;
 	$usuario->password = '';
 
 	$usuario->save();
@@ -131,9 +136,13 @@ if(isset($perfil)){
 	$perfil->idFacebook =  $user->getId();
 	$perfil->link = $user->getLink();
 	$perfil->birthday = $user->getBirthday();
+	$perfil->avatar_path = $pic;
+	$perfil->genero = $sex;
 		
 		
 	$perfil->save();
+
+	Auth::loginUsingId($LastInsertId);
 
 	return Redirect::to('');
 }
@@ -182,6 +191,7 @@ Route::get('objetos/', function()
 		$newnode->setAttribute("lat", $objeto->latitud_objeto);
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
 		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
+		$newnode->setAttribute("typeid", $objeto->tipoobjeto_id);
 		if(isset($objeto->foto_objeto)){
 			$newnode->setAttribute("path", $objeto->foto_objeto);
 		}else{

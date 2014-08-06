@@ -2,10 +2,7 @@
 	jQuery(document).ready(function() {
 
 
-		$('#facelogin').click(function(){
-			var url = jQuery('#baseurl').val()+"/login/fb";
-			window.location.href = url;
-		});
+		
 
 		/***** click y buscar en el mapa ***/
 		$(document).on("click", ".buscamissing", function() {
@@ -96,9 +93,24 @@
 					  var name 		= $(this).attr('name');
 					  var desc 	    = '<p>'+ $(this).attr('address') +'</p>';
 					  var type 		= $(this).attr('type');
-					  var path      =  $(this).attr('path');;
+					  var typeid 		= $(this).attr('typeid');
+					  var path      =  $(this).attr('path');
 					  var point 	= new google.maps.LatLng(parseFloat($(this).attr('lat')),parseFloat($(this).attr('lng')));
-					  showMarkers(id, point, name, path, desc, type, $('#baseurl').val()+"/img/pin_blue.png");
+					  var pin = "/img/pin-1_blue.png";
+					  switch(typeid) {
+						    case '1':
+				    			pin = "/img/pin-1_blue.png"
+				    			break;
+				    		case '2':
+				    			pin = "/img/pin-1_green.png"
+				    			break;
+				    		case '3':
+				    			pin = "/img/pin-1_orange.png"
+				    			break;
+						    default:
+						        pin = "/img/pin-1_blue.png"
+						}
+					  showMarkers(id, point, name, path, desc, type, $('#baseurl').val()+pin);
 				});
 			});	
 
@@ -211,7 +223,7 @@
 		//Content structure of info Window for the Markers
 		contentString = $('<div class="marker-info-win">'+
 		'<div class="row col-md-offset-3">'+
-		'<h4>'+MapTitle+'<small>'+Type+'</small></h4>'+
+		'<h4> '+MapTitle+' <small> '+Type+' </small></h4>'+
 		'</div>'+
 		'<div class="row">'+
 		'<div class="col-md-4">'+
