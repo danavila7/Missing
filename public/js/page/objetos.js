@@ -147,7 +147,7 @@
                   '</div>'+
                   '<div class="form-group">'+
                     '<label>Descripci&oacute;n*</label>'+
-                    '<textarea type="text" class="form-control save-desc" name="pDesc" placeholder="Ingresar Descripci&oacute;n" maxlength="150" required>'+
+                    '<textarea type="text" class="form-control save-desc" name="pDesc" placeholder="Ingresar Descripci&oacute;n" maxlength="250" required>'+
                     '</textarea>'+
                   '</div>'+
                   '<div class="form-group">'+
@@ -156,8 +156,10 @@
                     '</select>'+
                   '</div>'+
                 '</form>'+
-                '<button name="save-marker" class="save-marker btn btn-default">Guardar</button>'+
-                '<button name="remove-marker" class="remove-marker btn btn-default">Cancelar</button>'+
+                '<div class="btn-group">'+
+				  '<button type="button" class="save-marker btn btn-default">Guardar</button>'+
+				  '<button type="button" class="remove-marker btn btn-default">Cancelar</button>'+
+				'</div>'+
         		'</div>');
 		
 		//Create an infoWindow
@@ -177,7 +179,7 @@
 		{
 			//add click listner to save marker button
 			google.maps.event.addDomListener(saveBtn, "click", function(event) {
-				var mReplace = contentString.find('span.info-content'); //html to be replaced after success
+				var mReplace = contentString.find('div.marker-edit'); //html to be replaced after success
 				var mName = contentString.find('input.save-name')[0].value; //name input field value
 				var mDesc  = contentString.find('textarea.save-desc')[0].value; //description input field value
 				var mType = contentString.find('select.save-type')[0].value; //type of marker
@@ -189,7 +191,7 @@
 					{
 						$('.desc-alert').addClass('has-error');
 					}else{
-					save_marker(marker, mName, mDesc, mType, mReplace, mImage); //call save marker function
+					save_marker(marker, mName, mDesc, mType, mReplace); //call save marker function
 					}
 				} 
 			});
@@ -221,18 +223,28 @@
 		});
 		var contentString = '';
 		//Content structure of info Window for the Markers
-		contentString = $('<div class="marker-info-win">'+
-		'<div class="row col-md-offset-3">'+
+		contentString = 
+		$('<div class="marker-info-win">'+
+		'<div class="row">'+
+		'<div class="col-sm-5 col-sm-offset-2">'+
 		'<h4> '+MapTitle+' <small> '+Type+' </small></h4>'+
 		'</div>'+
-		'<div class="row">'+
-		'<div class="col-md-4">'+
-		'<img src ="'+baseurl+'/uploads/'+Path+'" alt="'+MapTitle+'" class="img-rounded" height="70" width="70" />'+
 		'</div>'+
 		'<div class="row">'+
-		'<button type="button" id="show-detalle" class="btn btn-info">Detalles</button>'+
-		'<button name="remove-marker" class="remove-marker btn btn-danger" title="Borrar Missing">Borrar</button>'+
-		'</div></div>');	
+		'<div class="col-sm-2 col-sm-offset-1">'+
+		'<img src ="'+baseurl+'/uploads/'+Path+'" alt="'+MapTitle+'" class="img-rounded" height="70" width="70" />'+
+		'</div>'+
+		'<div class="col-sm-6 col-sm-offset-1">'+
+		'<p>'+MapDesc+'</p>'+
+		'</div>'+
+		'</div>'+
+		'<div class="row">'+
+		'<div class="btn-group col-sm-offset-5">'+
+		'<button type="button" id="show-detalle" class="save-marker btn btn-default">Detalles</button>'+
+		'<button type="button" class="remove-marker btn btn-default">Borrar</button>'+
+		'</div>'+
+		'</div>'+
+		'</div>');	
 		
 		//Create an infoWindow
 		var infowindow = new google.maps.InfoWindow();
@@ -257,11 +269,18 @@
 	}
 
 	function cargaDatos(Id){
+
 		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+Id, function (data) {
+
 				jsondata = eval(data);
 				missing = eval(jsondata.missing);
-				
-			});	
+				fecha = eval(missing.fecha);
+				$('#nom_objeto').text(missing.nombre_objeto);
+				$('#desc_objeto').text(missing.descripcion_objeto);
+				$('#fecha_objeto').text(fecha.date);
+				$('#tipo').text(missing.tipo);
+				$('#usuario_objeto').text(missing.usuario);
+			});
 		$('#modal-detalles').modal();
 	}
 	
@@ -296,7 +315,7 @@
 	}
 	
 	//############### Save Marker Function ##############
-	function save_marker(Marker, mName, mAddress, mType, replaceWin, mImage)
+	function save_marker(Marker, mName, mAddress, mType, replaceWin)
 	{
 		//Save new marker using jQuery Ajax
 		 var mLatLang = Marker.getPosition().toUrlValue(); //get marker position
@@ -307,6 +326,7 @@
 		 url: $('#baseurl').val()+"/objetos",
 		 data: myData,
 		  success:function(data){
+		  		alert(data)
 				 replaceWin.html(data); //replace info window with new html
 				 Marker.setDraggable(false); //set marker to fixed
 				 Marker.setIcon('../img/pin_blue.png'); //replace icon

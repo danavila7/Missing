@@ -7,6 +7,8 @@ jQuery(document).ready(function() {
 		$('#login-error').fadeOut( "slow" );
 	});
 
+	$('.navmenu').offcanvas()
+
 	$(document).on("click", ".iniciar-sesion", function() {	
 		$('#modal-login').modal();
 	}); 

@@ -18,27 +18,31 @@
 
   {{ HTML::script('js/lib/jquery.js') }}
   {{ HTML::script('js/lib/bootstrap.js') }}
+  {{ HTML::script('js/lib/jasny-bootstrap.min.js') }}
+  <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
   {{ HTML::script('js/page/home.js') }}
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
   </script>
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
+  {{ HTML::style('css/jasny-bootstrap.min.css'); }}
   {{ HTML::style('css/marker.css'); }}
+  <!--{{ HTML::style('css/jquery.mobile.css'); }}-->
   {{ HTML::style('css/home.css'); }}
   {{ HTML::script('js/page/objetos.js') }}
  <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
+  {{ HTML::style('css/bootstrap-responsive.css'); }}
   <!--{{ HTML::style('css/bootstrap.css'); }}-->
     
 </head>
 <body>
+
+
   <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">MISSING beta</a>
+      <a class="brand" href="#"> <img  src="img/missing.png" height="50px" width="130px"></a>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
@@ -71,7 +75,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right logout-home hide" ng-controller="loginController">
         <li><a href="#" id="username" ></a></li>
-        <li><a class="brand" href="#"> <img class="avatar img-circle" src="img/avatar-default.jpeg" height="25px" width="25px"></a></li>
+        <li><a class="brand" href="#"> <img class="avatar img-circle" src="img/avatar-default.jpeg" height="20px" width="20px"></a></li>
          <!--<li><a href="#" ng-click="logout()">Logout</a></li>-->
         <li><button ng-click="logout()" class="btn btn-default">Logout</button></li>
       </ul>

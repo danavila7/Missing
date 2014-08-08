@@ -34,7 +34,19 @@ class HomeController extends BaseController {
 
 	public function ObtieneMissingPorId($id){
 		$objeto = Objeto::find($id);
-		return Response::json(array('missing'=>$objeto));
+		$usuario = Usuario::find($objeto->usuario_id);
+		$obj = new Objeto;
+		$data  = array(
+			"id" => $objeto->id,
+			"nombre_objeto" => $objeto->nombre_objeto,
+			"descripcion_objeto" =>$objeto->descripcion_objeto,
+			"latitud_objeto"=>$objeto->latitud_objeto,
+			"longitud_objeto"=>$objeto->longitud_objeto,
+			"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
+			"fecha"=>$objeto->created_at,
+			"usuario" => $usuario->usuario
+			);
+		return Response::json(array('missing'=>$data));
 
 	}
 }

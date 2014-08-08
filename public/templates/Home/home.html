@@ -1,31 +1,19 @@
 
 <!--Script&Style de la pagina-->
 <div class="row">
-    <div  class="col-md-12">
-        <div class="col-md-6 col-md-offset-5 loader">
-            <img id="loading">
-        </div>
-           
-            <div id="map"></div>
+
+    <div class="span10">
+      <div id="map"></div>
     </div>
-    <div class="col-md-4 col-md-offset-1">
-            <div class="panel panel-default">
-            <div class="panel-heading">Ultimos Missing</div>
-                <div class="panel-body">
-                    <div class="input-group">
-                        <span class="input-group-addon">Buscar</span>
-                        <input type="text" class="form-control" placeholder="Ingrese el Missing..." ng-model="buscador" />
-                    </div>
-                    <table class="table table-hover" id="lista-missing" >
-                        <tr ng-repeat="data in datos|filter:buscador">
-                            <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-    </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
+    <div class="span3">
+            <ul class="nav nav-pills">
+              <li class="active">
+                <a class ="pointer" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">Ver Todos</a>
+              </li>
+              <li><a href="#">...</a></li>
+              <li><a href="#">...</a></li>
+            </ul>
+              <div class="panel panel-default">
             <div class="panel-heading">Mis Ultimos Missing</div>
                 <div class="panel-body">
                     <div class="input-group">
@@ -40,6 +28,26 @@
                 </div>
             </div>
     </div>
+
+<!-- nav bar izquierda -->
+<nav  class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Ultimos Missing</div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">Buscar</span>
+                        <input type="text" class="form-control" placeholder="Ingrese el Missing..." ng-model="buscador" />
+                    </div>
+                    <table class="table table-hover" id="lista-missing" >
+                        <tr ng-repeat="data in datos|filter:buscador">
+                            <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+
 <!-- Modal -->
 <div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -73,7 +81,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -81,11 +89,31 @@
         <h4 class="modal-title" id="myModalLabel">Missing</h4>
       </div>
       <div class="modal-body">
-        
+        <input type="hidden" id="id_objeto" />
+        <div class="panel panel-info">
+          <div class="panel-heading" id="nom_objeto"></div>
+          <div class="panel-body">
+            <p id="desc_objeto"></p>
+          </div>
+          <table class="table">
+            <tr>
+              <td>Creado por</td>
+              <td id="usuario_objeto"></td>
+            </tr> 
+            <tr>
+              <td>Tipo</td>
+               <td id="tipo"></td>
+            </tr>
+            <tr>
+              <td>Fecha</td>
+              <td id="fecha_objeto"></td>
+            </tr>
+          </table>
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

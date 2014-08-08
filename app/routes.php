@@ -192,7 +192,7 @@ Route::get('objetos/', function()
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
 		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
 		$newnode->setAttribute("typeid", $objeto->tipoobjeto_id);
-		if(isset($objeto->foto_objeto)){
+		if(isset($objeto->foto_objeto) || $objeto->foto_objeto != ""){
 			$newnode->setAttribute("path", $objeto->foto_objeto);
 		}else{
 			$newnode->setAttribute("path", "default.png");
