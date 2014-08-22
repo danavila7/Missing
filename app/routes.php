@@ -31,7 +31,7 @@ Route::get("/", function()
     return View::make("home");
 });
  //Obtiene los ultimos Missing
-Route::get("obtenerObjetos", 'HomeController@ObtenerMissing');
+Route::get("obtenerObjetos", 'HomeController@ObtenerTodosMissing');
 //Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
 //Muestra datos de un Objeto
@@ -113,8 +113,7 @@ $user = $response->getGraphObject(GraphUser::className());
 $loc = $response->getGraphObject(GraphLocation::className());
 
 //debo preguntar si existe el id de facebook del usuario
-//si existe
-$perfil = Perfiles::where('username', '=', $user->getId())->first();
+$perfil = Perfiles::where('idFacebook', '=', $user->getId())->first();
 if(isset($perfil)){
 	 $user = Usuario::find($perfil->usuario_id);
 	 Auth::loginUsingId($user->id);
@@ -147,13 +146,6 @@ if(isset($perfil)){
 	return Redirect::to('');
 }
 return Redirect::to('');
-//obtengo el id y voy a login para iniciar session
-//si no existe guardo los datos en el perfil e inicio session
-//(String)$user.getProperty("email")
-//return "Login User ->".$user->getMiddleName();
-
-
-
 }
 return Redirect::to('');
 });
@@ -169,8 +161,10 @@ Route::get('objetos/', function()
 	$node = $dom->createElement("markers"); //Create new element node
 	$parnode = $dom->appendChild($node); //make the node show up
 	
-	// Select all the rows in the markers table
-	$objetos = Objeto::all();
+	// Select all the rows in the markers table  DB::table('objetos')->where('tipoobjeto_id', '2');
+	$objetos = Objeto::where('estado', '=', 1)->get();
+
+
 	if (!$objetos) {
 		header('HTTP/1.1 500 Error: no se encontraron objetos!');
 		exit();
@@ -187,7 +181,6 @@ Route::get('objetos/', function()
 		$newnode = $parnode->appendChild($node);
 		$newnode->setAttribute("id", $objeto->id);
 		$newnode->setAttribute("name",$objeto->nombre_objeto);
-		$newnode->setAttribute("address", $objeto->descripcion_objeto);
 		$newnode->setAttribute("lat", $objeto->latitud_objeto);
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
 		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
@@ -207,38 +200,40 @@ Route::get('objetos/', function()
 	
 });
 
+Route::post('borrarObjeto/', function(){
+	if(Request::ajax()){
+		
+		$id	=  Input::get('id');
+		$objeto = Objeto::find($id);
+		//0 borrado, 1 activo, 2 encontrado
+		$objeto->estado = 0;
+		$objeto->save();
+		echo $objeto->nombre_objeto;
+		}
+});
+
 Route::post('objetos/', function()
 {
 	if(Request::ajax()){
-		
-		if(Input::get('del'))
-		{
-			//eliminar un objeto (mejorar este metodo)
-			$mLatLang	= explode(',', Input::get('latlang'));
-			$objeto = Objeto::where('latitud_objeto','=', $mLatLang[0], 'AND')
-			->where('longitud_objeto', '=', $mLatLang[1])->first();
-			
-					
-			$objeto->delete();
-			echo "Eliminado con exito.";
-		}else{
-		
 		$objeto = new Objeto;
 		list($lat, $long) = explode(",", (Input::get('latlang')));
 		
 		
 		$objeto->nombre_objeto = (Input::get('name'));
-		$objeto->descripcion_objeto = (Input::get('address'));
+		$objeto->descripcion_objeto = (Input::get('desc'));
+		$objeto->direccion_objeto = (Input::get('address'));
 		$objeto->tipoobjeto_id = (Input::get('type'));
 		$objeto->latitud_objeto = $lat;
 		$objeto->longitud_objeto = $long;
 		$objeto->tipopublicacion_id = 1;
 		$objeto->foto_objeto = '';
 		$objeto->usuario_id = Auth::user()->id;
+		$objeto->estado = 1;
 		
 		$objeto->save();
 		$LastInsertId = $objeto->id;
-		echo "Objeto ".$objeto->nombre_objeto." tipo ".$objeto->tipoobjeto_id." Creado con exito.";
+		return Response::json(array('id'=>$LastInsertId));
+		//echo "{'nombre':'".$objeto->nombre_objeto."', 'tipo':'".$objeto->tipoobjeto_id."'}";
 		/*
 		//ingresar una imagen (mejorar el metodo)
 		//$file = Input::file('image');
@@ -253,6 +248,5 @@ Route::post('objetos/', function()
 		}else{
 		echo "Quedo la caga";	
 		}*/
-		}
 	}
 });

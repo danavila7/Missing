@@ -8,7 +8,7 @@
     <div class="span3">
             <ul class="nav nav-pills">
               <li class="active">
-                <a class ="pointer" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">Ver Todos</a>
+                <a class ="pointer" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">Busqueda</a>
               </li>
               <li><a href="#">...</a></li>
               <li><a href="#">...</a></li>
@@ -31,10 +31,22 @@
 
 <!-- nav bar izquierda -->
 <nav  class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
-
           <div class="panel panel-default">
             <div class="panel-heading">Ultimos Missing</div>
                 <div class="panel-body">
+                  <div class="input-group">
+                    <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-click="checkPin()" id="check-objeto" ><img  src="/img/pin-1_blue.png" title="objeto"/>
+                    </label>
+                    <label>
+                      <input type="checkbox" ng-click="checkPin()" id="check-animal" ><img id="check-animal" src="/img/pin-1_green.png" title="animal"/>
+                    </label>
+                    <label>
+                      <input type="checkbox" ng-click="checkPin()" id="check-persona" ><img id="check-persona"  src="/img/pin-1_orange.png" title="persona"/>
+                    </label>
+                    </div>
+                    </div>
                     <div class="input-group">
                         <span class="input-group-addon">Buscar</span>
                         <input type="text" class="form-control" placeholder="Ingrese el Missing..." ng-model="buscador" />
@@ -47,6 +59,54 @@
                 </div>
             </div>
         </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="confirm-delete-share" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header modal-title-borrar">
+        <input type="hidden" class="confirma-borrar-hidden" value="" />
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title">Confirmar</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Estas seguro que deseas borrar el Missing <strong class="nombre_missing"></strong> ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default confirma-borrar" >Aceptar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>    
+
+<!-- Modal -->
+<div class="modal fade" id="modal-share" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title" id="myModalLabel">Comparte este Missing en las redes sociales e informa a tus contactos que estas buscando.</h4><small>Adicionalmente compartiremos esta publicación en nuestras redes sociales y abarcará a mucha más gente. Ya estas más serca de encontrar lo que perdiste.</small>
+      </div>
+      <div class="modal-body">
+        <form role="form" >
+              <div class="form-group">
+                <button type="submit" class="btn btn-default">Comparte en Facebook</button>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-default">Comparte en Twitter</button>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-default">Comparte en Google+</button>
+              </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>        
 
 <!-- Modal -->
 <div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -81,12 +141,88 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-datos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title" id="myModalLabel">Mientras más datos, más posibilidades de encontrar lo que buscas.</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form" id="datos-avanzados">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="nombre-obj" placeholder="Nombre">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Fecha perdida</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="fecha_perdida" placeholder="Fecha">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Descripción</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="descripcion-obj" rows="3" placeholder="Descripción"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Agrega una foto</label>
+              <div class="col-sm-10">
+              <input type="file" class="form-control" id="imagen-obj" required>
+              </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Tipo</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="tipo-obj">
+                <option>Seleccióne una opción</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="recompensa_check"> ¿Agregar Recompensa?
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group div-recompensa">
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="recompensa_text" placeholder="Ingresa un monto">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-default">Sign in</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" >Aceptar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header modal-title-detalle">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Missing</h4>
+        <h4 class="modal-title">Missing</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" id="id_objeto" />
@@ -103,6 +239,10 @@
             <tr>
               <td>Tipo</td>
                <td id="tipo"></td>
+            </tr>
+            <tr>
+              <td>Dirección</td>
+               <td id="dir_objeto"></td>
             </tr>
             <tr>
               <td>Fecha</td>

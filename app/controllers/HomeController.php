@@ -9,22 +9,40 @@ class HomeController extends BaseController {
 	}
 
 	public function ObtenerMissingPorUsuario(){
-		$Ultimos5MissingPorUsuario  = array();
+		$UltimosMissingPorUsuario  = array();
 		if (Auth::check())
 		{
 		$id = Auth::id();
-    	$Ultimos5MissingPorUsuario = DB::table('objetos')
+    	$UltimosMissingPorUsuario = DB::table('objetos')
                     ->where('usuario_id', $id)
+                    ->where('estado' , 1)
                     ->take(5)
                     ->orderBy('created_at', 'desc')
                     ->get();
 		}
-		return Response::json(array('Missing'=>$Ultimos5MissingPorUsuario));
+		return Response::json(array('Missing'=>$UltimosMissingPorUsuario));
+	}
+
+
+	//obtener los ultimos missing pordenados por fecha
+	public function ObtenerTodosMissing($tipoobjeto_id = null){
+		$objetos = DB::table('objetos')
+					->where('estado', 1)
+					->where(function($query){
+						if(isset($tipoobjeto_id)){
+							$query->where('tipoobjeto_id', $tipoobjeto_id);
+						}
+					})
+					->orderBy('created_at', 'desc')
+                    ->get();
+    	return Response::json(array(
+        "objetos"=>$objetos
+    	));
 	}
 
 	public function ObtenerMissing(){
 		$objetos = DB::table('objetos')
-					->take(5)
+					->where('estado', 1)
 					->orderBy('created_at', 'desc')
                     ->get();
     	return Response::json(array(
@@ -40,6 +58,7 @@ class HomeController extends BaseController {
 			"id" => $objeto->id,
 			"nombre_objeto" => $objeto->nombre_objeto,
 			"descripcion_objeto" =>$objeto->descripcion_objeto,
+			"direccion_objeto" => $objeto->direccion_objeto,
 			"latitud_objeto"=>$objeto->latitud_objeto,
 			"longitud_objeto"=>$objeto->longitud_objeto,
 			"tipo"=>$obj->GetType($objeto->tipoobjeto_id),

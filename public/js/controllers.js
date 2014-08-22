@@ -14,6 +14,14 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 			$location.path("/login");
 		});
 	 }
+
+	 $scope.checkPin = function(){
+	 	var objeto = jQuery('#check-objeto').is('checked');
+	 	var animal = jQuery('#check-animal').is('checked');
+	 	var persona = jQuery('#check-persona').is('checked');
+
+	 	alert('obj->'+objeto+' ani->'+animal+' per->'+persona);
+	 }
 });
  
 app.controller("loginController", function($scope, $location, AuthenticationService){

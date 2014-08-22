@@ -1,4 +1,10 @@
 
 .facelogin { cursor: pointer; }
 .pointer { cursor: pointer; cursor: hand; }
+.modal-title-detalle {
+  background-color: #75CDFF;
+}
+.modal-title-borrar {
+  background-color: #FF8686;
+}
 

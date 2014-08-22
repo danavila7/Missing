@@ -19,6 +19,7 @@
   {{ HTML::script('js/lib/jquery.js') }}
   {{ HTML::script('js/lib/bootstrap.js') }}
   {{ HTML::script('js/lib/jasny-bootstrap.min.js') }}
+  {{ HTML::script('js/lib/bootstrap-datepicker.js') }}
   <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
   {{ HTML::script('js/page/home.js') }}
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
@@ -31,6 +32,8 @@
   {{ HTML::script('js/page/objetos.js') }}
  <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
+  {{ HTML::style('css/datepicker.css'); }}
+  {{ HTML::style('css/datepicker3.css'); }}
   {{ HTML::style('css/bootstrap-responsive.css'); }}
   <!--{{ HTML::style('css/bootstrap.css'); }}-->
     
@@ -41,7 +44,8 @@
   <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="brand" href="#"> <img  src="img/missing.png" height="50px" width="130px"></a>
+      <a class="brand" href="#"> 
+        <img  src="img/missing.png" height="50px" width="130px"></a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
@@ -75,16 +79,17 @@
       </ul>
       <ul class="nav navbar-nav navbar-right logout-home hide" ng-controller="loginController">
         <li><a href="#" id="username" ></a></li>
-        <li><a class="brand" href="#"> <img class="avatar img-circle" src="img/avatar-default.jpeg" height="20px" width="20px"></a></li>
+        <li><a class="brand" href="#"> 
+          <img class="avatar img-circle" src="img/avatar-default.jpeg" height="30px" width="30px"></a></li>
          <!--<li><a href="#" ng-click="logout()">Logout</a></li>-->
-        <li><button ng-click="logout()" class="btn btn-default">Logout</button></li>
+        <li><button ng-click="logout()" class="btn btn-default">Cerrar Sesión</button></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
-    <div class="row" ng-view>
+    <div class="row container-fluid"  ng-view>
 
     </div>
     <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
