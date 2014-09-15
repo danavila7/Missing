@@ -33,7 +33,8 @@ class UsuarioController extends BaseController
             $perfil = DB::table('perfiles')
                     ->where('usuario_id', Auth::user()->id)
                     ->first();
-            return Response::json(array('isloggin'=>Auth::user()->usuario,'avatar'=>$perfil->avatar_path));
+            return Response::json(array('isloggin'=>Auth::user()->usuario,
+                'esCreado'=>Auth::user()->esCreado,'email'=>Auth::user()->email,'avatar'=>$perfil->avatar_path));
         }else{
         	return Response::json(array('isloggin'=>'false'));
         }   
@@ -45,6 +46,18 @@ class UsuarioController extends BaseController
         return Response::json(array('msg'=>'Logout'));
     }
 
+    public function get_getUser(){
+        if(Auth::check()){
+            $user = Usuario::find(Auth::user()->id);
+            $nombre = $user->usuario;
+            $email = $user->email;
+            $esCreado = $user->esCreado;
+            $id = $user->id;
+            return Response::json(array('msg'=>'true','nombre'=>$nombre,'email'=>$email, 'esCreado'=>$esCreado));
+        }else{
+            return Response::json(array('msg'=>'false'));
+        }  
+    }
 
     public function showProfile($id)
     {
@@ -61,7 +74,7 @@ class UsuarioController extends BaseController
     
 	public function get_index()
 	{
-		$users = User::all();
+		$users = Usuario::all();
 		return View::make('users.index')->with('users', $users);
 	}
     
@@ -86,24 +99,21 @@ class UsuarioController extends BaseController
 		return View::make('users.create');
 	}
 	
-	public function post_create()
+	public function post_create_user()
 	{
-		$user = new User;
-		
-		$user->usuario = Input::get("usuario");
-		$user->email = Input::get("email");
-		$user->password = Input::get("password");
-		
-		
+
+		$user = Usuario::find(Auth::user()->id);
+		$user->password = Hash::make(Input::json("password"));
+        $user->realpassword = Input::json("password");
+        $user->esCreado = 1;
 		$user->save();
 		
-        //return "El formulario se creo.";
-		return Redirect::to('users/listausuarios');
+         return Response::json(array('msg'=>Auth::user()->usuario));
 	}
 	
 	public function get_delete($user_id)
 	{
-		$user = User::find($user_id);
+		$user = Usuario::find($user_id);
 		
 		if(is_null($user))
 		{
@@ -116,7 +126,7 @@ class UsuarioController extends BaseController
     
     public function get_listausuarios()
 	{
-        $users = User::all();
+        $users = Usuario::all();
 		return View::make('users.listausuarios')->with('users', $users);
 	}
     
@@ -124,7 +134,7 @@ class UsuarioController extends BaseController
     
     public function get_update($user_id)
     {
-		$user = User::find($user_id);
+		$user = Usuario::find($user_id);
 		
 		if(is_null($user))
 		{
@@ -137,7 +147,7 @@ class UsuarioController extends BaseController
     
     public function post_update($user_id)
     {
-		$user = User::find($user_id);
+		$user = Usuario::find($user_id);
 		
 		if(is_null($user))
 		{

@@ -1,0 +1,72 @@
+<div class="modal fade" id="modal-datos" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title" id="myModalLabel">Mientras más datos, más posibilidades de encontrar lo que buscas.</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form" id="datos-avanzados" ng-submit="crearDatos()">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="nombre-obj" placeholder="Nombre">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Fecha perdida</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="fecha_perdida" placeholder="Fecha">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Descripción</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="descripcion-obj" rows="3" placeholder="Descripción"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Agrega una foto</label>
+              <div class="col-sm-10">
+              <input type="file" class="form-control" id="imagen-obj" required>
+              </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Tipo</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="tipo-obj">
+                <option>Seleccióne una opción</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="recompensa_check"> ¿Agregar Recompensa?
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group div-recompensa">
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="recompensa_text" placeholder="Ingresa un monto">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-success">Crear Missing</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

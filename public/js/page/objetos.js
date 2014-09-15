@@ -1,6 +1,8 @@
 	var map;
 	jQuery(document).ready(function() {
 
+		$('#modal-loading').modal();
+
 		/**** datepicker para la fecha de perdida ****/
 		$('#fecha_perdida').datepicker({
    			 todayHighlight: true
@@ -69,6 +71,7 @@
 	
 	//############### Google Map Initialize ##############
 	function map_initialize(mapCenter){
+
 			var googleMapOptions = 
 			{ 
 				center: mapCenter, // map center
@@ -105,7 +108,7 @@
 					  var name 		= $(this).attr('name');
 					  var desc 	    = '<p>'+ $(this).attr('address') +'</p>';
 					  var type 		= $(this).attr('type');
-					  var typeid 		= $(this).attr('typeid');
+					  var typeid 	= $(this).attr('typeid');
 					  var path      =  $(this).attr('path');
 					  var point 	= new google.maps.LatLng(parseFloat($(this).attr('lat')),parseFloat($(this).attr('lng')));
 					  var pin = "/img/pin-1_blue.png";
@@ -127,6 +130,7 @@
 			});	
 
 			//escondemos el loader
+			//$('#modal-loading').modal('hide')
 			jQuery('.loader').hide();
 			//Right Click
 			google.maps.event.addListener(map, 'rightclick', function(event) {

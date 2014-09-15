@@ -1,11 +1,27 @@
-app.controller("homeController", function($scope, $http, $location, AuthenticationService) {
+app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService) {
 	 $http.get(jQuery('#baseurl').val()+'/obtenerObjetos').success(function(data){
         $scope.datos = data.objetos;//así enviamos los posts a la vista
    	});
 
+	 //asignar modales con nginclude
+    $scope.modallogin = 'templates/Modal/modal-login.html';
+    $scope.modalagregadatos = 'templates/Modal/modal-agrega-datos.html';
+    $scope.modalconfirmdelete = 'templates/Modal/modal-confirm-delete.html';
+    $scope.modalshare = 'templates/Modal/modal-share.html';
+    $scope.modaldetalles = 'templates/Modal/modal-detalles.html';
+    $scope.modalloading = 'templates/Modal/modal-loading.html';
+    $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
+
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
 			$location.path("/");
+		});
+	}
+
+	$scope.CreateUser = function(){
+		CreateUserService.create($scope.user).success(function(){
+			$location.path("/");
+			$('#modal-create-usuario').modal('hide');
 		});
 	}
 
@@ -26,6 +42,10 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
  
 app.controller("loginController", function($scope, $location, AuthenticationService){
 	$scope.credentials = { username:'', password:'' };
+
+
+
+
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
 			$location.path("/");
@@ -86,12 +106,26 @@ app.factory("ShowService", function($rootScope, $http){
 
 app.run(function($rootScope, $http, $location, AuthenticationService, ShowService, SessionService){
 
-	var routasThatRequireAuth = ['/usuarios'];
+	var routesThatRequireAuth = ['/usuarios'];
+
+	var routesGetUser = ['/createUser'];
 
 	var rutasObjetos = ['/'];
 
 	$rootScope.$on('$viewContentLoaded', function() {
-		
+
+		if(_(routesGetUser).contains($location.path())){
+			$http.get(jQuery('#baseurl').val()+'/getUser').success(function(data){
+				if(data.msg == 'true'){
+					if(data.nombre != null){
+						jQuery('#create_nombre').val(data.nombre);
+					}
+					if(data.email != null){
+						jQuery('#create_email').val(data.email);
+					}
+				}
+   			});
+		}
 		if(_(rutasObjetos).contains($location.path())){
 			//debo ir a buscar si existe un usuario logiado dentro de laravel
 			$http.get(jQuery('#baseurl').val()+'/isLoggedIn').success(function(data){
@@ -100,6 +134,26 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
 					SessionService.setuser('username', data.isloggin);
 					ShowService.showDataUser(data.isloggin, data.avatar);
 					jQuery('#isLoggin').val(true);
+					if(data.esCreado != 'true'){
+
+						$http.get(jQuery('#baseurl').val()+'/getUser').success(function(data){
+						if(data.msg == 'true'){
+							if(data.nombre != null){
+								jQuery('#nombre_user').html(data.nombre);
+							}
+							if(data.email != null){
+								jQuery('#create_email').val(data.email);
+							}
+							if(data.esCreado == null || data.esCreado == 0){
+								$('#modal-create-usuario').modal({
+  								backdrop: 'static',	
+  								keyboard: false
+								});
+							}
+						}
+		   				});
+						//window.location = window.location.href.replace(/#.*/, '#/createUser');
+					}
 				}else{
 					jQuery('#isLoggin').val(false);
 				}
@@ -108,7 +162,7 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
 			//loading del mapa
 			jQuery('#loading').attr('src', jQuery('#baseurl').val()+'/img/ajax-loader.gif');
 		}
-    	if(!_(routasThatRequireAuth).contains($location.path()) && AuthenticationService.isLoggedIn()){
+    	if(!_(routesThatRequireAuth).contains($location.path()) && AuthenticationService.isLoggedIn()){
     		ShowService.showDataUser(SessionService.get('username'));
     	}else{
     		ShowService.showDataLogin();
@@ -117,7 +171,7 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
 
 	$rootScope.$on('$routeChangeStart', function(event, next, current){
 		//debugger;
-		if(_(routasThatRequireAuth).contains($location.path()) && !AuthenticationService.isLoggedIn()){
+		if(_(routesThatRequireAuth).contains($location.path()) && !AuthenticationService.isLoggedIn()){
 			$location.path("/login");
 		}
 	});
@@ -142,6 +196,28 @@ app.factory("SessionService", function(){
 		},
 	};
 });
+
+
+app.factory("CreateUserService", function($http, $location, SessionService, FlashService, ShowService){
+	var createSuccess = function(response){
+		SessionService.set('authenticated', true);
+		SessionService.setuser('username', response.flash);
+	};
+	var createError = function(response){
+		SessionService.set('authenticated', true);
+		SessionService.setuser('username', response.flash);
+	};
+	return{
+		create: function (user){
+			//debugger;
+			var create = $http.post("/createUser", user);
+			//login.success(cacheSession);
+			//login.error(loginError);
+			return create;
+		}
+	};
+});
+
 
 app.factory("AuthenticationService", function($http, $location, SessionService, FlashService, ShowService){
 	var cacheSession = function(response){

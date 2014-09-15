@@ -37,12 +37,18 @@ Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario'
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 
+
+//Ruta Crear Usuario
+Route::post('/createUser','UsuarioController@post_create_user');
+
 //Ruta Login
 Route::post('/login','UsuarioController@post_login');
 //Ruta Logout
 Route::get('/logout','UsuarioController@get_logout');
 //Esta logeado?
 Route::get('/isLoggedIn','UsuarioController@isLoggedIn');
+//Crear usuario logeado por facebook
+Route::get('/getUser','UsuarioController@get_getUser');
 
 
 //AUTH
@@ -115,11 +121,10 @@ $loc = $response->getGraphObject(GraphLocation::className());
 //debo preguntar si existe el id de facebook del usuario
 $perfil = Perfiles::where('idFacebook', '=', $user->getId())->first();
 if(isset($perfil)){
-	 $user = Usuario::find($perfil->usuario_id);
-	 Auth::loginUsingId($user->id);
+	 $usuario = Usuario::find($perfil->usuario_id);
+	 Auth::loginUsingId($usuario->id);
 	 return Redirect::to('');
 }else{
-
 	$usuario = new Usuario;
 		
 	$usuario->usuario = $user->getFirstName().' '.$user->getMiddleName().' '.$user->getLastName();
@@ -138,12 +143,9 @@ if(isset($perfil)){
 	$perfil->avatar_path = $pic;
 	$perfil->genero = $sex;
 		
-		
 	$perfil->save();
 
-	Auth::loginUsingId($LastInsertId);
-
-	return Redirect::to('');
+	return Redirect::to('');	
 }
 return Redirect::to('');
 }
@@ -185,7 +187,7 @@ Route::get('objetos/', function()
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
 		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
 		$newnode->setAttribute("typeid", $objeto->tipoobjeto_id);
-		if(isset($objeto->foto_objeto) || $objeto->foto_objeto != ""){
+		if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
 			$newnode->setAttribute("path", $objeto->foto_objeto);
 		}else{
 			$newnode->setAttribute("path", "default.png");

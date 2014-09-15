@@ -12,6 +12,10 @@ app.config(function($routeProvider)
         templateUrl : "templates/Login/login.html",
         controller : "loginController"
     })
+    .when("/createUser", {
+        templateUrl : "templates/Login/create-user-logged.html",
+        controller : "loginController"
+    })
     .otherwise({ reditrectTo : "/" });
 });
 

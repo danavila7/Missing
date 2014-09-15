@@ -22,8 +22,8 @@
   {{ HTML::script('js/lib/bootstrap-datepicker.js') }}
   <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
   {{ HTML::script('js/page/home.js') }}
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
-  </script>
+  <!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
+  </script>-->
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
   {{ HTML::style('css/jasny-bootstrap.min.css'); }}
   {{ HTML::style('css/marker.css'); }}
@@ -71,7 +71,7 @@
           <input type="password" name="password" class="form-control" placeholder="Ingresar el password" ng-model="credentials.password" required/>
         </div>
       </form>-->
-       <li><a href="#" class="iniciar-sesion">Iniciar Sesión</a></li>
+       <li><a class="iniciar-sesion pointer">Iniciar Sesión</a></li>
       <div class="alert alert-danger" id="login-error" style="display:none;">
         <button type="button" class="close">×</button>
         Login Invalido... Vuelve a intentarlo.

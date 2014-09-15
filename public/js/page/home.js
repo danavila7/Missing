@@ -1,5 +1,7 @@
 jQuery(document).ready(function() {
 
+	$('#modal-loading').modal();
+
 	var baseurl = jQuery('#baseurl').val();
 
 	$(document).on("click", ".close", function() {	
@@ -21,7 +23,4 @@ jQuery(document).ready(function() {
     if (window.location.href.indexOf('#/_=_') > 0) {
     window.location = window.location.href.replace(/#.*/, '#/');
 	}
-
-	
-
 });
