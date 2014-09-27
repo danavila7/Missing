@@ -2,18 +2,17 @@
 	jQuery(document).ready(function() {
 
 		$('#modal-loading').modal();
-
 		/**** datepicker para la fecha de perdida ****/
-		$('#fecha_perdida').datepicker({
-   			 todayHighlight: true
+		$(".input-date").datepicker({
+	   			 todayHighlight: true
 		});
 
 		/***** click para esconder el texto de recompensa en el formulario ****/
 		$(document).on("click", "#recompensa_check", function() {
-			if($(this).is('checked')){
-				$('#recompensa_text').fadeOut( "slow" );
+			if($(this).is(':checked')){
+				$('.div-recompensa').removeClass('hide');
 			}else{
-				$('#recompensa_text').fadeIn( "slow" );
+				$('.div-recompensa').addClass('hide');
 			}
 		});
 		
@@ -197,6 +196,14 @@
 		});
 
 		google.maps.event.addDomListener(datosBtn, "click", function(event) {
+			//marker
+			var mLatLang = marker.getPosition().toUrlValue(); //get marker position
+
+		 var elem = mLatLang.split(',');
+			var lat = elem[0];
+			var lng = elem[1];
+			$("#modal_long_obj").val(lng);
+			$("#modal_lat_obj").val(lat);
 			$('#modal-datos').modal();
 		});
 		

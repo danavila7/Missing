@@ -37,6 +37,9 @@ Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario'
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 
+//Ruta Crear Objeto
+Route::post('/createObject','ObjetoController@post_create_object');
+
 
 //Ruta Crear Usuario
 Route::post('/createUser','UsuarioController@post_create_user');
@@ -49,6 +52,8 @@ Route::get('/logout','UsuarioController@get_logout');
 Route::get('/isLoggedIn','UsuarioController@isLoggedIn');
 //Crear usuario logeado por facebook
 Route::get('/getUser','UsuarioController@get_getUser');
+
+
 
 
 //AUTH
@@ -144,7 +149,7 @@ if(isset($perfil)){
 	$perfil->genero = $sex;
 		
 	$perfil->save();
-
+	Auth::loginUsingId($LastInsertId);
 	return Redirect::to('');	
 }
 return Redirect::to('');

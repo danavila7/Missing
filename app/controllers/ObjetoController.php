@@ -28,25 +28,30 @@ class ObjetoController extends BaseController
 		return View::make('users.create');
 	}
 	
-	public function post_create()
+	public function post_create_object()
 	{
-		$user = new User;
+		$obj = new Objeto;
 		
-		$user->nombre = Input::get("nombre");
-		$user->email = Input::get("email");
-		$user->esadmin = Input::get("esadmin");
-		$user->password = Input::get("password");
-		
-		
-		$user->save();
-		
-        //return "El formulario se creo.";
-		return Redirect::to('users/listausuarios');
+		$obj->nombre_objeto = Input::json("nombre");
+		//$obj->fecha_perdida = Input::json("fecha");
+		$obj->descripcion_objeto = Input::json("descripcion");
+		$obj->latitud_objeto = Input::json("latitud");
+		$obj->longitud_objeto = Input::json("longitud");
+		//$obj->foto_objeto = Input::json("foto");
+		$obj->tipoobjeto_id = Input::json("tipo_objeto");
+		$obj->contacto_objeto = Input::json("contacto");
+		$obj->recompensa_objeto = Input::json("recompensa");
+		$obj->tipopublicacion_id = 1;
+		$obj->estado = 0;
+
+		$obj->save();
+
+
 	}
 	
 	public function get_delete($user_id)
 	{
-		$user = User::find($user_id);
+		$user = Objeto::find($user_id);
 		
 		if(is_null($user))
 		{
@@ -59,7 +64,7 @@ class ObjetoController extends BaseController
     
     public function get_listaobjetos()
 	{
-        $users = User::all();
+        $users = Objeto::all();
 		return View::make('users.listausuarios')->with('users', $users);
 	}
     

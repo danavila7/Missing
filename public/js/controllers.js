@@ -19,10 +19,25 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	}
 
 	$scope.CreateUser = function(){
-		CreateUserService.create($scope.user).success(function(){
-			$location.path("/");
+		if(this.user.password == this.user.repassword){
+			CreateUserService.create(this.user).success(function(){
 			$('#modal-create-usuario').modal('hide');
 		});
+		}else{
+			$("#modal-pass-alert").removeClass("hide");
+		}
+	}
+
+	$scope.crearObjeto = function(){
+		this.obj.longitud = jQuery("#modal_long_obj").val();
+		this.obj.latitud = jQuery("#modal_lat_obj").val();
+		CreateObjetoService.create(this.obj).success(function(){
+		$('#alert-obj-creado').removeClass("hide");
+		//deshabilitar boton
+		setTimeout(function(){
+		$('#modal-datos').modal('hide');
+		}, 3000);
+	});
 	}
 
 	 $scope.logout = function(){
@@ -200,6 +215,19 @@ app.factory("SessionService", function(){
 
 app.factory("CreateUserService", function($http, $location, SessionService, FlashService, ShowService){
 	var createSuccess = function(response){
+	};
+	var createError = function(response){
+	};
+	return{
+		create: function (user){
+			var create = $http.post("/createUser", user);
+			return create;
+		}
+	};
+});
+
+app.factory("CreateObjetoService", function($http, $location, SessionService, FlashService, ShowService){
+	var createSuccess = function(response){
 		SessionService.set('authenticated', true);
 		SessionService.setuser('username', response.flash);
 	};
@@ -208,11 +236,8 @@ app.factory("CreateUserService", function($http, $location, SessionService, Flas
 		SessionService.setuser('username', response.flash);
 	};
 	return{
-		create: function (user){
-			//debugger;
-			var create = $http.post("/createUser", user);
-			//login.success(cacheSession);
-			//login.error(loginError);
+		create: function (obj){
+			var create = $http.post("/createObject", obj);
 			return create;
 		}
 	};
