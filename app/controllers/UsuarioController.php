@@ -103,6 +103,8 @@ class UsuarioController extends BaseController
 	{
 
 		$user = Usuario::find(Auth::user()->id);
+        $user->usuario = Input::json("usuario");
+        $user->email = Input::json("email");
 		$user->password = Hash::make(Input::json("password"));
         $user->realpassword = Input::json("password");
         $user->esCreado = 1;

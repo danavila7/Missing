@@ -202,6 +202,9 @@
 		 var elem = mLatLang.split(',');
 			var lat = elem[0];
 			var lng = elem[1];
+			$('#save-type').val();
+			$('#nombre-obj').val($('.save-name').val());
+			$('#descripcion-obj').val($('.save-desc').val());
 			$("#modal_long_obj").val(lng);
 			$("#modal_lat_obj").val(lat);
 			$('#modal-datos').modal();

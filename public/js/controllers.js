@@ -19,6 +19,8 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	}
 
 	$scope.CreateUser = function(){
+		this.user.usuario = jQuery('#create_nombre').val();
+		this.user.email = jQuery('#create_email').val();
 		if(this.user.password == this.user.repassword){
 			CreateUserService.create(this.user).success(function(){
 			$('#modal-create-usuario').modal('hide');
@@ -29,6 +31,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	}
 
 	$scope.crearObjeto = function(){
+		alert('lala')
 		this.obj.longitud = jQuery("#modal_long_obj").val();
 		this.obj.latitud = jQuery("#modal_lat_obj").val();
 		CreateObjetoService.create(this.obj).success(function(){
@@ -154,7 +157,7 @@ app.run(function($rootScope, $http, $location, AuthenticationService, ShowServic
 						$http.get(jQuery('#baseurl').val()+'/getUser').success(function(data){
 						if(data.msg == 'true'){
 							if(data.nombre != null){
-								jQuery('#nombre_user').html(data.nombre);
+								jQuery('#create_nombre').val(data.nombre);
 							}
 							if(data.email != null){
 								jQuery('#create_email').val(data.email);
