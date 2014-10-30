@@ -1,6 +1,7 @@
 	var map;
 	jQuery(document).ready(function() {
 
+
 		$('#modal-loading').modal();
 		/**** datepicker para la fecha de perdida ****/
 		$(".input-date").datepicker({
@@ -101,9 +102,9 @@
 				}
 			});*/
 			jQuery.get(jQuery('#baseurl').val()+"/objetos", function (data) {
-				jQuery(data).find("marker").each(function () {
-					//alert($(this).attr('name'))
+				jQuery(data).find("marker").each(function () {					
 					  var id 		= $(this).attr('id');
+					  var usuario_id = $(this).attr('usuario_id');
 					  var name 		= $(this).attr('name');
 					  var desc 	    = '<p>'+ $(this).attr('address') +'</p>';
 					  var type 		= $(this).attr('type');
@@ -124,7 +125,7 @@
 						    default:
 						        pin = "/img/pin-1_blue.png"
 						}
-					  showMarkers(id, point, name, path, desc, type, $('#baseurl').val()+pin);
+					  showMarkers(id, point, name, path, desc, type, $('#baseurl').val()+pin, usuario_id);
 				});
 			});	
 
@@ -153,6 +154,7 @@
 			animation: google.maps.Animation.DROP,
 			icon: iconPath
 		});
+
 		var contentString = $('<div class="marker-edit">'+
 				'<h4>Missing<small> Ingresar datos </small><button type="button" class="mas-datos btn btn-primary btn-xs">Más Datos</button> </h4>'+
                 '<form role="form" enctype="multipart/form-data" name="SaveMarker" id="SaveMarker" >'+
@@ -270,7 +272,7 @@
 	
 	
 	//############### Create Marker Function ##############
-	function showMarkers(Id, MapPos, MapTitle, Path,  MapDesc, Type, iconPath)
+	function showMarkers(Id, MapPos, MapTitle, Path,  MapDesc, Type, iconPath, usuario_id)
 	{
 		var baseurl = $('#baseurl').val();
 		//Marker del xml
@@ -283,6 +285,12 @@
 		});
 		var contentString = '';
 		//Content structure of info Window for the Markers
+		var button = '';
+		if($('#isLoggin').val() == 'true'){
+			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
+				button = '<button type="button" class="remove-marker btn btn-default">Borrar</button>';
+			}
+		}
 		contentString = 
 		$('<div class="marker-info-win">'+
 		'<div class="row">'+
@@ -301,7 +309,7 @@
 		'<div class="row">'+
 		'<div class="btn-group col-sm-offset-5">'+
 		'<button type="button" id="show-detalle" class="save-marker btn btn-default">Detalles</button>'+
-		'<button type="button" class="remove-marker btn btn-default">Borrar</button>'+
+		button+
 		'</div>'+
 		'</div>'+
 		'</div>');	
@@ -313,11 +321,17 @@
 
 		//Find remove button in infoWindow
 		var showDetalle 	= contentString.find('button#show-detalle')[0];
-		var removeBtn 	= contentString.find('button.remove-marker')[0];
-		//add click listner to remove marker button
-		google.maps.event.addDomListener(removeBtn, "click", function(event) {
-			remove_marker(Id,MapTitle,marker);
-		});
+		if($('#isLoggin').val() == 'true'){
+			//alert($('#usuario_id').val())
+			//alert(usuario_id)
+			if($('#usuario_id').val() == usuario_id){
+			var removeBtn 	= contentString.find('button.remove-marker')[0];
+			//add click listner to remove marker button
+			google.maps.event.addDomListener(removeBtn, "click", function(event) {
+				remove_marker(Id,MapTitle,marker);
+			});
+			}
+		}
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
 			cargaDatos(Id);
 		});

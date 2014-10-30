@@ -89,8 +89,8 @@
 </nav>
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
+    <input type="hidden" id="usuario_id" value="@if (Auth::check()) {{Auth::user()->id}} @endif" />
     <div class="row container-fluid"  ng-view>
-
     </div>
     <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />
     <input type="hidden" id="isLoggin" value="false" />

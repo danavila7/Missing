@@ -23,6 +23,24 @@ class HomeController extends BaseController {
 		return Response::json(array('Missing'=>$UltimosMissingPorUsuario));
 	}
 
+	public function ObtieneMissingProximos($lng,$lat){
+
+		$objetos = DB::table('objetos')->select(DB::raw("objetos.*, 
+			( 3959 * acos( cos( radians(".$lat.") ) * cos( radians( latitud_objeto ) ) 
+            * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
+            * sin( radians(latitud_objeto)))) AS distance"))
+				->where('estado', '1')
+				->orderBy('distance', 'desc')
+				->get();
+
+		//INNER JOIN objetos on objetos.id = location.from_id
+
+		return Response::json(array('missing'=>$objetos));
+
+	}
+
+	
+
 
 	//obtener los ultimos missing pordenados por fecha
 	public function ObtenerTodosMissing($tipoobjeto_id = null){

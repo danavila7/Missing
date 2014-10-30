@@ -34,6 +34,8 @@ Route::get("/", function()
 Route::get("obtenerObjetos", 'HomeController@ObtenerTodosMissing');
 //Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
+//Obtiene los missing por locacion
+Route::get('datosMissingProximos/{lng}/{lat}', 'HomeController@ObtieneMissingProximos');
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 
@@ -187,6 +189,7 @@ Route::get('objetos/', function()
 		$node = $dom->createElement("marker");
 		$newnode = $parnode->appendChild($node);
 		$newnode->setAttribute("id", $objeto->id);
+		$newnode->setAttribute("usuario_id", $objeto->usuario_id);
 		$newnode->setAttribute("name",$objeto->nombre_objeto);
 		$newnode->setAttribute("lat", $objeto->latitud_objeto);
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
