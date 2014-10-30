@@ -35,6 +35,25 @@ class Objeto extends Eloquent implements UserInterface, RemindableInterface {
 
     }
 
+    public function GetStatus($status){
+
+        switch ($status) {
+            case '0':
+                return "Sin publicar";
+                break;
+            case '1':
+                return "No se ha encontrado";
+                break;
+            case '2':
+                return "Encontrado";
+                break;
+            default:
+                return "Sin Publicar";
+                break;
+        }
+
+    }
+
 	
 }
 

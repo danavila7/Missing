@@ -72,6 +72,10 @@ class HomeController extends BaseController {
 		$objeto = Objeto::find($id);
 		$usuario = Usuario::find($objeto->usuario_id);
 		$obj = new Objeto;
+		$path = "default.png";
+		if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
+			$path = $objeto->foto_objeto;
+		}
 		$data  = array(
 			"id" => $objeto->id,
 			"nombre_objeto" => $objeto->nombre_objeto,
@@ -79,7 +83,12 @@ class HomeController extends BaseController {
 			"direccion_objeto" => $objeto->direccion_objeto,
 			"latitud_objeto"=>$objeto->latitud_objeto,
 			"longitud_objeto"=>$objeto->longitud_objeto,
+			"path"=>$path,
+			"contacto_objeto"=>$objeto->contacto_objeto,
+			"recompensa_objeto"=>$objeto->recompensa_objeto,
+			"fecha_perdida"=>$objeto->fecha_perdida,
 			"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
+			"estado"=>$obj->GetStatus($objeto->estado),
 			"fecha"=>$objeto->created_at,
 			"usuario" => $usuario->usuario
 			);

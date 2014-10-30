@@ -193,6 +193,7 @@ Route::get('objetos/', function()
 		$newnode->setAttribute("name",$objeto->nombre_objeto);
 		$newnode->setAttribute("lat", $objeto->latitud_objeto);
 		$newnode->setAttribute("lng", $objeto->longitud_objeto);
+		$newnode->setAttribute("desc", $objeto->descripcion_objeto);
 		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
 		$newnode->setAttribute("typeid", $objeto->tipoobjeto_id);
 		if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){

@@ -1,7 +1,6 @@
 	var map;
 	jQuery(document).ready(function() {
 
-
 		$('#modal-loading').modal();
 		/**** datepicker para la fecha de perdida ****/
 		$(".input-date").datepicker({
@@ -106,7 +105,7 @@
 					  var id 		= $(this).attr('id');
 					  var usuario_id = $(this).attr('usuario_id');
 					  var name 		= $(this).attr('name');
-					  var desc 	    = '<p>'+ $(this).attr('address') +'</p>';
+					  var desc 	    = '<p>'+ $(this).attr('desc') +'</p>';
 					  var type 		= $(this).attr('type');
 					  var typeid 	= $(this).attr('typeid');
 					  var path      =  $(this).attr('path');
@@ -114,18 +113,18 @@
 					  var pin = "/img/pin-1_blue.png";
 					  switch(typeid) {
 						    case '1':
-				    			pin = "/img/pin-1_blue.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "/img/pin-1_green.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_green.png"
 				    			break;
 				    		case '3':
-				    			pin = "/img/pin-1_orange.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "/img/pin-1_blue.png"
+						        pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
 						}
-					  showMarkers(id, point, name, path, desc, type, $('#baseurl').val()+pin, usuario_id);
+					  showMarkers(id, point, name, path, desc, type, pin, usuario_id);
 				});
 			});	
 
@@ -137,7 +136,7 @@
 				if($('#isLoggin').val() == 'false'){
 						$('#modal-login').modal();
 					}else{
-					createMarker(event.latLng, $('#baseurl').val()+"/img/pin_green.png");
+					createMarker(event.latLng, "http://54.232.198.18/Missing/public/img/pin-1_green.png");
 					}
 			});				
 	}
@@ -274,7 +273,7 @@
 	//############### Create Marker Function ##############
 	function showMarkers(Id, MapPos, MapTitle, Path,  MapDesc, Type, iconPath, usuario_id)
 	{
-		var baseurl = $('#baseurl').val();
+		var baseurl = $('#baseurl').val().replace('index.php','');
 		//Marker del xml
 		var marker = new google.maps.Marker({
 			position: MapPos,
@@ -343,12 +342,13 @@
 	}
 
 	function cargaDatos(Id){
-
+		var baseurl = $('#baseurl').val().replace('index.php','');
 		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+Id, function (data) {
 
 				jsondata = eval(data);
 				missing = eval(jsondata.missing);
 				fecha = eval(missing.fecha);
+				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#nom_objeto').text(missing.nombre_objeto);
 				$('#desc_objeto').text(missing.descripcion_objeto);
 				$('#fecha_objeto').text(fecha.date);
@@ -459,7 +459,7 @@
 						'</div>'+
 						'<div class="row">'+
 						'<div class="col-sm-2 col-sm-offset-1">'+
-						'<img src ="'+$('#baseurl').val()+'/uploads/default.png" alt="'+mName+'" class="img-rounded" height="70" width="70" />'+
+						'<img src ="http://54.232.198.18/Missing/public/uploads/default.png" alt="'+mName+'" class="img-rounded" height="70" width="70" />'+
 						'</div>'+
 						'<div class="col-sm-6 col-sm-offset-1">'+
 						'<p>'+mDesc+'</p>'+
@@ -477,16 +477,16 @@
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
 						    case '1':
-				    			pin = "../img/pin-1_blue.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "../img/pin-1_green.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_green.png"
 				    			break;
 				    		case '3':
-				    			pin = "../img/pin-1_orange.png"
+				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "../img/pin-1_blue.png"
+						        pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
 						}
 						 Marker.setDraggable(false); //set marker to fixed
 						 Marker.setIcon(pin); //replace icon
