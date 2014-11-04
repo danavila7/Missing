@@ -18,12 +18,12 @@ class UsuarioController extends BaseController
     public function post_login()
     {
         $credentials = array(
-        'usuario' => Input::json('email'),
+        'email' => Input::json('email'),
         'password' => Input::json('password'));
         if(Auth::attempt($credentials)){
             return Response::json(array('flash'=>Auth::user()->usuario));
         }else{
-        	return Response::json(array('flash'=>'Login Invalido!'),500);
+        	return Response::json(array('flash'=>Hash::make(Input::json('password'))),500);
         }   
     }
 

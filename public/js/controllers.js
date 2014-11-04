@@ -13,7 +13,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
 
 	$scope.login = function(){
-		AuthenticationService.login($scope.credentials).success(function(){
+		AuthenticationService.login(this.credentials).success(function(){
 			$location.path("/");
 		});
 	}
@@ -31,7 +31,6 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	}
 
 	$scope.crearObjeto = function(){
-		alert('lala')
 		this.obj.longitud = jQuery("#modal_long_obj").val();
 		this.obj.latitud = jQuery("#modal_lat_obj").val();
 		CreateObjetoService.create(this.obj).success(function(){
@@ -60,9 +59,6 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
  
 app.controller("loginController", function($scope, $location, AuthenticationService){
 	$scope.credentials = { username:'', password:'' };
-
-
-
 
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
