@@ -53,15 +53,17 @@ Route::get('datosMissingProximos/{lng}/{lat}/{num}', 'HomeController@ObtieneMiss
 
 
 
+/************ FIN RUTA RESTFULL ***************/
 
 
 
 
 
 
+/************ RUTA DE MISSING ***************/
 
-/************ RUTA DE USUARIO ***************/
 
+//MISSING
 Route::get("/", function()
 {
     return View::make("home");
@@ -72,14 +74,17 @@ Route::get("obtenerObjetos", 'HomeController@ObtenerTodosMissing');
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
-
 //Ruta Crear Objeto
 Route::post('/createObject','ObjetoController@post_create_object');
 
 
-//Ruta Crear Usuario
-Route::post('/createUser','UsuarioController@post_create_user');
 
+
+//USUARIO
+//Ruta Crear Usuario
+Route::post('/createUser','UsuarioController@CreateUser');
+//Ruta Crear Usuario Facebook
+Route::post('/createUserEsCreado','UsuarioController@CreateUserEsCreado');
 //Ruta Login
 Route::post('/login','UsuarioController@post_login');
 //Ruta Logout
@@ -87,7 +92,7 @@ Route::get('/logout','UsuarioController@get_logout');
 //Esta logeado?
 Route::get('/isLoggedIn','UsuarioController@isLoggedIn');
 //Crear usuario logeado por facebook
-Route::get('/getUser','UsuarioController@get_getUser');
+Route::get('/getUser','UsuarioController@GetUser');
 
 
 

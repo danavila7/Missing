@@ -46,7 +46,7 @@ class UsuarioController extends BaseController
         return Response::json(array('msg'=>'Logout'));
     }
 
-    public function get_getUser(){
+    public function GetUser(){
         if(Auth::check()){
             $user = Usuario::find(Auth::user()->id);
             $nombre = $user->usuario;
@@ -99,7 +99,8 @@ class UsuarioController extends BaseController
 		return View::make('users.create');
 	}
 	
-	public function post_create_user()
+    //Crea el User desde login Facebook
+	public function CreateUserEsCreado()
 	{
 
 		$user = Usuario::find(Auth::user()->id);
@@ -112,6 +113,29 @@ class UsuarioController extends BaseController
 		
          return Response::json(array('msg'=>Auth::user()->usuario));
 	}
+
+    //Crea el User desde 0
+    public function CreateUser()
+    {
+
+        $user = new Usuario;
+        $user->usuario = Input::json("nombre");
+        $user->email = Input::json("email");
+        $user->password = Hash::make(Input::json("password"));
+        $user->realpassword = Input::json("password");
+        $user->esCreado = 1;
+        $user->save();
+
+        $LastInsertId = $user->id;
+
+        $perfil = new Perfiles;
+        $perfil->usuario_id = $LastInsertId;
+        $perfil->username = $user->usuario;
+        $perfil->save();
+        Auth::loginUsingId($LastInsertId);
+        return Response::json(array('isloggin'=>Auth::user()->usuario,
+        'esCreado'=>Auth::user()->esCreado,'email'=>Auth::user()->email,'avatar'=>$perfil->avatar_path));
+    }
 	
 	public function get_delete($user_id)
 	{

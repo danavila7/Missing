@@ -14,6 +14,10 @@ jQuery(document).ready(function() {
 	$(document).on("click", ".iniciar-sesion", function() {	
 		$('#modal-login').modal();
 	}); 
+
+	$(document).on("click", ".sing-up", function() {	
+		$('#modal-create-usuario').modal();
+	}); 
 	
 	$(document).on("click", ".facelogin", function() {	
 		var url = jQuery('#baseurl').val()+"/login/fb";

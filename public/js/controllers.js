@@ -11,6 +11,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modaldetalles = 'templates/Modal/modal-detalles.html';
     $scope.modalloading = 'templates/Modal/modal-loading.html';
     $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
+    $scope.modalcrearusuarioescreado = 'templates/Modal/modal-crear-usuario-es-creado.html';
 
 	$scope.login = function(){
 		AuthenticationService.login(this.credentials).success(function(){
@@ -18,15 +19,25 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 		});
 	}
 
-	$scope.CreateUser = function(){
+	$scope.CreateUserEsCreado = function(){
 		this.user.usuario = jQuery('#create_nombre').val();
 		this.user.email = jQuery('#create_email').val();
+		if(this.user.password == this.user.repassword){
+			CreateUserService.createescreado(this.user).success(function(){
+			$('#modal-create-usuario-es-creado').modal('hide');
+		});
+		}else{
+			$(".modal-pass-alert").removeClass("hide");
+		}
+	}
+
+	$scope.CreateUser = function(){
 		if(this.user.password == this.user.repassword){
 			CreateUserService.create(this.user).success(function(){
 			$('#modal-create-usuario').modal('hide');
 		});
 		}else{
-			$("#modal-pass-alert").removeClass("hide");
+			$(".modal-pass-alert").removeClass("hide");
 		}
 	}
 
@@ -214,12 +225,21 @@ app.factory("SessionService", function(){
 
 app.factory("CreateUserService", function($http, $location, SessionService, FlashService, ShowService){
 	var createSuccess = function(response){
+		SessionService.set('authenticated', true);
+		SessionService.setuser('username', response.isloggin);
+		ShowService.showDataUser(response.isloggin, response.avatar);
+		jQuery('#isLoggin').val(true);
 	};
 	var createError = function(response){
 	};
 	return{
 		create: function (user){
-			var create = $http.post("/createUser", user);
+			var create = $http.post(jQuery('#baseurl').val()+"/createUser", user);
+			create.success(createSuccess);
+			return create;
+		},
+		createescreado: function (user){
+			var create = $http.post(jQuery('#baseurl').val()+"/createUserEsCreado", user);
 			return create;
 		}
 	};
@@ -227,16 +247,12 @@ app.factory("CreateUserService", function($http, $location, SessionService, Flas
 
 app.factory("CreateObjetoService", function($http, $location, SessionService, FlashService, ShowService){
 	var createSuccess = function(response){
-		SessionService.set('authenticated', true);
-		SessionService.setuser('username', response.flash);
 	};
 	var createError = function(response){
-		SessionService.set('authenticated', true);
-		SessionService.setuser('username', response.flash);
 	};
 	return{
 		create: function (obj){
-			var create = $http.post("/createObject", obj);
+			var create = $http.post(jQuery('#baseurl').val()+"/createObject", obj);
 			return create;
 		}
 	};

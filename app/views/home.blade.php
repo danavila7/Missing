@@ -71,6 +71,7 @@
           <input type="password" name="password" class="form-control" placeholder="Ingresar el password" ng-model="credentials.password" required/>
         </div>
       </form>-->
+      <li><a class="sing-up pointer">Crear Cuenta</a></li>
        <li><a class="iniciar-sesion pointer">Iniciar Sesión</a></li>
       <div class="alert alert-danger" id="login-error" style="display:none;">
         <button type="button" class="close">×</button>
