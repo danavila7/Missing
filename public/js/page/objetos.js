@@ -113,16 +113,16 @@
 					  var pin = "/img/pin-1_blue.png";
 					  switch(typeid) {
 						    case '1':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_green.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png"
 				    			break;
 				    		case '3':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_orange.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
+						        pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 						}
 					  showMarkers(id, point, name, path, desc, type, pin, usuario_id);
 				});
@@ -136,7 +136,7 @@
 				if($('#isLoggin').val() == 'false'){
 						$('#modal-login').modal();
 					}else{
-					createMarker(event.latLng, "http://54.232.198.18/Missing/public/img/pin-1_green.png");
+					createMarker(event.latLng, "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png");
 					}
 			});				
 	}
@@ -459,7 +459,7 @@
 						'</div>'+
 						'<div class="row">'+
 						'<div class="col-sm-2 col-sm-offset-1">'+
-						'<img src ="http://54.232.198.18/Missing/public/uploads/default.png" alt="'+mName+'" class="img-rounded" height="70" width="70" />'+
+						'<img src ="http://appmissing.missing.cl/Missing/public/uploads/default.png" alt="'+mName+'" class="img-rounded" height="70" width="70" />'+
 						'</div>'+
 						'<div class="col-sm-6 col-sm-offset-1">'+
 						'<p>'+mDesc+'</p>'+
@@ -477,16 +477,16 @@
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
 						    case '1':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_green.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png"
 				    			break;
 				    		case '3':
-				    			pin = "http://54.232.198.18/Missing/public/img/pin-1_orange.png"
+				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "http://54.232.198.18/Missing/public/img/pin-1_blue.png"
+						        pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 						}
 						 Marker.setDraggable(false); //set marker to fixed
 						 Marker.setIcon(pin); //replace icon

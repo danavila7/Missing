@@ -263,7 +263,7 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 	return{
 		login: function (credentials){
 			//debugger;
-			var login = $http.post("/login", credentials);
+			var login = $http.post(jQuery('#baseurl').val()+"/login", credentials);
 			login.success(cacheSession);
 			login.success(loginSuccess);
 			login.success(FlashService.clear);
@@ -271,7 +271,7 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 			return login;
 		},
 		logout: function (){
-			var logout = $http.get("/logout");
+			var logout = $http.get(jQuery('#baseurl').val()+"/logout");
 			logout.success(uncacheSession);
 			logout.success(ShowService.showDataLogin);
 			return logout;

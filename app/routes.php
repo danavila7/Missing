@@ -20,7 +20,43 @@ session_start();
 |
 */
 
-/************ RUTA DE HOME ***************/
+/************ RUTA RESTFULL ***************/
+//USUARIOS
+Route::post('/login','RestUsuarioController@post_login');
+
+
+
+
+
+
+
+//MISSING
+
+
+//Obtiene los missing por locacion
+Route::get('datosMissingProximos/{lng}/{lat}/{num}', 'HomeController@ObtieneMissingProximos');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -34,8 +70,6 @@ Route::get("/", function()
 Route::get("obtenerObjetos", 'HomeController@ObtenerTodosMissing');
 //Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
-//Obtiene los missing por locacion
-Route::get('datosMissingProximos/{lng}/{lat}/{num}', 'HomeController@ObtieneMissingProximos');
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 

@@ -23,7 +23,7 @@ class UsuarioController extends BaseController
         if(Auth::attempt($credentials)){
             return Response::json(array('flash'=>Auth::user()->usuario));
         }else{
-        	return Response::json(array('flash'=>Hash::make(Input::json('password'))),500);
+        	return Response::json(array('flash'=>'Credenciales no validas'),500);
         }   
     }
 
