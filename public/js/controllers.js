@@ -129,15 +129,35 @@ app.factory("ShowService", function($rootScope, $http){
 	}
 });
 
-app.run(function($rootScope, $http, $location, AuthenticationService, ShowService, SessionService){
+app.run(function($rootScope, $http, $location, $routeParams, AuthenticationService, ShowService, SessionService){
 
 	var routesThatRequireAuth = ['/usuarios'];
 
 	var routesGetUser = ['/createUser'];
 
+	var routesShare = ['/share/'];
+
 	var rutasObjetos = ['/'];
 
 	$rootScope.$on('$viewContentLoaded', function() {
+
+		if($routeParams.missingId != '' && $routeParams.missingId !== undefined){
+			var Id = $routeParams.missingId;
+			var baseurl = jQuery('#baseurl').val();
+			$http.get(baseurl+"/datosMissing/"+Id).success(function(data){
+				var missing = eval(data.missing);
+				fecha = eval(missing.fecha);
+				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&sensor=false";
+				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
+				$('#ubicacion').attr('src', src);
+				$('#nom_objeto').text(missing.nombre_objeto);
+				$('#desc_objeto').text(missing.descripcion_objeto);
+				$('#fecha_objeto').text(fecha.date);
+				$('#dir_objeto').text(missing.direccion_objeto);
+				$('#tipo').text(missing.tipo);
+				$('#usuario_objeto').text(missing.usuario);
+   			});
+		}
 
 		if(_(routesGetUser).contains($location.path())){
 			$http.get(jQuery('#baseurl').val()+'/getUser').success(function(data){

@@ -24,6 +24,9 @@ jQuery(document).ready(function() {
 			window.location.href = url;
 	});
 
+	if (window.location.href.indexOf('share') > 0) {
+	}
+
     if (window.location.href.indexOf('#/_=_') > 0) {
     window.location = window.location.href.replace(/#.*/, '#/');
 	}

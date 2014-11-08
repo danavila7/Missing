@@ -20,7 +20,25 @@ class RestHomeController extends BaseController {
 
 	}
 
-	public function ObtieneMissingPorId($id){
+	public function ObtieneMissingPorUsuarioId($id){
+		$objetos = DB::table('objetos')
+		->where('usuario_id',$id)
+		->select('id', 'nombre_objeto','tipoobjeto_id')->get();
+		$data = array();
+		$obj = new Objeto;
+		foreach ($objetos as $value) {
+			$data[] = array(
+				'id'=>$value->id,
+				'nombre_objeto'=>$value->nombre_objeto,
+				'tipo'=>$obj->GetType($value->tipoobjeto_id),
+				);
+		}
+
+		return Response::json(array('missing'=>$data));
+
+	}
+
+	public function ObtieneMissingPorMissingId($id){
 		$objeto = Objeto::find($id);
 		$usuario = Usuario::find($objeto->usuario_id);
 		$obj = new Objeto;

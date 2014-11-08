@@ -22,7 +22,7 @@ session_start();
 
 /************ RUTA RESTFULL ***************/
 //USUARIOS
-Route::post('/login','RestUsuarioController@post_login');
+Route::get('/validalogin/{email}/{pass}','RestUsuarioController@ValidaLogin');
 
 
 
@@ -34,7 +34,8 @@ Route::post('/login','RestUsuarioController@post_login');
 
 
 //Obtiene los missing por locacion
-Route::get('datosMissingProximos/{lng}/{lat}/{num}', 'HomeController@ObtieneMissingProximos');
+Route::get('datosmissingproximos/{lng}/{lat}/{num}', 'RestHomeController@ObtieneMissingProximos');
+Route::get('datosmissingmios/{id}', 'RestHomeController@ObtieneMissingPorUsuarioId');
 
 
 

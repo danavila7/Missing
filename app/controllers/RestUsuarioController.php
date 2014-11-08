@@ -2,15 +2,16 @@
 
 class RestUsuarioController extends BaseController
 {
-    public function post_login($email, $password)
+    public function ValidaLogin($email, $password)
     {
         $credentials = array(
         'email' => $email,
         'password' => $password);
         if(Auth::attempt($credentials)){
-            return Response::json(array('msg'=>Auth::user()->usuario));
+            $user = Usuario::where('email', '=', $email)->firstOrFail();
+            return Response::json(array('msg'=>'1','id'=>$user->id));
         }else{
-        	return Response::json(array('flash'=>Hash::make(Input::json('password'))),500);
+        	return Response::json(array('msg'=>'0'));
         }   
     }    
 

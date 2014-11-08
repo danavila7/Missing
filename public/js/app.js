@@ -16,6 +16,10 @@ app.config(function($routeProvider)
         templateUrl : "templates/Login/create-user-logged.html",
         controller : "loginController"
     })
+    .when("/share/:missingId", {
+        templateUrl : "templates/Home/share.html",
+        controller : "homeController"
+    })
     .otherwise({ reditrectTo : "/" });
 });
 

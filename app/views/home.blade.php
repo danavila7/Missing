@@ -36,20 +36,21 @@
   {{ HTML::style('css/datepicker3.css'); }}
   {{ HTML::style('css/bootstrap-responsive.css'); }}
   <!--{{ HTML::style('css/bootstrap.css'); }}-->
-    
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_CL/sdk.js#xfbml=1&appId=1476123785965298&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 </head>
 <body>
-
-
+  <div id="fb-root"></div>
   <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="brand" href="#"> 
-        <img  src="img/missing.png" height="50px" width="130px"></a>
-    </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="http://www.missing.cl/">Home</a></li>
+        <li><a href="http://www.missing.cl/">Missing</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-left">
         <li>
@@ -82,8 +83,7 @@
         <li><a href="#" id="username" ></a></li>
         <li><a class="brand" href="#"> 
           <img class="avatar img-circle" src="img/avatar-default.jpeg" height="30px" width="30px"></a></li>
-         <!--<li><a href="#" ng-click="logout()">Logout</a></li>-->
-        <li><button ng-click="logout()" class="btn btn-default">Cerrar Sesión</button></li>
+          <li><a ng-click="logout()" class="pointer">Cerrar Sesión</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

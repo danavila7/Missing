@@ -41,9 +41,6 @@ class HomeController extends BaseController {
 
 	}
 
-	
-
-
 	//obtener los ultimos missing pordenados por fecha
 	public function ObtenerTodosMissing($tipoobjeto_id = null){
 		$objetos = DB::table('objetos')

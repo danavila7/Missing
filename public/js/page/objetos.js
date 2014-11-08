@@ -344,11 +344,12 @@
 	function cargaDatos(Id){
 		var baseurl = $('#baseurl').val().replace('index.php','');
 		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+Id, function (data) {
-
 				jsondata = eval(data);
 				missing = eval(jsondata.missing);
 				fecha = eval(missing.fecha);
+				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&sensor=false";
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
+				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);
 				$('#desc_objeto').text(missing.descripcion_objeto);
 				$('#fecha_objeto').text(fecha.date);
@@ -472,6 +473,7 @@
 						'</div>'+
 						'</div>'+
 						'</div>');
+						$('.fb-share-button').attr('data-href', $('#baseurl').val()+'/share/'+id);
 				  		$('#modal-share').modal();
 						 $('.marker-edit').html(html); //replace info window with new html
 						 $('.marker-edit').removeClass('marker-edit');
