@@ -14,8 +14,6 @@ class RestHomeController extends BaseController {
 				->orderBy('distance', 'desc')
 				->get();
 
-		//INNER JOIN objetos on objetos.id = location.from_id
-
 		return Response::json(array('missing'=>$objetos));
 
 	}

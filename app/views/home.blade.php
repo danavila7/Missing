@@ -22,6 +22,7 @@
   {{ HTML::script('js/lib/bootstrap-datepicker.js') }}
   <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
   {{ HTML::script('js/page/home.js') }}
+  {{ HTML::script('js/page/objetos.js') }}
   <!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
   </script>-->
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
@@ -29,7 +30,6 @@
   {{ HTML::style('css/marker.css'); }}
   <!--{{ HTML::style('css/jquery.mobile.css'); }}-->
   {{ HTML::style('css/home.css'); }}
-  {{ HTML::script('js/page/objetos.js') }}
  <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
   {{ HTML::style('css/datepicker.css'); }}

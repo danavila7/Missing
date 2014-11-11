@@ -70,7 +70,9 @@ Route::get("/", function()
     return View::make("home");
 });
  //Obtiene los ultimos Missing
-Route::get("obtenerObjetos", 'HomeController@ObtenerTodosMissing');
+Route::get("obtenerObjetosMapaProximos/{lat}/{lng}", 'HomeController@ObtenerTodosMissingMapaProximos');
+ //Obtiene los ultimos Missing por Filtro
+Route::get("obtenerobjetosporfiltro/{objeto}/{animal}/{persona}", 'HomeController@ObtenerTodosMissingPorFiltro');
 //Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
 //Muestra datos de un Objeto

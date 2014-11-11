@@ -21,7 +21,7 @@
                 <div class="panel-body">
                     <div class="input-group">
                         <span class="input-group-addon">Buscar</span>
-                        <input type="text" class="form-control" placeholder="Ingrese el Missing..." ng-model="Mibuscador" />
+                        <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />
                     </div>
                     <table class="table table-hover" id="lista-missing" >
                         <tr ng-repeat="data in misDatos|filter:Mibuscador">
@@ -35,7 +35,7 @@
 <!-- nav bar izquierda -->
     <nav  class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
           <div class="panel panel-default">
-            <div class="panel-heading">Ultimos Missing</div>
+            <div class="panel-heading">Ultimos Missing en tu Area</div>
                 <div class="panel-body">
                   <div class="input-group">
                     <div class="checkbox">

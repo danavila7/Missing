@@ -1,5 +1,20 @@
 app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService) {
-	 $http.get(jQuery('#baseurl').val()+'/obtenerObjetos').success(function(data){
+	
+	/**** si el usuario permite la localidad del navegador ****/
+	var lat = -33.437118;
+	var lng = -70.650544;
+	if(navigator.geolocation) {
+    browserSupportFlag = true;
+    	navigator.geolocation.getCurrentPosition(function(position) {
+      	var currentMapCenter = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      	lat = position.coords.latitude;
+      	lng = position.coords.longitude;
+    	}, function() {
+
+    	});
+  	}
+	//envio principal, (debe cargar por area)
+	$http.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng).success(function(data){
         $scope.datos = data.objetos;//así enviamos los posts a la vista
    	});
 
@@ -60,11 +75,23 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 }
 
 	 $scope.checkPin = function(){
-	 	var objeto = jQuery('#check-objeto').is('checked');
-	 	var animal = jQuery('#check-animal').is('checked');
-	 	var persona = jQuery('#check-persona').is('checked');
+	 	var objeto = jQuery('#check-objeto').prop('checked');
+	 	var animal = jQuery('#check-animal').prop('checked');
+	 	var persona = jQuery('#check-persona').prop('checked');
+	 	if(objeto == true){
+	 		objeto = 1;
+	 	}
+	 	if(animal == true){
+	 		animal = 1;
+	 	}
+	 	if(persona == true){
+	 		persona = 1;
+	 	}
+	 	//cargar datos por pin
+	 	$http.get(jQuery('#baseurl').val()+'/obtenerobjetosporfiltro/'+objeto+'/'+animal+'/'+persona).success(function(data){
+        	$scope.datos = data.objetos;
+   		});
 
-	 	alert('obj->'+objeto+' ani->'+animal+' per->'+persona);
 	 }
 });
  
@@ -142,12 +169,14 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 	$rootScope.$on('$viewContentLoaded', function() {
 
 		if($routeParams.missingId != '' && $routeParams.missingId !== undefined){
+			
 			var Id = $routeParams.missingId;
-			var baseurl = jQuery('#baseurl').val();
+			var baseurl = $('#baseurl').val().replace('index.php','');
 			$http.get(baseurl+"/datosMissing/"+Id).success(function(data){
 				var missing = eval(data.missing);
 				fecha = eval(missing.fecha);
-				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&sensor=false";
+				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&markers=color:blue%7Clabel:S%"+missing.latitud_objeto+","+missing.longitud_objeto+"&sensor=false";
+				$('.back-app').attr('href', baseurl);
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);
@@ -156,7 +185,7 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 				$('#dir_objeto').text(missing.direccion_objeto);
 				$('#tipo').text(missing.tipo);
 				$('#usuario_objeto').text(missing.usuario);
-   			});
+   			});/**/
 		}
 
 		if(_(routesGetUser).contains($location.path())){

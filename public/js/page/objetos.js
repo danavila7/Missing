@@ -37,8 +37,6 @@
 			      {});
 		//selecciono un lugar de la lista
 		google.maps.event.addListener(autocomplete, 'place_changed', onPlaceChanged);
-
-		
 		function onPlaceChanged() {	
 			//obtengo el address by Geocoder
 			var geocoder = new google.maps.Geocoder();
@@ -47,7 +45,7 @@
 				  lat = place.geometry.location.lat();
 				  lng = place.geometry.location.lng();
 			  	var mapCenter = new google.maps.LatLng(lat,lng); //Google map Coordinates
-				map_initialize(mapCenter); // initialize google map
+				map_initialize(mapCenter,lat,lng); // initialize google map
 			  }
 
 			}
@@ -57,19 +55,19 @@
     browserSupportFlag = true;
     	navigator.geolocation.getCurrentPosition(function(position) {
       	var currentMapCenter = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-      	map_initialize(currentMapCenter);
+      	map_initialize(currentMapCenter,position.coords.latitude,position.coords.longitude);
     	}, function() {
 
     	});
+  	}else{
+  		var mapCenter = new google.maps.LatLng(-33.437118,-70.650544); //Google map Coordinates	
+  		map_initialize(mapCenter,-33.437118,-70.650544); // initialize google map
   	}
 	
-	var mapCenter = new google.maps.LatLng(-33.437118,-70.650544); //Google map Coordinates
-
 	
-	//map_initialize(mapCenter); // initialize google map
 	
 	//############### Google Map Initialize ##############
-	function map_initialize(mapCenter){
+	function map_initialize(mapCenter,lat,lng){
 
 			var googleMapOptions = 
 			{ 
@@ -84,50 +82,39 @@
 				mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
 			};
 		
-		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);			
-			//Load Markers from the XML File, Check (map_process.php)
-			/*jQuery.get(jQuery('#baseurl').val()+"/obtenerObjetos", function (data) {
+		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);		
+			jQuery.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng, function (data) {
 				//json
 				jsondata = eval(data);
 				for(i=0; i< jsondata['objetos'].length;i++){
-					info = eval(jsondata['objetos'][0]);
-					  var name 		= info.nombre_objeto;
-					  var desc 	= '<p>'+ info.descripcion_objeto +'</p>';
-					  var type 		= info.tipoobjeto_id;
-					  var path      =  '';//info.foto_objeto;
-					  var point 	= new google.maps.LatLng(parseFloat(info.latitud_objeto),parseFloat(info.longitud_objeto));
-					  //alert('json'+info.tipoobjeto_id)
-					  //create_marker(point, name, path, desc, false, false, false, $('#baseurl').val()+"/img/pin_blue.png");
-				}
-			});*/
-			jQuery.get(jQuery('#baseurl').val()+"/objetos", function (data) {
-				jQuery(data).find("marker").each(function () {					
-					  var id 		= $(this).attr('id');
-					  var usuario_id = $(this).attr('usuario_id');
-					  var name 		= $(this).attr('name');
-					  var desc 	    = '<p>'+ $(this).attr('desc') +'</p>';
-					  var type 		= $(this).attr('type');
-					  var typeid 	= $(this).attr('typeid');
-					  var path      =  $(this).attr('path');
-					  var point 	= new google.maps.LatLng(parseFloat($(this).attr('lat')),parseFloat($(this).attr('lng')));
-					  var pin = "/img/pin-1_blue.png";
-					  switch(typeid) {
+						
+						info = eval(jsondata['objetos'][i]);
+
+						var id = info.id;
+						var  usuario_id = info.usuario_id;
+						var nombre_objeto 	= info.nombre_objeto;
+					  	var descripcion_objeto 	= '<p>'+ info.descripcion_objeto +'</p>';
+					  	var tipo 		= info.tipo;
+					  	var tipoobjeto_id 	= info.tipoobjeto_id;
+					  	var path      =  info.path;
+					  	var point 	= new google.maps.LatLng(parseFloat(info.latitud_objeto),parseFloat(info.longitud_objeto));
+					  	var pin = "/img/pin-1_blue.png";
+					  	switch(tipoobjeto_id) {
 						    case '1':
 				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
 				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png"
-				    			break;
+				    			break;;
 				    		case '3':
 				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_orange.png"
 				    			break;
 						    default:
 						        pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
 						}
-					  showMarkers(id, point, name, path, desc, type, pin, usuario_id);
-				});
-			});	
-
+						showMarkers(id, point, nombre_objeto, path, descripcion_objeto, tipo, pin, usuario_id);
+				}
+			});
 			//escondemos el loader
 			//$('#modal-loading').modal('hide')
 			jQuery('.loader').hide();
@@ -473,8 +460,8 @@
 						'</div>'+
 						'</div>'+
 						'</div>');
-						$('.fb-share-button').attr('data-href', $('#baseurl').val()+'/share/'+id);
 				  		$('#modal-share').modal();
+				  		$('#modal-share').find('.share-face').attr('data-id', id);
 						 $('.marker-edit').html(html); //replace info window with new html
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
@@ -518,7 +505,12 @@
 
 });
 
-
+function fbshareCurrentPage(){
+		var id = $('#modal-share').find('.share-face').attr('data-id');
+		alert(id);
+    	window.open("https://www.facebook.com/sharer/sharer.php?u="+escape(window.location.href)+"share/"+id+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    	return false; 
+}
 
 
 

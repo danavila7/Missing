@@ -42,18 +42,75 @@ class HomeController extends BaseController {
 	}
 
 	//obtener los ultimos missing pordenados por fecha
-	public function ObtenerTodosMissing($tipoobjeto_id = null){
-		$objetos = DB::table('objetos')
-					->where('estado', 1)
+	public function ObtenerTodosMissingMapaProximos($lat,$lng){
+		$objetos = DB::table('objetos')->select(DB::raw("objetos.*, 
+			( 3959 * acos( cos( radians(".$lat.") ) * cos( radians( latitud_objeto ) ) 
+            * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
+            * sin( radians(latitud_objeto)))) AS distance,
+			CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
+				->where('estado', '1')
 					->where(function($query){
 						if(isset($tipoobjeto_id)){
 							$query->where('tipoobjeto_id', $tipoobjeto_id);
 						}
 					})
-					->orderBy('created_at', 'desc')
+					->orderBy('distance', 'desc')
+					->take(20)
                     ->get();
+        $obj = new Objeto;            
+        $object = array();
+        foreach($objetos as $objeto){
+        	$path = '';
+        	if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
+				$path = $objeto->foto_objeto;
+			}else{
+				$path = "default.png";
+			}   
+        	$object[] = array("id"=>$objeto->id,
+        				"usuario_id"=>$objeto->usuario_id,
+        				"nombre_objeto"=>$objeto->nombre_objeto,
+        				"latitud_objeto"=>$objeto->latitud_objeto,
+        				"longitud_objeto"=>$objeto->longitud_objeto,
+        				"descripcion_objeto"=>$objeto->descripcion_objeto,
+        				"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
+        				"tipoobjeto_id"=>$objeto->tipoobjeto_id,
+        				"path"=>$path
+        		);       
+		}
     	return Response::json(array(
-        "objetos"=>$objetos
+        "objetos"=>$object
+    	));
+	}
+
+	//obtener los ultimos missing por filtro ordenados por fecha
+	public function ObtenerTodosMissingPorFiltro($objeto,$animal,$persona){
+
+
+		$query = DB::table('objetos')
+					->where('estado', 1);
+
+		$datos = array();
+		if($objeto == 1){
+			$datos[] = 1;
+		}
+		if($animal == 1){
+			$datos[] = 2;
+ 		}
+ 		if($persona == 1){
+ 			$datos[] = 3;
+ 		}
+		
+		if(count($datos) > 0){
+			$query	= $query->whereIn('tipoobjeto_id', $datos);
+		}
+		
+		$result = $query->take(10)
+			   			->orderBy('created_at', 'desc')
+               			->get();
+
+
+    	return Response::json(array(
+        "objetos"=>$result
     	));
 	}
 
@@ -62,6 +119,7 @@ class HomeController extends BaseController {
 					->where('estado', 1)
 					->orderBy('created_at', 'desc')
                     ->get();
+
     	return Response::json(array(
         "objetos"=>$objetos
     	));
