@@ -10,6 +10,7 @@
     </style>
     <style type="text/css">
 </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
   {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
   {{ HTML::script('js/AngularJS/angular-route.js') }}
@@ -25,7 +26,6 @@
   {{ HTML::script('js/page/objetos.js') }}
   <!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
   </script>-->
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
   {{ HTML::style('css/jasny-bootstrap.min.css'); }}
   {{ HTML::style('css/marker.css'); }}
   <!--{{ HTML::style('css/jquery.mobile.css'); }}-->
@@ -48,10 +48,15 @@
   <div id="fb-root"></div>
   <nav class="navbar navbar-inverse" role="navigation">
   <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="brand" href="{{ URL::to('/');}}"> 
+        <img  src="img/logo-missing1.png" height="45px" width="45px">
+      </a>
+    </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
+      <!--<ul class="nav navbar-nav">
         <li><a href="http://www.missing.cl/">Missing</a></li>
-      </ul>
+      </ul>-->
       <ul class="nav navbar-nav navbar-left">
         <li>
           <form class="navbar-form navbar-left">
@@ -80,10 +85,23 @@
       </div>
       </ul>
       <ul class="nav navbar-nav navbar-right logout-home hide" ng-controller="loginController">
-        <li><a href="#" id="username" ></a></li>
-        <li><a class="brand" href="#"> 
+        <li><a id="username" ></a></li>
+        <li><a class="brand"> 
           <img class="avatar img-circle" src="img/avatar-default.jpeg" height="30px" width="30px"></a></li>
-          <li><a ng-click="logout()" class="pointer">Cerrar Sesión</a></li>
+          <li>
+            <a class="dropdown-toggle pointer" data-toggle="dropdown">
+            <img  src="img/glyphicons/png/glyphicons_136_cogwheel.png" height="25px" width="25px"/>
+            <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li class="pointer"><a>Editar Perfil</a></li>
+              <li class="divider"></li>
+              <li class="pointer"><a>Mis Missing</a></li>
+              <li class="divider"></li>
+              <li class="pointer"><a>Configuración</a></li>
+              <li><a ng-click="logout()" class="pointer">Cerrar Sesión</a></li>
+          </ul>
+          </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

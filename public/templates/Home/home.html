@@ -11,13 +11,15 @@
     <div class="span3">
             <ul class="nav nav-pills">
               <li class="active">
-                <a class ="pointer" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">Busqueda</a>
+                <a class =" navbar-toggle pointer" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">Busqueda</a>
               </li>
               <li><a></a></li>
               <li><a></a></li>
             </ul>
               <div class="panel panel-default">
+                <div ng-if="misDatos.length > 0">
             <div class="panel-heading">Mis Ultimos Missing</div>
+                
                 <div class="panel-body">
                     <div class="input-group">
                         <span class="input-group-addon">Buscar</span>
@@ -29,6 +31,10 @@
                         </tr>
                     </table>
                 </div>
+              </div>
+              <div ng-if="misDatos.length == 0">
+                <div class="panel-heading"><a class="iniciar-sesion pointer">Inicia sesión</a> para cargar tus datos.</div>
+              </div>
             </div>
     </div>
 
