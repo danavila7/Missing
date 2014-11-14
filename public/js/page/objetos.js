@@ -335,6 +335,7 @@
 				missing = eval(jsondata.missing);
 				fecha = eval(missing.fecha);
 				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&sensor=false";
+				$('#modal-detalles').find('.share').attr('data-id', missing.id);
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);
@@ -345,6 +346,27 @@
 				$('#usuario_objeto').text(missing.usuario);
 			});
 		$('#modal-detalles').modal();
+	}
+
+
+	function cargaPerfil(Id){
+		var baseurl = $('#baseurl').val().replace('index.php','');
+		/*jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+Id, function (data) {
+				jsondata = eval(data);
+				missing = eval(jsondata.missing);
+				fecha = eval(missing.fecha);
+				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&sensor=false";
+				$('#modal-detalles').find('.share').attr('data-id', missing.id);
+				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
+				$('#ubicacion').attr('src', src);
+				$('#nom_objeto').text(missing.nombre_objeto);
+				$('#desc_objeto').text(missing.descripcion_objeto);
+				$('#fecha_objeto').text(fecha.date);
+				$('#dir_objeto').text(missing.direccion_objeto);
+				$('#tipo').text(missing.tipo);
+				$('#usuario_objeto').text(missing.usuario);
+			});*/
+		$('#modal-editar-perfil').modal();
 	}
 	
 	//############### Remove Marker Function ##############
@@ -430,8 +452,7 @@
 						  });
 		    		}
 		    	 address = city+','+state+', '+country;
-		    	 var myData = {name : mName, desc : mDesc, address : address, latlang : mLatLang, type : mType }; //post variables
-				 console.log(replaceWin);		
+		    	 var myData = {name : mName, desc : mDesc, address : address, latlang : mLatLang, type : mType }; //post variables	
 				 $.ajax({
 				 type: "POST",
 				 url: $('#baseurl').val()+"/objetos",
@@ -461,7 +482,7 @@
 						'</div>'+
 						'</div>');
 				  		$('#modal-share').modal();
-				  		$('#modal-share').find('.share-face').attr('data-id', id);
+				  		$('#modal-share').find('.share').attr('data-id', id);
 						 $('.marker-edit').html(html); //replace info window with new html
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
@@ -495,22 +516,10 @@
     			},
     			error: function(response){
     			}
-   				});
-
-
-		 
+   				});	 
 	}
-
-
-
 });
 
-function fbshareCurrentPage(){
-		var id = $('#modal-share').find('.share-face').attr('data-id');
-		alert(id);
-    	window.open("https://www.facebook.com/sharer/sharer.php?u="+escape(window.location.href)+"share/"+id+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
-    	return false; 
-}
 
 
 

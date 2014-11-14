@@ -94,7 +94,7 @@
             <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li class="pointer"><a>Editar Perfil</a></li>
+              <li class="pointer" onclick="cargaPerfil({{Auth::user()->id}})"><a>Editar Perfil</a></li>
               <li class="divider"></li>
               <li class="pointer"><a>Mis Missing</a></li>
               <li class="divider"></li>
