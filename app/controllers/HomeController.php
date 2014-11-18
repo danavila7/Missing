@@ -55,7 +55,7 @@ class HomeController extends BaseController {
 						}
 					})
 					->orderBy('distance', 'desc')
-					->take(20)
+					->take(6)
                     ->get();
         $obj = new Objeto;            
         $object = array();

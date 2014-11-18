@@ -1,13 +1,24 @@
 
-body { background: #fff !important;}
+html { height: 100% }
+
+body { 
+	height: 100%;
+}
+
+.bs-docs-nav {
+	background-color: #75CDFF!important;
+}
+
 .facelogin { cursor: pointer; }
 .pointer { cursor: pointer; cursor: hand; }
 .modal-title-detalle {
-  background-color: #75CDFF;
+  background-color: #75CDFF!important;
 }
+
 .modal-title-borrar {
   background-color: #FF8686;
 }
+
 
 
 
