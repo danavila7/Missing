@@ -69,6 +69,8 @@ Route::get("/", function()
 {
     return View::make("home");
 });
+ //Obtiene  todos los objetos
+Route::get("obtenerTodosMissing/", 'HomeController@ObtenerTodosMissing');
  //Obtiene los ultimos Missing
 Route::get("obtenerObjetosMapaProximos/{lat}/{lng}", 'HomeController@ObtenerTodosMissingMapaProximos');
  //Obtiene los ultimos Missing por Filtro
@@ -78,7 +80,9 @@ Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario'
 //Muestra datos de un Objeto
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 //Ruta Crear Objeto
-Route::post('/createObject','ObjetoController@post_create_object');
+Route::post('/createObject','ObjetoController@CrearObjeto');
+//Ruta Carga Imagen
+Route::post('/cargaImagen','ObjetoController@CargaImagen');
 
 
 

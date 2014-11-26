@@ -28,44 +28,62 @@ class ObjetoController extends BaseController
 		return View::make('users.create');
 	}
 	
-	public function post_create_object()
+	public function CrearObjeto()
 	{
 		$obj = new Objeto;
-		
 		$obj->nombre_objeto = Input::json("nombre");
-		//$obj->fecha_perdida = Input::json("fecha");
+		$obj->fecha_perdida = Input::json("fecha");
 		$obj->descripcion_objeto = Input::json("descripcion");
 		$obj->latitud_objeto = Input::json("latitud");
 		$obj->longitud_objeto = Input::json("longitud");
-		//$obj->foto_objeto = Input::json("foto");
 		$obj->tipoobjeto_id = Input::json("tipo_objeto");
 		$obj->contacto_objeto = Input::json("contacto");
 		$obj->recompensa_objeto = Input::json("recompensa");
 		$obj->tipopublicacion_id = 1;
 		$obj->estado = 0;
-
+		$obj->usuario_id = Auth::user()->id;
 		$obj->save();
 
+		$LastInsertId = $obj->id;
+		$valida = false;
+		if(isset($LastInsertId)){
+			$valida = true;
+			Session::put('saveObjectId', $LastInsertId);
+		}
+		return Response::json(array('msg'=>$valida));
 
 	}
-	
-	public function get_delete($user_id)
+
+	public function CargaImagen(){
+		$id = Session::get('saveObjectId');
+		$objeto = Objeto::find($id);
+		$file = Input::file('file');
+		$destinationPath = '../public/uploads';
+		$extension =$file->getClientOriginalExtension(); 
+		$filename = $objeto->nombre_objeto.'_'.$objeto->id.'.'.$extension;
+		$objeto->foto_objeto = $filename;
+		$objeto->save();
+		$upload_success = $file->move($destinationPath, $filename);
+		return Response::json(array('msg'=>'ok'));
+	}
+
+	public function get_delete($id)
 	{
-		$user = Objeto::find($user_id);
+		$objeto = Objeto::find($id);
 		
-		if(is_null($user))
+		if(is_null($objeto))
 		{
-			return Redirect::to('users/listausuarios');
+			return Redirect::to('objetos/listaobjetos');
 		}
 		
-		$user->delete();
-		return Redirect::to('users/listausuarios');
+		$objeto->delete();
+		return Redirect::to('objetos/listaobjetos');
 	}
     
     public function get_listaobjetos()
 	{
-        $users = Objeto::all();
-		return View::make('users.listausuarios')->with('users', $users);
+        $objetos = Objeto::all();
+		return View::make('users.listausuarios')->with('objetos', $objetos);
 	}
     
     

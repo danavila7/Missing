@@ -23,6 +23,25 @@ class HomeController extends BaseController {
 		return Response::json(array('Missing'=>$UltimosMissingPorUsuario));
 	}
 
+	public function ObtenerTodosMissing(){
+		$missingTotal  = array();
+		if (Auth::check())
+		{
+		$id = Auth::id();
+    	$missingTotal = DB::table('objetos')
+    				->where('usuario_id', $id)
+                    ->where('estado' , 0)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+		}else{
+			$missingTotal = DB::table('objetos')
+                    ->where('estado' , 0)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+		}
+		return Response::json(array('objetos'=>$missingTotal));
+	}
+
 	public function ObtieneMissingProximos($lng,$lat,$num){
 
 		$objetos = DB::table('objetos')->select(DB::raw("objetos.*, 

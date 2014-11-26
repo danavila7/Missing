@@ -83,20 +83,18 @@
 			};
 		
 		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);		
-			jQuery.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng, function (data) {
+			jQuery.get(jQuery('#baseurl').val()+"/obtenerTodosMissing", function (data) {
 				//json
 				jsondata = eval(data);
 				for(i=0; i< jsondata['objetos'].length;i++){
-						
 						info = eval(jsondata['objetos'][i]);
-
 						var id = info.id;
 						var  usuario_id = info.usuario_id;
 						var nombre_objeto 	= info.nombre_objeto;
 					  	var descripcion_objeto 	= '<p>'+ info.descripcion_objeto +'</p>';
 					  	var tipo 		= info.tipo;
 					  	var tipoobjeto_id 	= info.tipoobjeto_id;
-					  	var path      =  info.path;
+					  	var path      =  info.foto_objeto;
 					  	var point 	= new google.maps.LatLng(parseFloat(info.latitud_objeto),parseFloat(info.longitud_objeto));
 					  	var pin = "/img/pin-1_blue.png";
 					  	switch(tipoobjeto_id) {

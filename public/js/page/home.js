@@ -25,11 +25,6 @@ jQuery(document).ready(function() {
 
 	$(document).on("click", ".sing-up", function() {	
 		$('#modal-create-usuario').modal();
-	}); 
-	
-	$(document).on("click", ".facelogin", function() {	
-		var url = jQuery('#baseurl').val()+"/login/fb";
-			window.location.href = url;
 	});
 
 	if (window.location.href.indexOf('share') > 0) {

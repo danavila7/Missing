@@ -6,9 +6,63 @@
         <h4 class="modal-title" id="myModalLabel">Mientras más datos, más posibilidades de encontrar lo que buscas.</h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" role="form" id="datos-avanzados" ng-submit="crearObjeto()">
-          <input type="text" ng-model="obj.longitud" id="modal_long_obj" />
-          <input type="text" ng-model="obj.latitud" id="modal_lat_obj" />
+        <form role="form" ng-submit="CrearObjeto()">
+          <input type="hidden" ng-model="obj.longitud" id="modal_long_obj" />
+          <input type="hidden" ng-model="obj.latitud" id="modal_lat_obj" />
+              <div class="form-group">
+                <label for="inputNombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre-obj" ng-model="obj.nombre" placeholder="Nombre" required>
+              </div>
+              <div class="form-group">
+                <label for="inputFecha">Fecha</label>
+               <input type="text" class="form-control input-date" ng-model="obj.fecha" placeholder="Fecha">
+              </div>
+              <div class="form-group">
+                <label for="inputContacto">Telefono Contacto</label>
+                <input type="text" class="form-control" ng-model="obj.contacto" placeholder="Telefono">
+              </div>
+              <div class="form-group">
+                <label for="inputDescripcion">Descripción</label>
+                <textarea class="form-control" id="descripcion-obj" rows="3" ng-model="obj.descripcion" placeholder="Descripción"></textarea>
+              </div>
+
+
+
+
+              <div class="form-group">
+                <label for="inputFoto">Agrega Fotos</label>
+                <input class="form-control" accept="image/*" id="imagen-obj" type="file" file-model="myFile"/>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-info" ng-repeat="file in files">{{file.name}}</li>
+              </ul>
+              </div>
+              
+
+
+
+
+               <div class="form-group">
+                <label for="inputTipoObjeto">Tipo Objeto</label>
+                <select class="form-control" id="tipo-obj" ng-model="obj.tipo_objeto" required>
+                  <option>Selecciona una opción</option>
+                  <option value="1">Objeto</option>
+                  <option value="2">Animal</option>
+                  <option value="3">Persona</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="inputRecompensa">¿Agregar Recompensa?</label>
+                <input type="checkbox" id="recompensa_check" /> 
+              </div>
+              <div class="form-group div-recompensa hide">
+                <label for="inputMonto">Monto</label>
+                <input type="text" class="form-control" id="recompensa_text" ng-model="obj.recompensa" placeholder="Ingresa un monto" />
+              </div>
+              <div class="alert alert-success hide" id="alert-obj-creado" role="alert">Missing creado con exito!!!</div>
+              <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+        <!--<form class="form-horizontal" role="form" id="datos-avanzados" ng-submit="CrearObjeto()">
+          
           <div class="form-group">
             <label class="col-sm-2 control-label">Nombre</label>
             <div class="col-sm-10">
@@ -70,7 +124,7 @@
             </div>
           </div>
           <div class="alert alert-success hide" id="alert-obj-creado" role="alert">Missing creado con exito!!!</div>
-        </form>
+        </form>-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -78,3 +132,6 @@
     </div>
   </div>
 </div>
+
+
+

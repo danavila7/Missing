@@ -1,48 +1,60 @@
 <!DOCTYPE html>
-<!--le decimos a nuestra página que vamos a utilizar el módulo app que hemos creado-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"/> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><html lang="en" class="no-js"><![endif]-->
+<!-- AGREGANDO EL MODULO APP (ANGULARJS) -->
 <html ng-app="app">
 <head>
+<title>Missing | El Waze de los objetos perdidos.</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="description" content="Weza de objetos perdidos.">
-<meta name="keywords" content="missing, perdidas, robos, busquedas, animales, personas, objetos">
-<meta name="author" content="Daniel Avila">
-  <title>Missing | El Waze de los objetos perdidos.</title>
-    <style type="text/css">
-      #map { 
-        width:100%;
-        height:100%;
-      }
-    </style>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
+<meta name="keywords" content="missing, perdidas, robos, busquedas, animales, personas, objetos, perdido
+Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra">
+<meta name="author" content="Davila">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<!-- GOOGLE MAPS API -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
+
+  <!-- JS -->
   {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
   {{ HTML::script('js/AngularJS/angular-route.js') }}
   {{ HTML::script('js/app.js') }}
   {{ HTML::script('js/controllers.js') }}
-
   {{ HTML::script('js/lib/jquery.js') }}
   {{ HTML::script('js/lib/bootstrap.js') }}
   {{ HTML::script('js/lib/jasny-bootstrap.min.js') }}
   {{ HTML::script('js/lib/bootstrap-datepicker.js') }}
+  {{ HTML::script('js/lib/bootstrap-fileupload.js') }}
   <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
+  {{ HTML::script('js/page/login.js') }}
   {{ HTML::script('js/page/home.js') }}
   {{ HTML::script('js/page/objetos.js') }}
-  <!--<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB3kJGreQqizzCxAH9zZWcfvL4i7Trox8g&sensor=false">
-  </script>-->
+
+  <!-- CSS -->
   {{ HTML::style('css/jasny-bootstrap.min.css'); }}
   {{ HTML::style('css/marker.css'); }}
   <!--{{ HTML::style('css/jquery.mobile.css'); }}-->
   {{ HTML::style('css/home.css'); }}
- <!--   style -->
   {{ HTML::style('css/bootstrap.css'); }}
   {{ HTML::style('css/docs.min.css'); }}
   {{ HTML::style('css/datepicker.css'); }}
-  {{ HTML::style('css/datepicker3.css'); }}
   {{ HTML::style('css/bootstrap-responsive.css'); }}
-  <!--{{ HTML::style('css/bootstrap.css'); }}-->
+  {{ HTML::style('css/bootstrap-fileupload.css'); }}
+
+
+
+<!-- script especiales -->
+  {{ HTML::script('js/yepnope.js') }}
+  {{ HTML::script('js/rulesJS.js') }}
+
+<!-- FACEBOOK API -->
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -51,8 +63,12 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 <script src="http://connect.facebook.net/en_ES/all.js"></script>
+
 </head>
 <body>
+  <!--[if lt IE 7]>
+  <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+  <![endif]-->
   <div id="fb-root"></div>
   <!-- Docs master nav -->
 <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
@@ -105,7 +121,7 @@
             <ul class="dropdown-menu" role="menu">
               <li class="pointer" onclick="cargaPerfil(@if (Auth::check()) {{Auth::user()->id}} @endif)"><a>Editar Perfil</a></li>
               <li class="divider"></li>
-              <li class="pointer"><a>Mis Missing</a></li>
+              <li class="pointer"><a>Siguiendo</a></li>
               <li class="divider"></li>
               <li class="pointer"><a>Configuración</a></li>
               <li><a ng-click="logout()" class="pointer">Cerrar Sesión</a></li>
@@ -117,7 +133,6 @@
 </header>
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
-    <!-- Page content of course! -->
 <main id="content" role="main">
     <div class="container" ng-view>
     </div>

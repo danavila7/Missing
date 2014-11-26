@@ -1,4 +1,4 @@
-app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService) {
+app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService) {
 	
 	/**** si el usuario permite la localidad del navegador ****/
 	var lat = -33.437118;
@@ -28,6 +28,11 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
     $scope.modalcrearusuarioescreado = 'templates/Modal/modal-crear-usuario-es-creado.html';
 
+    //upload fotos
+    $scope.upload = function(){
+    	$http.post('')
+    }
+
 	$scope.login = function(){
 		AuthenticationService.login(this.credentials).success(function(){
 			$location.path("/");
@@ -56,16 +61,17 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 		}
 	}
 
-	$scope.crearObjeto = function(){
+	$scope.CrearObjeto = function(){
 		this.obj.longitud = jQuery("#modal_long_obj").val();
 		this.obj.latitud = jQuery("#modal_lat_obj").val();
-		CreateObjetoService.create(this.obj).success(function(){
-		$('#alert-obj-creado').removeClass("hide");
+		var file = this.myFile;
+		CreateObjetoService.create(file, this.obj).success(function(){
+		/*$('#alert-obj-creado').removeClass("hide");
 		//deshabilitar boton
-		setTimeout(function(){
-		$('#modal-datos').modal('hide');
-		}, 3000);
-	});
+			setTimeout(function(){
+			$('#modal-datos').modal('hide');
+			}, 3000);*/
+		});
 	}
 
 	 $scope.logout = function(){
@@ -296,12 +302,33 @@ app.factory("CreateUserService", function($http, $location, SessionService, Flas
 
 app.factory("CreateObjetoService", function($http, $location, SessionService, FlashService, ShowService){
 	var createSuccess = function(response){
+		alert(response.msg)
 	};
 	var createError = function(response){
 	};
 	return{
-		create: function (obj){
-			var create = $http.post(jQuery('#baseurl').val()+"/createObject", obj);
+		create: function (file, obj){
+			var fd = new FormData();
+        	fd.append('file', file);
+
+			var create = $http.post(jQuery('#baseurl').val()+"/createObject", obj)
+			.success(function(){
+				alert('cargo el objeto');
+				var saveImage = $http.post(jQuery('#baseurl').val()+"/cargaImagen", fd,{ 
+				transformRequest:angular.identity,
+				headers:{'Content-type':undefined}
+				})
+				.success(function(){
+					alert('cargo la imagen');
+				})
+				.error(function(){
+					alert('no cargo la imagen');
+				});
+			})
+			.error(function(){
+				alert('error no cargo');
+			});
+			
 			return create;
 		}
 	};
