@@ -15,7 +15,7 @@ class HomeController extends BaseController {
 		$id = Auth::id();
     	$UltimosMissingPorUsuario = DB::table('objetos')
                     ->where('usuario_id', $id)
-                    ->where('estado' , 1)
+                    ->where('estado' , 0)
                     ->take(5)
                     ->orderBy('created_at', 'desc')
                     ->get();
@@ -49,7 +49,7 @@ class HomeController extends BaseController {
             * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
             * sin( radians(latitud_objeto)))) AS distance,
 			CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
-				->where('estado', '1')
+				->where('estado', '0')
 				->take($num)
 				->orderBy('distance', 'desc')
 				->get();
@@ -106,7 +106,7 @@ class HomeController extends BaseController {
 
 
 		$query = DB::table('objetos')
-					->where('estado', 1);
+					->where('estado', 0);
 
 		$datos = array();
 		if($objeto == 1){
@@ -135,7 +135,7 @@ class HomeController extends BaseController {
 
 	public function ObtenerMissing(){
 		$objetos = DB::table('objetos')
-					->where('estado', 1)
+					->where('estado', 0)
 					->orderBy('created_at', 'desc')
                     ->get();
 
