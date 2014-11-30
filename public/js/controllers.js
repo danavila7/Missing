@@ -64,13 +64,14 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	$scope.CrearObjeto = function(){
 		this.obj.longitud = jQuery("#modal_long_obj").val();
 		this.obj.latitud = jQuery("#modal_lat_obj").val();
+		this.obj.tipo_objeto = jQuery("#tipo-obj").val();
 		var file = this.myFile;
 		CreateObjetoService.create(file, this.obj).success(function(){
-		/*$('#alert-obj-creado').removeClass("hide");
+		$('#alert-obj-creado').removeClass("hide");
 		//deshabilitar boton
 			setTimeout(function(){
 			$('#modal-datos').modal('hide');
-			}, 3000);*/
+			}, 3000);
 		});
 	}
 
@@ -313,20 +314,19 @@ app.factory("CreateObjetoService", function($http, $location, SessionService, Fl
 
 			var create = $http.post(jQuery('#baseurl').val()+"/createObject", obj)
 			.success(function(){
-				alert('cargo el objeto');
 				var saveImage = $http.post(jQuery('#baseurl').val()+"/cargaImagen", fd,{ 
 				transformRequest:angular.identity,
 				headers:{'Content-type':undefined}
 				})
 				.success(function(){
-					alert('cargo la imagen');
+					//alert('cargo la imagen');
 				})
 				.error(function(){
-					alert('no cargo la imagen');
+					//alert('no cargo la imagen');
 				});
 			})
 			.error(function(){
-				alert('error no cargo');
+				//alert('error no cargo');
 			});
 			
 			return create;

@@ -36,7 +36,8 @@ jQuery(document).ready(function() {
 
 	$(document).on("click", ".share-fb", function() {	
 		var id = $(this).attr('data-id');
-		var share_url = escape(window.location.href)+"share/"+id;
+		var baseurl = jQuery('#baseurl').val();
+		var share_url = baseurl+"/share/"+id;
 		var tipo_objeto = $(this).parents('#modal-detalles').find('#tipo').text();
 		var frase = '';
 		if(tipo_objeto == 'Persona'){
@@ -52,14 +53,13 @@ jQuery(document).ready(function() {
 		var share_subtitle = "Comparte esta publicación para que más gente me pueda ayudar.";
 		var share_description = $(this).parents('#modal-detalles').find('#desc_objeto').text();
 		var share_imagen = $(this).parents('#modal-detalles').find('#img_objeto').attr('src');
-		
 		postToFacebookDialog(
-			share_url, 
+			baseurl, 
 			share_text, 
 			share_subtitle, 
 			share_description, 
 			share_imagen, 
-			share_url, 
+			baseurl, 
 			''
 			);
 	});

@@ -152,6 +152,10 @@ class HomeController extends BaseController {
 		if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
 			$path = $objeto->foto_objeto;
 		}
+
+		$date = date('d M Y - H:i a',strtotime($objeto->created_at));
+
+
 		$data  = array(
 			"id" => $objeto->id,
 			"nombre_objeto" => $objeto->nombre_objeto,
@@ -165,7 +169,7 @@ class HomeController extends BaseController {
 			"fecha_perdida"=>$objeto->fecha_perdida,
 			"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
 			"estado"=>$obj->GetStatus($objeto->estado),
-			"fecha"=>$objeto->created_at,
+			"fecha"=>$date,
 			"usuario" => $usuario->usuario
 			);
 		return Response::json(array('missing'=>$data));
