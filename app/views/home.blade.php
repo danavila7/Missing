@@ -16,6 +16,9 @@
 <meta name="keywords" content="missing, perdidas, robos, busquedas, animales, personas, objetos, perdido
 Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra">
 <meta name="author" content="Davila">
+<meta property="og:title" content="Publica, Comparte y encuentra"/>
+<meta property="og:image" content="http://appmissing.missing.cl/Missing/public/img/logo-missing3.png"/>
+<meta property="og:description" content="Ayudame a encontrar lo que perdí "/>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <!-- GOOGLE MAPS API -->
@@ -55,6 +58,7 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
   {{ HTML::script('js/rulesJS.js') }}
 
 <!-- FACEBOOK API -->
+{{ HTML::script('js/functions/facebook.js') }}
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -64,6 +68,15 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
 }(document, 'script', 'facebook-jssdk'));</script>
 <script src="http://connect.facebook.net/en_ES/all.js"></script>
 
+<!-- TWITTER API -->
+<script type="text/javascript">
+window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
+</script>
+
+<!-- GOOGLE+ API -->
+<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'es'}
+</script>
 </head>
 <body>
   <!--[if lt IE 7]>
@@ -148,6 +161,20 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
       <li>
         <div class="fb-like" data-send="true" data-width="450">
         </div>
+      </li>
+      <li>
+        <a class="twitter-share-button"
+            href="https://twitter.com/share"
+            data-url="{{ URL::to('/');}}"
+            data-via="missing_app"
+            data-text="Publica, comparte y encuentra!"
+            data-related="Missing App"
+            data-count="vertical">
+            Tweet
+        </a>
+      </li>
+      <li>
+        <div class="g-plus" data-action="share"></div>
       </li>
     </ul>
   </div>

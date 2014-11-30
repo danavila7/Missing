@@ -48,18 +48,18 @@ facebookInviteFriends = function(message, url){
 };*/
 
 jQuery(function() {
-    base_url = jQuery('#baseurl').val();
     jQuery.ajaxSetup({cache: true});
     jQuery.getScript('//connect.facebook.net/en_US/all.js', function() {
         FB.init({
             appId: '1476123785965298',
-            channelUrl: base_url + 'channel'
+            xfbml: true, 
+            cookie: true
         });
-        FB.getLoginStatus(function(response) {
+       /*FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
                 facebook_user_id = response.authResponse.userID;
                 facebook_user_accesstoken = response.authResponse.accessToken;
             }
-        }, true);
+        }, true);*/
     });
 });

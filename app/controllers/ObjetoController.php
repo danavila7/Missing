@@ -60,7 +60,7 @@ class ObjetoController extends BaseController
 		$file = Input::file('file');
 		$destinationPath = '../public/uploads';
 		$extension =$file->getClientOriginalExtension(); 
-		$filename = $objeto->nombre_objeto.'_'.$objeto->id.'.'.$extension;
+		$filename = $objeto->id.'.'.$extension;
 		$objeto->foto_objeto = $filename;
 		$objeto->save();
 		$upload_success = $file->move($destinationPath, $filename);

@@ -36,38 +36,55 @@ jQuery(document).ready(function() {
 
 	$(document).on("click", ".share-fb", function() {	
 		var id = $(this).attr('data-id');
-
-			FB.ui({
-		method: 'send',
-		name: 'lalala',
-		link: jQuery('#baseurl').val()+"share/"+id,
-	});
-			/*FB.ui(
-			  {
-			    method: 'share',
-			    href: jQuery('#baseurl').val()+"share/"+id,
-			  },
-			  function(response) {
-			    if (response && !response.error_code) {
-			      alert('Posting completed.');
-			    } else {
-			      alert('Error while posting.');
-			    }
-			  }
-			);*/
-
+		var share_url = escape(window.location.href)+"share/"+id;
+		var tipo_objeto = $(this).parents('#modal-detalles').find('#tipo').text();
+		var frase = '';
+		if(tipo_objeto == 'Persona'){
+			frase = 'Ayudame a encontrar a esta Persona llamada ';
+		}
+		if(tipo_objeto == 'Objeto'){
+			frase = 'Ayudame a encontrar este objeto ';
+		}
+		if(tipo_objeto == 'Animal'){
+			frase = 'Ayudame a encontrar esta mascota llamada ';
+		}
+		var share_text = frase+'"'+$(this).parents('#modal-detalles').find('#nom_objeto').text()+'"';
+		var share_subtitle = "Comparte esta publicación para que más gente me pueda ayudar.";
+		var share_description = $(this).parents('#modal-detalles').find('#desc_objeto').text();
+		var share_imagen = $(this).parents('#modal-detalles').find('#img_objeto').attr('src');
 		
-    	//window.open("https://www.facebook.com/sharer/sharer.php?u="+escape(window.location.href)+"share/"+id+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+		postToFacebookDialog(
+			share_url, 
+			share_text, 
+			share_subtitle, 
+			share_description, 
+			share_imagen, 
+			share_url, 
+			''
+			);
 	});
 
 	$(document).on("click", ".share-tw", function() {	
+		var share_url = escape(window.location.href)+"share/"+id;
+		var tipo_objeto = $(this).parents('#modal-detalles').find('#tipo').text();
+		var frase = '';
+		if(tipo_objeto == 'Persona'){
+			frase = 'Ayudame a encontrar a esta Persona llamada ';
+		}
+		if(tipo_objeto == 'Objeto'){
+			frase = 'Ayudame a encontrar este objeto ';
+		}
+		if(tipo_objeto == 'Animal'){
+			frase = 'Ayudame a encontrar esta mascota llamada ';
+		}
+		var share_text = frase+'"'+$(this).parents('#modal-detalles').find('#nom_objeto').text()+'"';
 		var id = $(this).attr('data-id');
-		window.open("https://twitter.com/share?url="+escape(window.location.href)+"share/"+id+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+		window.open("https://twitter.com/share?url="+escape(window.location.href)+"share/"+id+"&text="+share_text+'&via=missing', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
 	});
 
 	$(document).on("click", ".share-go", function() {	
 		var id = $(this).attr('data-id');
 		window.open("https://plus.google.com/share?url="+escape(window.location.href)+"share/"+id+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
 
-});
+	});
 });
