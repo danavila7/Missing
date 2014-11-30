@@ -79,7 +79,7 @@ jQuery(document).ready(function() {
 		}
 		var share_text = frase+'"'+$(this).parents('#modal-detalles').find('#nom_objeto').text()+'"';
 		var id = $(this).attr('data-id');
-		window.open("https://twitter.com/share?url="+escape(window.location.href)+"share/"+id+"&text="+share_text+'&via=missing', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+		window.open("https://twitter.com/share?url="+escape(window.location.href)+"share/"+id+"&text="+share_text+'&via=missing_app', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
 	});
 
 	$(document).on("click", ".share-go", function() {	
