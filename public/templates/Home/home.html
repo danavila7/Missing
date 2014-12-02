@@ -33,18 +33,27 @@
                       </div>
                       <table class="table table-hover" id="lista-missing" >
                           <tr ng-repeat="data in misDatos|filter:Mibuscador">
-                              <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a>
+                              <td class="pointer">
+                                <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }} 
+                                <!--<button class="btn btn-xs btn-warning pull-right btn-eliminar" data-id="{{data.id}}" title="Eliminar"><i class="fa fa-trash"></i></button>-->
+                                <!--<button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>-->
+                                </a>
                               </td>
                           </tr>
                       </table>
                   </div>
                 </div>
-                <div ng-if="misDatos.length == 0">
+                <div ng-if="isLoggin == false">
                   <div class="panel-heading">
                     <a class="iniciar-sesion pointer">
                       Inicia sesión
                     </a> 
                     para cargar tus datos.
+                  </div>
+                </div>
+                <div ng-if="misDatos.length <= 0 && isLoggin == true">
+                  <div class="panel-heading">
+                    Haz click derecho en el mapa para ingresar un Missing perdido.
                   </div>
                 </div>
         </div>
@@ -79,8 +88,7 @@
                         <tr ng-repeat="data in datos|filter:buscador">
                             <td>
                               <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}">Nombre: {{ data.nombre_objeto }}
-                                <button class="btn btn-xs btn-warning pull-right"><span class="glyphicon glyphicon-trash"></span></button>
-                                <button class="btn btn-xs btn-warning pull-right"><span class="glyphicon glyphicon-trash"></span></button>
+                               <button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>
                               </a>
                             </td>
                         </tr>
@@ -92,26 +100,31 @@
   <div role="tabpanel" class="tab-pane fade" id="sig-missing">
       <div>
         <div class="panel panel-default">
-            <div ng-if="misDatos.length > 0">
+            <div ng-if="misSeguidos.length > 0">
                   <div class="panel-body">
                       <div class="input-group">
                           <span class="input-group-addon">Buscar</span>
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />
                       </div>
                       <table class="table table-hover" id="lista-missing" >
-                          <tr ng-repeat="data in misDatos|filter:Mibuscador">
+                          <tr ng-repeat="data in misSeguidos|filter:Mibuscador">
                               <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a>
                               </td>
                           </tr>
                       </table>
                   </div>
                 </div>
-                <div ng-if="misDatos.length == 0">
+               <div ng-if="isLoggin == false">
                   <div class="panel-heading">
                     <a class="iniciar-sesion pointer">
                       Inicia sesión
                     </a> 
                     para cargar tus datos.
+                  </div>
+                </div>
+                <div ng-if="misSeguidos.length <= 0 && isLoggin == true">
+                  <div class="panel-heading">
+                    Aun no haz seguido ningun Missing.
                   </div>
                 </div>
         </div>

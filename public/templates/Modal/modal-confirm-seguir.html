@@ -1,0 +1,24 @@
+<div class="modal fade" id="confirm-seguir" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form role="form" ng-submit="confirmSeguir()">
+        <input type="hidden" id="missing-id" />
+        <input type="text" ng-model="obj.id" value="lala" />
+      <div class="modal-header modal-title-borrar">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title">Confirmar</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Estas seguro que deseas seguir el Missing <strong class="nombre_missing"></strong> ?</p>
+       <div class="alert alert-success hide" id="alert-obj-seguido" role="alert">
+        Haz seguido este missing!!!
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default confirma-seguir" >Aceptar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>  

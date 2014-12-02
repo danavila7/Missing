@@ -16,6 +16,12 @@ class Objeto extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $table = 'objetos';
 
+    //relación uno a uno entre objeto y usuario
+    public function usuario()
+    {
+        return $this->hasOne("Usuario");
+    }
+
 	public function GetType($type_id){
 
     	switch ($type_id) {

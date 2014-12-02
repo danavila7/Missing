@@ -54,6 +54,22 @@ class ObjetoController extends BaseController
 
 	}
 
+	public function SeguirObjeto()
+	{
+		$sig = new Siguiendo;
+		$sig->usuario_id = Auth::user()->id;
+		$sig->objeto_id = Input::json("objeto_id");
+		$sig->save();
+
+		$LastInsertId = $sig->id;
+		$valida = false;
+		if(isset($LastInsertId)){
+			$valida = true;
+		}
+		return Response::json(array('msg'=>Input::json("objeto_id")));
+
+	}
+
 	public function CargaImagen(){
 		$id = Session::get('saveObjectId');
 		$objeto = Objeto::find($id);

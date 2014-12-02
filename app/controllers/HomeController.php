@@ -23,6 +23,23 @@ class HomeController extends BaseController {
 		return Response::json(array('Missing'=>$UltimosMissingPorUsuario));
 	}
 
+	public function ObtenerMissingSeguidosPorUsuario(){
+		$MissingSeguidosPorUsuario  = array();
+		if (Auth::check())
+		{
+		$id = Auth::id();
+    	$siguiendo = DB::table('siguiendo')
+                    ->where('usuario_id', $id)
+                    ->take(5)
+                    ->orderBy('created_at', 'desc')
+                    ->lists('objeto_id');
+		$MissingSeguidosPorUsuario = DB::table('objetos')
+                    ->whereIn('id', $siguiendo)
+                    ->get();
+		}
+		return Response::json(array('Missing'=>$MissingSeguidosPorUsuario));
+	}
+
 	public function ObtenerTodosMissing(){
 		$missingTotal  = array();
 		if (Auth::check())
@@ -61,18 +78,20 @@ class HomeController extends BaseController {
 	}
 
 	//obtener los ultimos missing pordenados por fecha
-	public function ObtenerTodosMissingMapaProximos($lat,$lng){
-		$objetos = DB::table('objetos')->select(DB::raw("objetos.*, 
-			( 3959 * acos( cos( radians(".$lat.") ) * cos( radians( latitud_objeto ) ) 
-            * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
-            * sin( radians(latitud_objeto)))) AS distance,
-			CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
-				->where('estado', '1')
+	public function ObtenerTodosMissingMapaProximos($lat,$lng, $radio){
+		$objetos = DB::table('objetos')
+				->select(DB::raw("objetos.*, 
+				( 3959 * acos( cos( radians(".$lat.") ) * cos( radians( latitud_objeto ) ) 
+	            * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
+	            * sin( radians(latitud_objeto)))) AS distance,
+				CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
+				->where('estado', '0')
 					->where(function($query){
 						if(isset($tipoobjeto_id)){
 							$query->where('tipoobjeto_id', $tipoobjeto_id);
 						}
 					})
+					->having('distance', '<', $radio)
 					->orderBy('distance', 'desc')
 					->take(6)
                     ->get();

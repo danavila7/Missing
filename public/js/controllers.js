@@ -1,4 +1,4 @@
-app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService) {
+app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService, SeguirObjetoService) {
 	
 	/**** si el usuario permite la localidad del navegador ****/
 	var lat = -33.437118;
@@ -13,8 +13,9 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 
     	});
   	}
-	//envio principal, (debe cargar por area)
-	$http.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng).success(function(data){
+	
+	var radio = 100;
+	$http.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng+"/"+radio).success(function(data){
         $scope.datos = data.objetos;//así enviamos los posts a la vista
    	});
 
@@ -27,6 +28,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modalloading = 'templates/Modal/modal-loading.html';
     $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
     $scope.modalcrearusuarioescreado = 'templates/Modal/modal-crear-usuario-es-creado.html';
+    $scope.modalcrearusuarioescreado = 'templates/Modal/modal-confirm-seguir.html';
 
     //upload fotos
     $scope.upload = function(){
@@ -78,6 +80,17 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 $scope.logout = function(){
 	 	AuthenticationService.logout().success(function(){
 			$location.path("/login");
+		});
+	 }
+
+	 $scope.confirmSeguir = function(){
+	 	var id = jQuery('#confirm-seguir').find('#missing-id').val();
+	 	SeguirObjetoService.seguir(id).success(function(){
+	 		$('#alert-obj-seguido').removeClass("hide");
+			//deshabilitar boton
+			setTimeout(function(){
+			$('#confirm-seguir').modal('hide');
+			}, 3000);
 		});
 	 }
 
@@ -145,6 +158,11 @@ app.factory("ShowService", function($rootScope, $http){
 			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
 			$rootScope.misDatos = data.Missing;
    			});
+   			//Cargar lista con missing seguidos
+			$http.get(jQuery('#baseurl').val()+'/obtenerMissingSeguidosPorUsuario').success(function(data){
+			$rootScope.misSeguidos = data.Missing;
+   			});
+   			$rootScope.isLoggin = true;
 			//esconder el login
 			jQuery('.login-home').addClass('hide');
 			jQuery('#isLoggin').val(true);
@@ -156,6 +174,8 @@ app.factory("ShowService", function($rootScope, $http){
 			jQuery('.login-home').removeClass('hide');
 			jQuery('#isLoggin').val(false);
 			$rootScope.misDatos ='';
+			$rootScope.misSeguidos = '';
+			$rootScope.isLoggin = false;
 		},
 		errorLogin: function(){
 			jQuery('#login-error').fadeIn( "slow" );
@@ -181,18 +201,18 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 			var baseurl = $('#baseurl').val().replace('index.php','');
 			$http.get(baseurl+"/datosMissing/"+Id).success(function(data){
 				var missing = eval(data.missing);
-				fecha = eval(missing.fecha);
 				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&markers=color:blue%7Clabel:S%"+missing.latitud_objeto+","+missing.longitud_objeto+"&sensor=false";
 				$('.back-app').attr('href', baseurl);
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);
 				$('#desc_objeto').text(missing.descripcion_objeto);
-				$('#fecha_objeto').text(fecha.date);
+				$('#fecha_objeto').text(missing.fecha);
 				$('#dir_objeto').text(missing.direccion_objeto);
 				$('#tipo').text(missing.tipo);
 				$('#usuario_objeto').text(missing.usuario);
-   			});/**/
+				$('.fb-comments').attr('data-href', baseurl+'/#/'+missing.id);
+   			});
 		}
 
 		if(_(routesGetUser).contains($location.path())){
@@ -297,6 +317,20 @@ app.factory("CreateUserService", function($http, $location, SessionService, Flas
 		createescreado: function (user){
 			var create = $http.post(jQuery('#baseurl').val()+"/createUserEsCreado", user);
 			return create;
+		}
+	};
+});
+
+app.factory("SeguirObjetoService", function($http, $location, SessionService, FlashService, ShowService){
+	var seguirSuccess = function(response){
+	};
+	var seguirError = function(response){
+	};
+	return{
+		seguir: function (id){
+			var seguir = $http.post(jQuery('#baseurl').val()+"/seguirObjeto", { objeto_id : id });
+			seguir.success(seguirSuccess);
+			return seguir;
 		}
 	};
 });
