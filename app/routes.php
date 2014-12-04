@@ -289,7 +289,7 @@ Route::post('objetos/', function()
 		$objeto->tipopublicacion_id = 1;
 		$objeto->foto_objeto = '';
 		$objeto->usuario_id = Auth::user()->id;
-		$objeto->estado = 1;
+		$objeto->estado = 0;
 		
 		$objeto->save();
 		$LastInsertId = $objeto->id;

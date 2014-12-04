@@ -158,6 +158,14 @@ app.factory("ShowService", function($rootScope, $http){
 			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
 			$rootScope.misDatos = data.Missing;
    			});
+
+			//Pagination
+ 			$rootScope.curPage = 0;
+ 			$rootScope.pageSize = 5;
+     		$rootScope.numberOfPages = function() {
+				return Math.ceil($rootScope.misDatos.length / $rootScope.pageSize);
+			};
+
    			//Cargar lista con missing seguidos
 			$http.get(jQuery('#baseurl').val()+'/obtenerMissingSeguidosPorUsuario').success(function(data){
 			$rootScope.misSeguidos = data.Missing;

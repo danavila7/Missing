@@ -24,6 +24,8 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
 <!-- GOOGLE MAPS API -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en"></script>
 
+ 
+
   <!-- JS -->
   {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
@@ -51,8 +53,6 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
   {{ HTML::style('css/datepicker.css'); }}
   {{ HTML::style('css/bootstrap-responsive.css'); }}
   {{ HTML::style('css/bootstrap-fileupload.css'); }}
-
-
 
 <!-- script especiales -->
   {{ HTML::script('js/yepnope.js') }}
@@ -85,7 +85,7 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
   <![endif]-->
   <div id="fb-root"></div>
   <!-- Docs master nav -->
-<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+<header class="navbar navbar-static-top bs-docs-nav azul" id="top" role="banner">
   <div class="container">
     <div class="navbar-header">
       <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -116,15 +116,15 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
           <input type="password" name="password" class="form-control" placeholder="Ingresar el password" ng-model="credentials.password" required/>
         </div>
       </form>-->
-      <li><a class="sing-up pointer">Crear Cuenta</a></li>
-       <li><a class="iniciar-sesion pointer">Iniciar Sesión</a></li>
+      <li><a class="sing-up pointer nav-bar-text">Crear Cuenta</a></li>
+       <li><a class="iniciar-sesion pointer nav-bar-text">Iniciar Sesión</a></li>
       <div class="alert alert-danger" id="login-error" style="display:none;">
         <button type="button" class="close">×</button>
         Login Invalido... Vuelve a intentarlo.
       </div>
       </ul>
       <ul class="nav navbar-nav navbar-right logout-home hide" ng-controller="loginController">
-        <li><a id="username" ></a></li>
+        <li><a class="nav-bar-text" id="username" ></a></li>
         <li><a class="brand"> 
           <img class="avatar img-circle" src="img/avatar-default.jpeg" height="30px" width="30px"></a></li>
           <li>

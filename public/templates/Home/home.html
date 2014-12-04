@@ -28,18 +28,41 @@
             <div ng-if="misDatos.length > 0">
                   <div class="panel-body">
                       <div class="input-group">
-                          <span class="input-group-addon">Buscar</span>
-                          <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />
+                         <!-- <span class="input-group-addon">Buscar</span>
+                          <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
                       </div>
                       <table class="table table-hover" id="lista-missing" >
-                          <tr ng-repeat="data in misDatos|filter:Mibuscador">
+                         <ul class="list-group">
+                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
+                            <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misDatos | filter:Mibuscador | pagination: curPage * pageSize | limitTo: pageSize"
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
+                               <span>{{ data.nombre_objeto }}</span>
+                             </li>
+                          </ul> 
+                         <div class="pagination pagination-centered" ng-show="misDatos.length">
+                            <ul class="pagination-controle pagination">
+                               <li>
+                                <button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+                               ng-click="curPage=curPage-1"> &lt; PREV</button>
+                               </li>
+                               <li>
+                               <span>Página {{curPage + 1}} of {{ numberOfPages() }}</span>
+                               </li>
+                               <li>
+                               <button type="button" class="btn btn-primary"
+                               ng-disabled="curPage >= misDatos.length/pageSize - 1"
+                               ng-click="curPage = curPage+1">SIG &gt;</button>
+                               </li>
+                            </ul>
+                          </div>
+                          <!--<tr ng-repeat="data in misDatos|filter:Mibuscador">
                               <td class="pointer">
                                 <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }} 
-                                <!--<button class="btn btn-xs btn-warning pull-right btn-eliminar" data-id="{{data.id}}" title="Eliminar"><i class="fa fa-trash"></i></button>-->
-                                <!--<button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>-->
+                                <button class="btn btn-xs btn-warning pull-right btn-eliminar" data-id="{{data.id}}" title="Eliminar"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>
                                 </a>
                               </td>
-                          </tr>
+                          </tr>-->
                       </table>
                   </div>
                 </div>

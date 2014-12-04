@@ -9,6 +9,14 @@ body {
 	background-color: #75CDFF!important;
 }
 
+.nav-bar-text{
+	color: #0BACC9!important;
+}
+
+.nav-bar-style{
+	
+}
+
 .facelogin { cursor: pointer; }
 .pointer { cursor: pointer; cursor: hand; }
 .modal-title-detalle {
@@ -17,6 +25,15 @@ body {
 
 .modal-title-borrar {
   background-color: #FF8686;
+}
+
+.azul{
+border:1px solid #02306a;
+background-color:#23528c;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#23528c', endColorstr='#02306a');
+background: -webkit-gradient(linear, left top, left bottom, from(#23528c), to(#02306a));
+background: -moz-linear-gradient(top, #23528c, #02306a);
+color: #fff;
 }
 
 

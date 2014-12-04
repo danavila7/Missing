@@ -915,7 +915,7 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #337ab7;
+  color: #0BACC9;
   text-decoration: none;
 }
 a:hover,
@@ -3567,7 +3567,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   font-size: 14px;
   font-weight: normal;
   line-height: 1;
-  color: #555;
+  color: #0BACC9;
   text-align: center;
   background-color: #eee;
   border: 1px solid #ccc;

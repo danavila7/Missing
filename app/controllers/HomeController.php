@@ -16,7 +16,7 @@ class HomeController extends BaseController {
     	$UltimosMissingPorUsuario = DB::table('objetos')
                     ->where('usuario_id', $id)
                     ->where('estado' , 0)
-                    ->take(5)
+                    //->take(5)
                     ->orderBy('created_at', 'desc')
                     ->get();
 		}

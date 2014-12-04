@@ -18,6 +18,15 @@ var app = angular.module("app", ['ngRoute']);
     };
 }]);
 
+app.filter('pagination', function()
+{
+ return function(input, start)
+ {
+  start = +start;
+  return input.slice(start);
+ };
+});
+
 
 //las rutas siguen trabajando de la misma forma
 app.config(function($routeProvider)
