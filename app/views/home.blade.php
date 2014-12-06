@@ -103,8 +103,8 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
         <li>
           <form class="navbar-form navbar-left">
           <div class="input-group">
-          <div class="input-group-addon">Buscar</div>
-          <input class="form-control" type="text" id="buscalugar" placeholder="Buscar un lugar">
+          <div class="input-group-addon"><i class="fa fa-search"></i></div>
+          <input class="form-control" type="text" id="buscalugar" placeholder="Ingresa una dirección...">
           </div>
         </form>
         </li>
@@ -148,7 +148,7 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
     <!--creamos el div con la directiva ng-view, aquí será donde
     carguen todas las vistas-->
 <main id="content" role="main">
-    <div class="container" ng-view>
+    <div class="container container-view" ng-view>
     </div>
     <input type="hidden" id="usuario_id" value="@if (Auth::check()) {{Auth::user()->id}} @endif" />
     <input type="hidden" id="baseurl" value="{{ URL::to('/');}}" />

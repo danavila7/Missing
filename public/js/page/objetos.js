@@ -399,13 +399,13 @@
 		}
 	}
 
-	$(document).on("click", ".btn-seguir", function(){
+	/*$(document).on("click", ".btn-seguir", function(){
 		var nom_objeto = $(this).attr('data-nombre');
 		var id = $(this).attr('data-id');
 		$('#confirm-seguir').find('.nombre_missing').html(nom_objeto);
 		$('#confirm-seguir').find('#missing-id').val(id);
 		$('#confirm-seguir').modal();
-	});
+	});*/
 
 	$(document).on("click", ".confirma-borrar", function() {
 		var Id = $(this).attr('data-id');	

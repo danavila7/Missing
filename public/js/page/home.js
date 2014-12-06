@@ -1,5 +1,7 @@
 jQuery(document).ready(function() {
 
+	
+
 	$(document).on("click", '#myTab a', function(e) {	
 		e.preventDefault()
 		var cl = $(this).attr('data-active');
@@ -18,6 +20,18 @@ jQuery(document).ready(function() {
 	});
 
 	$('.navmenu').offcanvas()
+
+	$(document).on("mouseover", ".btn-siguiendo", function() {	
+		$(this).text('Dejar de Seguir');
+		$(this).removeClass('btn-info');
+		$(this).addClass('btn-danger');
+  	})
+
+	$(document).on("mouseout", ".btn-siguiendo", function() {	
+		$(this).text('Siguiendo');
+    	$(this).removeClass('btn-danger');
+		$(this).addClass('btn-info');
+  	});
 
 	$(document).on("click", ".iniciar-sesion", function() {	
 		$('#modal-login').modal();

@@ -2,34 +2,29 @@
 
 class ObjetoController extends BaseController
 {
-	//public $layout = 'home.index';
-	//siempre action_
 	//$restful get y post
 	protected $layout = 'layouts.layout';
 
-    public function post_index()
-    {
+    public function post_index(){
         $credentials = array(
         'username' => Input::get('email'),
         'password' => Input::get('password'));
-        
-        if(Auth::attempt($credentials))
-        {
+        if(Auth::attempt($credentials)){
             return Redirect::to('objetos/index');
         }
-        else
-        {
+        else{
             return Redirect::back()->with_input();
         }   
     }
 	
-	public function get_create()
-	{
+
+	public function get_create(){
 		return View::make('users.create');
 	}
+
+
 	
-	public function CrearObjeto()
-	{
+	public function CrearObjeto(){
 		$obj = new Objeto;
 		$obj->nombre_objeto = Input::json("nombre");
 		$obj->fecha_perdida = Input::json("fecha");
@@ -54,8 +49,7 @@ class ObjetoController extends BaseController
 
 	}
 
-	public function SeguirObjeto()
-	{
+	public function SeguirObjeto(){
 		$sig = new Siguiendo;
 		$sig->usuario_id = Auth::user()->id;
 		$sig->objeto_id = Input::json("objeto_id");
@@ -68,6 +62,14 @@ class ObjetoController extends BaseController
 		}
 		return Response::json(array('msg'=>Input::json("objeto_id")));
 
+	}
+
+	public function DejarSeguirObjeto(){
+		$siguiendo = Siguiendo::where('usuario_id', Auth::user()->id)
+                    ->where('objeto_id',Input::json("objeto_id"))
+                    ->firstOrFail();
+		$siguiendo->delete();
+		return Response::json(array('msg'=>'ok'));
 	}
 
 	public function CargaImagen(){
@@ -83,55 +85,43 @@ class ObjetoController extends BaseController
 		return Response::json(array('msg'=>'ok'));
 	}
 
-	public function get_delete($id)
-	{
+	public function get_delete($id){
 		$objeto = Objeto::find($id);
 		
-		if(is_null($objeto))
-		{
+		if(is_null($objeto)){
 			return Redirect::to('objetos/listaobjetos');
 		}
-		
 		$objeto->delete();
 		return Redirect::to('objetos/listaobjetos');
 	}
     
-    public function get_listaobjetos()
-	{
+    public function get_listaobjetos(){
         $objetos = Objeto::all();
 		return View::make('users.listausuarios')->with('objetos', $objetos);
 	}
     
     
     
-    public function get_update($user_id)
-    {
+    public function get_update($user_id){
 		$user = User::find($user_id);
-		
-		if(is_null($user))
-		{
+		if(is_null($user)){
 			return Redirect::to('users/listausuarios');
 		}
-		
-        //return $user->nombre;
 		return View::make('users.update')->with('user', $user);
 	}
     
-    public function post_update($user_id)
-    {
+    public function post_update($user_id){
 		$user = User::find($user_id);
 		
-		if(is_null($user))
-		{
+		if(is_null($user)){
 			return Redirect::to('users/listausuarios');
 		}
-		//echo Input::get('esadmin');
+		
         $user->nombre = Input::get('nombre');
         $user->email = Input::get('email');
 		$user->esadmin = Input::get('esadmin');
         
-        if(Input::has('password'))
-        {
+        if(Input::has('password')){
 			$user->password = Input::get('password');
 		}
         

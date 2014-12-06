@@ -4,18 +4,18 @@
   <!-- Nav tabs -->
   <ul id="myTab" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="pointer active">
-      <a data-active="ult-missing" role="tab" data-toggle="tab">
-        Mis Missing
+      <a data-active="ult-missing" id="tab-ult-miss" role="tab" data-toggle="tab">
+      <i class="fa fa-arrows-alt"></i> Cercanos 
       </a>
     </li>
     <li role="presentation" class="pointer">
-      <a data-active="mis-missing" role="tab" data-toggle="tab">
-        Missing cercanos
+      <a data-active="mis-missing" id="tab-mis-miss" role="tab" data-toggle="tab">
+       <i class="fa fa-th-large"></i> Mios 
       </a>
     </li>
     <li role="presentation" class="pointer">
-      <a data-active="sig-missing" role="tab" data-toggle="tab">
-        Siguiendo
+      <a data-active="sig-missing" id="tab-sig-miss" role="tab" data-toggle="tab">
+      <i class="fa fa-check-square-o"></i>  Siguiendo 
       </a>
     </li>
   </ul>
@@ -23,6 +23,59 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade in active" id="ult-missing">
+    <nav  class="" role="navigation">
+          <div class="panel panel-default">
+            <div ng-if="datosProximos.length > 0">
+                  <div class="panel-body">
+                    <div class="input-group">
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" ng-click="checkPin()" id="check-objeto" >
+                            Objetos<img  src="img/pin-1_blue.png" title="objeto"/>
+                          </label>
+                          <label>
+                            <input type="checkbox" ng-click="checkPin()" id="check-animal" >
+                            Animales<img id="check-animal" src="img/pin-1_green.png" title="animal"/>
+                          </label>
+                          <label>
+                            <input type="checkbox" ng-click="checkPin()" id="check-persona" >
+                            Personas<img id="check-persona"  src="img/pin-1_orange.png" title="persona"/>
+                          </label>
+                        </div>
+                    </div>
+                      <div class="input-group">
+                         <!-- <span class="input-group-addon">Buscar</span>
+                          <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
+                      </div>
+                         <ul class="list-group">
+                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
+                            <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in datosProximos | filter:Mibuscador | pagination: curPageProx * pageSizeProx | limitTo: pageSizeProx"
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
+                               <span>{{ data.nombre_objeto }}</span>
+                               <button ng-show="isLoggin" ng-if="data.seguido == 1" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
+                               <button ng-show="isLoggin" ng-if="data.seguido == 0" class="btn btn-xs btn-default pull-right btn-seguir" id="btn-{{data.id}}" title="Seguir" ng-click="seguir(data.id)"><i class="fa fa-check-square-o"></i>  Seguir </button>
+                             </li>
+                          </ul>
+                          <div class="btn-group" role="group" aria-label="..." ng-show="datosProximos.length > pageSizeMios">
+                            <button type="button" class="btn btn-primary" 
+                                ng-disabled="curPageProx == 0"
+                                ng-click="curPageProx=curPageProx-1"><i class="fa fa-step-backward"></i></button>
+                            <button type="button" class="btn btn-default">Página {{curPageProx + 1}} de {{ numberOfPagesProx() }}</button>
+                            <button type="button" class="btn btn-primary" 
+                              ng-disabled="curPageProx >= datosProximos.length/pageSizeProx - 1"
+                              ng-click="curPageProx = curPageProx+1"><i class="fa fa-step-forward"></i></button>
+                          </div>
+                  </div>
+                </div>
+                <div ng-if="datosProximos.length <= 0">
+                  <div class="panel-heading">
+                    No se encontraron Missing cercanos.
+                  </div>
+                </div>
+        </div>
+        </nav>    
+  </div>
+    <div role="tabpanel" class="tab-pane fade in" id="mis-missing">
       <div>
         <div class="panel panel-default">
             <div ng-if="misDatos.length > 0">
@@ -31,39 +84,22 @@
                          <!-- <span class="input-group-addon">Buscar</span>
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
                       </div>
-                      <table class="table table-hover" id="lista-missing" >
                          <ul class="list-group">
                             <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
-                            <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misDatos | filter:Mibuscador | pagination: curPage * pageSize | limitTo: pageSize"
+                            <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misDatos | filter:Mibuscador | pagination: curPageMios * pageSizeMios | limitTo: pageSizeMios"
                             data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
                                <span>{{ data.nombre_objeto }}</span>
                              </li>
-                          </ul> 
-                         <div class="pagination pagination-centered" ng-show="misDatos.length">
-                            <ul class="pagination-controle pagination">
-                               <li>
-                                <button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
-                               ng-click="curPage=curPage-1"> &lt; PREV</button>
-                               </li>
-                               <li>
-                               <span>Página {{curPage + 1}} of {{ numberOfPages() }}</span>
-                               </li>
-                               <li>
-                               <button type="button" class="btn btn-primary"
-                               ng-disabled="curPage >= misDatos.length/pageSize - 1"
-                               ng-click="curPage = curPage+1">SIG &gt;</button>
-                               </li>
-                            </ul>
+                          </ul>
+                          <div class="btn-group" role="group" aria-label="..." ng-show="misDatos.length > pageSizeMios">
+                            <button type="button" class="btn btn-primary" 
+                                ng-disabled="curPageMios == 0"
+                                ng-click="curPageMios=curPageMios-1"><i class="fa fa-step-backward"></i></button>
+                            <button type="button" class="btn btn-default">Página {{curPageMios + 1}} de {{ numberOfPagesMios() }}</button>
+                            <button type="button" class="btn btn-primary" 
+                              ng-disabled="curPageMios >= misDatos.length/pageSizeMios - 1"
+                              ng-click="curPageMios = curPageMios+1"><i class="fa fa-step-forward"></i></button>
                           </div>
-                          <!--<tr ng-repeat="data in misDatos|filter:Mibuscador">
-                              <td class="pointer">
-                                <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }} 
-                                <button class="btn btn-xs btn-warning pull-right btn-eliminar" data-id="{{data.id}}" title="Eliminar"><i class="fa fa-trash"></i></button>
-                                <button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>
-                                </a>
-                              </td>
-                          </tr>-->
-                      </table>
                   </div>
                 </div>
                 <div ng-if="isLoggin == false">
@@ -83,58 +119,32 @@
     </div>
       
     </div>
-  <div role="tabpanel" class="tab-pane fade" id="mis-missing">
-    <nav  class="" role="navigation">
-          <div class="panel panel-default">
-                <div class="panel-body">
-                  <div class="input-group">
-                    <div class="checkbox">
-                    <label>
-                      <input type="checkbox" ng-click="checkPin()" id="check-objeto" >
-                      Objetos<img  src="img/pin-1_blue.png" title="objeto"/>
-                    </label>
-                    <label>
-                      <input type="checkbox" ng-click="checkPin()" id="check-animal" >
-                      Animales<img id="check-animal" src="img/pin-1_green.png" title="animal"/>
-                    </label>
-                    <label>
-                      <input type="checkbox" ng-click="checkPin()" id="check-persona" >
-                      Personas<img id="check-persona"  src="img/pin-1_orange.png" title="persona"/>
-                    </label>
-                    </div>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon">Buscar</span>
-                        <input type="text" class="form-control" placeholder="Ingrese el Missing..." ng-model="buscador" />
-                    </div>
-                    <table class="table table-hover" id="lista-missing" >
-                        <tr ng-repeat="data in datos|filter:buscador">
-                            <td>
-                              <a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}">Nombre: {{ data.nombre_objeto }}
-                               <button class="btn btn-xs btn-warning pull-right btn-seguir" data-id="{{data.id}}" data-nombre="{{data.nombre_objeto}}" title="Seguir"><i class="fa fa-check-square-o"></i></button>
-                              </a>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </nav>    
-  </div>
   <div role="tabpanel" class="tab-pane fade" id="sig-missing">
       <div>
         <div class="panel panel-default">
             <div ng-if="misSeguidos.length > 0">
                   <div class="panel-body">
                       <div class="input-group">
-                          <span class="input-group-addon">Buscar</span>
+                          <span class="input-group-addon"><i class="fa fa-search"></i></span>
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />
                       </div>
-                      <table class="table table-hover" id="lista-missing" >
-                          <tr ng-repeat="data in misSeguidos|filter:Mibuscador">
-                              <td><a class="buscamissing list-group-item" data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" class="list-group-item">Nombre: {{ data.nombre_objeto }}</a>
-                              </td>
-                          </tr>
-                      </table>
+                         <ul class="list-group">
+                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
+                            <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misSeguidos | filter:Mibuscador | pagination: curPageSig * pageSizeSig | limitTo: pageSizeSig"
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
+                               <span>{{ data.nombre_objeto }}</span>
+                               <button ng-show="isLoggin" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
+                             </li>
+                          </ul>
+                          <div class="btn-group" role="group" aria-label="..." ng-show="misSeguidos.length > pageSizeSig">
+                            <button type="button" class="btn btn-primary" 
+                                ng-disabled="curPageSig == 0"
+                                ng-click="curPageSig=curPageSig-1"><i class="fa fa-step-backward"></i></button>
+                            <button type="button" class="btn btn-default">Página {{curPageSig + 1}} de {{ numberOfPagesSig() }}</button>
+                            <button type="button" class="btn btn-primary" 
+                              ng-disabled="curPageSig >= misSeguidos.length/pageSizeSig - 1"
+                              ng-click="curPageSig = curPageSig+1"><i class="fa fa-step-forward"></i></button>
+                          </div>
                   </div>
                 </div>
                <div ng-if="isLoggin == false">
@@ -152,7 +162,6 @@
                 </div>
         </div>
     </div>
-      
     </div>
   </div>
 

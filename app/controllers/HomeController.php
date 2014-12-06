@@ -3,8 +3,7 @@
 class HomeController extends BaseController {
 	protected $layout = 'layouts.layout';
 
-	public function showHome()
-	{
+	public function showHome(){
 		$this->layout->content = View::make('objetos.index');
 	}
 
@@ -30,7 +29,6 @@ class HomeController extends BaseController {
 		$id = Auth::id();
     	$siguiendo = DB::table('siguiendo')
                     ->where('usuario_id', $id)
-                    ->take(5)
                     ->orderBy('created_at', 'desc')
                     ->lists('objeto_id');
 		$MissingSeguidosPorUsuario = DB::table('objetos')
@@ -86,24 +84,36 @@ class HomeController extends BaseController {
 	            * sin( radians(latitud_objeto)))) AS distance,
 				CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
 				->where('estado', '0')
-					->where(function($query){
-						if(isset($tipoobjeto_id)){
-							$query->where('tipoobjeto_id', $tipoobjeto_id);
-						}
-					})
 					->having('distance', '<', $radio)
 					->orderBy('distance', 'desc')
-					->take(6)
+					->take(10)
                     ->get();
         $obj = new Objeto;            
         $object = array();
+
+        //obtengo todos los que sigue el logeado
+        //comparo por cada objeto sercano si esxiste en (in_array)
+        //si existe agrego un 1 si no un 0
+        $siguiendo = array();
+        if (Auth::check())
+		{
+		$id = Auth::id();
+        $siguiendo = DB::table('siguiendo')
+                    ->where('usuario_id', $id)
+                    ->lists('objeto_id');
+        }
+
         foreach($objetos as $objeto){
         	$path = '';
         	if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
 				$path = $objeto->foto_objeto;
 			}else{
 				$path = "default.png";
-			}   
+			}
+			$seguido = 0;
+			if(in_array($objeto->id, $siguiendo)){
+				$seguido = 1;
+			} 
         	$object[] = array("id"=>$objeto->id,
         				"usuario_id"=>$objeto->usuario_id,
         				"nombre_objeto"=>$objeto->nombre_objeto,
@@ -112,6 +122,7 @@ class HomeController extends BaseController {
         				"descripcion_objeto"=>$objeto->descripcion_objeto,
         				"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
         				"tipoobjeto_id"=>$objeto->tipoobjeto_id,
+        				"seguido"=>$seguido,
         				"path"=>$path
         		);       
 		}

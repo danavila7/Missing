@@ -1,5 +1,13 @@
-app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService, SeguirObjetoService) {
+app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService, SeguirObjetoService, ShowDatosService) {
 	
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ 		$('#tab-ult-miss').html('<i class="fa fa-arrows-alt"></i>');
+ 		$('#tab-mis-miss').html('<i class="fa fa-th-large"></i>');
+ 		$('#tab-sig-miss').html('<i class="fa fa-check-square-o"></i>');
+	}else{
+	}
+
+
 	/**** si el usuario permite la localidad del navegador ****/
 	var lat = -33.437118;
 	var lng = -70.650544;
@@ -13,11 +21,9 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 
     	});
   	}
-	
-	var radio = 100;
-	$http.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng+"/"+radio).success(function(data){
-        $scope.datos = data.objetos;//así enviamos los posts a la vista
-   	});
+
+  	//cargo los missing proximos
+  	ShowDatosService.showDataProximos(lat,lng);
 
 	 //asignar modales con nginclude
     $scope.modallogin = 'templates/Modal/modal-login.html';
@@ -83,16 +89,28 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 		});
 	 }
 
-	 $scope.confirmSeguir = function(){
-	 	var id = jQuery('#confirm-seguir').find('#missing-id').val();
-	 	SeguirObjetoService.seguir(id).success(function(){
-	 		$('#alert-obj-seguido').removeClass("hide");
-			//deshabilitar boton
-			setTimeout(function(){
-			$('#confirm-seguir').modal('hide');
-			}, 3000);
+	 $scope.seguir = function(id_seguir){
+	 	SeguirObjetoService.seguir(id_seguir).success(function(){
+	 		jQuery('#btn-'+id_seguir).addClass('btn-siguiendo');
+	 		jQuery('#btn-'+id_seguir).removeClass('btn-default');
+	 		jQuery('#btn-'+id_seguir).addClass('btn-info');
+	 		jQuery('#btn-'+id_seguir).attr('ng-click', 'dejarSeguir('+id_seguir+')');
+	 		jQuery('#btn-'+id_seguir).text('Siguiendo');
 		});
 	 }
+
+	  $scope.dejarSeguir = function(id_seguir){
+	 	SeguirObjetoService.dejarSeguir(id_seguir).success(function(){
+	 		jQuery('#btn-'+id_seguir).removeClass('btn-siguiendo');
+	 		jQuery('#btn-'+id_seguir).addClass('btn-default');
+	 		jQuery('#btn-'+id_seguir).removeClass('btn-info');
+	 		jQuery('#btn-'+id_seguir).removeClass('btn-danger');
+	 		jQuery('#btn-'+id_seguir).attr('ng-click', 'seguir('+id_seguir+')');
+	 		jQuery('#btn-'+id_seguir).html('<i class="fa fa-check-square-o"></i>  Seguir ');
+		});
+	 }
+
+	
 
 	 $scope.checkPin = function(){
 	 	var objeto = jQuery('#check-objeto').prop('checked');
@@ -109,7 +127,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 	}
 	 	//cargar datos por pin
 	 	$http.get(jQuery('#baseurl').val()+'/obtenerobjetosporfiltro/'+objeto+'/'+animal+'/'+persona).success(function(data){
-        	$scope.datos = data.objetos;
+        	$scope.datosProximos = data.objetos;
    		});
 
 	 }
@@ -144,6 +162,50 @@ app.factory("FlashService", function($rootScope){
 	}
 });
 
+app.factory("ShowDatosService", function($rootScope, $http){
+	return{
+		showDataSiguiendo: function(){
+			//Cargar lista con missing seguidos
+			$http.get(jQuery('#baseurl').val()+'/obtenerMissingSeguidosPorUsuario').success(function(data){
+			$rootScope.misSeguidos = data.Missing;
+   			});
+
+   			//Pagination
+ 			$rootScope.curPageSig = 0;
+ 			$rootScope.pageSizeSig = 5;
+     		$rootScope.numberOfPagesSig = function() {
+				return Math.ceil($rootScope.misSeguidos.length / $rootScope.pageSizeSig);
+				};
+			},
+		showDataMios: function(){
+			//Cargar lista con missing del usuario
+			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
+			$rootScope.misDatos = data.Missing;
+   			});
+			//Pagination
+ 			$rootScope.curPageMios = 0;
+ 			$rootScope.pageSizeMios = 5;
+     		$rootScope.numberOfPagesMios = function() {
+				return Math.ceil($rootScope.misDatos.length / $rootScope.pageSizeMios);
+				};
+			},
+		showDataProximos: function(lat,lng){
+			//Cargar lista con missing seguidos
+			var radio = 100;
+			$http.get(jQuery('#baseurl').val()+"/obtenerObjetosMapaProximos/"+lat+"/"+lng+"/"+radio).success(function(data){
+		        $rootScope.datosProximos = data.objetos;//así enviamos los posts a la vista
+		   	});
+
+   			//Pagination
+ 			$rootScope.curPageProx = 0;
+ 			$rootScope.pageSizeProx = 5;
+     		$rootScope.numberOfPagesProx = function() {
+				return Math.ceil($rootScope.datosProximos.length / $rootScope.pageSizeProx);
+				};
+			}
+		}
+});
+
 app.factory("ShowService", function($rootScope, $http){
 	return{
 		showDataUser: function(message, avatar){
@@ -153,23 +215,6 @@ app.factory("ShowService", function($rootScope, $http){
 			//Mostrar el logout
 			//debugger;
 			jQuery('.logout-home').removeClass('hide');
-			
-			//Cargar lista con missing del usuario
-			$http.get(jQuery('#baseurl').val()+'/obtenerMissingPorUsuario').success(function(data){
-			$rootScope.misDatos = data.Missing;
-   			});
-
-			//Pagination
- 			$rootScope.curPage = 0;
- 			$rootScope.pageSize = 5;
-     		$rootScope.numberOfPages = function() {
-				return Math.ceil($rootScope.misDatos.length / $rootScope.pageSize);
-			};
-
-   			//Cargar lista con missing seguidos
-			$http.get(jQuery('#baseurl').val()+'/obtenerMissingSeguidosPorUsuario').success(function(data){
-			$rootScope.misSeguidos = data.Missing;
-   			});
    			$rootScope.isLoggin = true;
 			//esconder el login
 			jQuery('.login-home').addClass('hide');
@@ -191,7 +236,7 @@ app.factory("ShowService", function($rootScope, $http){
 	}
 });
 
-app.run(function($rootScope, $http, $location, $routeParams, AuthenticationService, ShowService, SessionService){
+app.run(function($rootScope, $http, $location, $routeParams, AuthenticationService, ShowService, SessionService, ShowDatosService){
 
 	var routesThatRequireAuth = ['/usuarios'];
 
@@ -242,6 +287,8 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
         			SessionService.set('authenticated', true);
 					SessionService.setuser('username', data.isloggin);
 					ShowService.showDataUser(data.isloggin, data.avatar);
+					ShowDatosService.showDataSiguiendo();
+					ShowDatosService.showDataMios();
 					jQuery('#isLoggin').val(true);
 					if(data.esCreado != 'true'){
 
@@ -273,6 +320,8 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 		}
     	if(!_(routesThatRequireAuth).contains($location.path()) && AuthenticationService.isLoggedIn()){
     		ShowService.showDataUser(SessionService.get('username'));
+    		ShowDatosService.showDataSiguiendo();
+    		ShowDatosService.showDataMios();
     	}else{
     		ShowService.showDataLogin();
     	}
@@ -307,11 +356,13 @@ app.factory("SessionService", function(){
 });
 
 
-app.factory("CreateUserService", function($http, $location, SessionService, FlashService, ShowService){
+app.factory("CreateUserService", function($http, $location, SessionService, ShowService, ShowDatosService){
 	var createSuccess = function(response){
 		SessionService.set('authenticated', true);
 		SessionService.setuser('username', response.isloggin);
 		ShowService.showDataUser(response.isloggin, response.avatar);
+		ShowDatosService.showDataSiguiendo();
+		ShowDatosService.showDataMios();
 		jQuery('#isLoggin').val(true);
 	};
 	var createError = function(response){
@@ -329,8 +380,9 @@ app.factory("CreateUserService", function($http, $location, SessionService, Flas
 	};
 });
 
-app.factory("SeguirObjetoService", function($http, $location, SessionService, FlashService, ShowService){
+app.factory("SeguirObjetoService", function($http, ShowDatosService){
 	var seguirSuccess = function(response){
+		ShowDatosService.showDataSiguiendo();
 	};
 	var seguirError = function(response){
 	};
@@ -339,13 +391,18 @@ app.factory("SeguirObjetoService", function($http, $location, SessionService, Fl
 			var seguir = $http.post(jQuery('#baseurl').val()+"/seguirObjeto", { objeto_id : id });
 			seguir.success(seguirSuccess);
 			return seguir;
+		},
+		dejarSeguir: function(id){
+			var dejarSeguir = $http.post(jQuery('#baseurl').val()+"/dejarSeguirObjeto", { objeto_id : id });
+			dejarSeguir.success(seguirSuccess);
+			return dejarSeguir;
 		}
 	};
 });
 
-app.factory("CreateObjetoService", function($http, $location, SessionService, FlashService, ShowService){
+app.factory("CreateObjetoService", function($http, $location, ShowDatosService){
 	var createSuccess = function(response){
-		alert(response.msg)
+		ShowDatosService.showDataMios();
 	};
 	var createError = function(response){
 	};
@@ -377,7 +434,7 @@ app.factory("CreateObjetoService", function($http, $location, SessionService, Fl
 });
 
 
-app.factory("AuthenticationService", function($http, $location, SessionService, FlashService, ShowService){
+app.factory("AuthenticationService", function($http, $location, SessionService, FlashService, ShowService, ShowDatosService){
 	var cacheSession = function(response){
 		SessionService.set('authenticated', true);
 		SessionService.setuser('username', response.flash);
@@ -392,6 +449,8 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 	}
 	var loginSuccess = function(response){
 		ShowService.showDataUser(response.flash);
+		ShowDatosService.showDataSiguiendo();
+		ShowDatosService.showDataMios();
 	}
 
 	return{

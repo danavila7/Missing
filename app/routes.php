@@ -85,6 +85,8 @@ Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 Route::post('/createObject','ObjetoController@CrearObjeto');
 //Ruta Seguir Objeto
 Route::post('/seguirObjeto','ObjetoController@SeguirObjeto');
+//Ruta Dejar Seguir Objeto
+Route::post('/dejarSeguirObjeto','ObjetoController@DejarSeguirObjeto');
 //Ruta Carga Imagen
 Route::post('/cargaImagen','ObjetoController@CargaImagen');
 
