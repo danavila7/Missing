@@ -133,12 +133,12 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
             <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li class="pointer" onclick="cargaPerfil(@if (Auth::check()) {{Auth::user()->id}} @endif)"><a>Editar Perfil</a></li>
+              <li class="pointer" onclick="cargaPerfil(@if (Auth::check()) {{Auth::user()->id}} @endif)">
+                <a class="dropdown-menu-text">Editar Perfil</a>
+              </li>
+              <li class="pointer dropdown-menu-text"><a class="dropdown-menu-text">Configuración</a></li>
               <li class="divider"></li>
-              <li class="pointer"><a>Siguiendo</a></li>
-              <li class="divider"></li>
-              <li class="pointer"><a>Configuración</a></li>
-              <li><a ng-click="logout()" class="pointer">Cerrar Sesión</a></li>
+              <li><a ng-click="logout()" class="pointer dropdown-menu-text">Cerrar Sesión</a></li>
           </ul>
           </li>
       </ul>

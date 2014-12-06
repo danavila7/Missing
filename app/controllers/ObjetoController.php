@@ -73,15 +73,17 @@ class ObjetoController extends BaseController
 	}
 
 	public function CargaImagen(){
-		$id = Session::get('saveObjectId');
-		$objeto = Objeto::find($id);
-		$file = Input::file('file');
-		$destinationPath = '../public/uploads';
-		$extension =$file->getClientOriginalExtension(); 
-		$filename = $objeto->id.'.'.$extension;
-		$objeto->foto_objeto = $filename;
-		$objeto->save();
-		$upload_success = $file->move($destinationPath, $filename);
+		if (Input::hasFile('file')){
+			$id = Session::get('saveObjectId');
+			$objeto = Objeto::find($id);
+			$file = Input::file('file');
+			$destinationPath = '../public/uploads';
+			$extension =$file->getClientOriginalExtension(); 
+			$filename = $objeto->id.'.'.$extension;
+			$objeto->foto_objeto = $filename;
+			$objeto->save();
+			$upload_success = $file->move($destinationPath, $filename);
+		}
 		return Response::json(array('msg'=>'ok'));
 	}
 

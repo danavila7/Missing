@@ -86,7 +86,6 @@ class HomeController extends BaseController {
 				->where('estado', '0')
 					->having('distance', '<', $radio)
 					->orderBy('distance', 'desc')
-					->take(10)
                     ->get();
         $obj = new Objeto;            
         $object = array();

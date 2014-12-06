@@ -4,6 +4,8 @@ class RestUsuarioController extends BaseController
 {
     public function ValidaLogin($email, $password)
     {
+        $email = 'dan';
+        $password = 'daniel';
         $credentials = array(
         'email' => $email,
         'password' => $password);

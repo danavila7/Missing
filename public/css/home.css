@@ -17,6 +17,10 @@ body {
 	
 }
 
+.dropdown-menu-text{
+	color: #0BACC9!important;
+}
+
 .facelogin { cursor: pointer; }
 .pointer { cursor: pointer; cursor: hand; }
 .modal-title-detalle {
@@ -35,6 +39,21 @@ background: -webkit-gradient(linear, left top, left bottom, from(#23528c), to(#0
 background: -moz-linear-gradient(top, #23528c, #02306a);
 color: #fff;
 }
+
+.container-maps{
+	position: relative;
+    padding-bottom: 50%; // This is the aspect ratio
+    height: 0;
+    overflow: hidden;
+}
+
+.google-maps {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
 
 
 

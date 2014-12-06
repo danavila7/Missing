@@ -25,6 +25,7 @@
     <div role="tabpanel" class="tab-pane fade in active" id="ult-missing">
     <nav  class="" role="navigation">
           <div class="panel panel-default">
+            <div class="panel-heading">Missing Cercanos a tu ubicación</div>
             <div ng-if="datosProximos.length > 0">
                   <div class="panel-body">
                     <div class="input-group">
@@ -48,10 +49,10 @@
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
                       </div>
                          <ul class="list-group">
-                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in datosProximos | filter:Mibuscador | pagination: curPageProx * pageSizeProx | limitTo: pageSizeProx"
-                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
-                               <span>{{ data.nombre_objeto }}</span>
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}">
+                              <h4 class="list-group-item-heading">{{ data.nombre_objeto }}</h4>
+                               <span>{{ data.tipo }}</span>
                                <button ng-show="isLoggin" ng-if="data.seguido == 1" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
                                <button ng-show="isLoggin" ng-if="data.seguido == 0" class="btn btn-xs btn-default pull-right btn-seguir" id="btn-{{data.id}}" title="Seguir" ng-click="seguir(data.id)"><i class="fa fa-check-square-o"></i>  Seguir </button>
                              </li>
@@ -78,6 +79,7 @@
     <div role="tabpanel" class="tab-pane fade in" id="mis-missing">
       <div>
         <div class="panel panel-default">
+          <div class="panel-heading">Mis Missing</div>
             <div ng-if="misDatos.length > 0">
                   <div class="panel-body">
                       <div class="input-group">
@@ -85,7 +87,6 @@
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
                       </div>
                          <ul class="list-group">
-                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misDatos | filter:Mibuscador | pagination: curPageMios * pageSizeMios | limitTo: pageSizeMios"
                             data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
                                <span>{{ data.nombre_objeto }}</span>
@@ -122,14 +123,14 @@
   <div role="tabpanel" class="tab-pane fade" id="sig-missing">
       <div>
         <div class="panel panel-default">
+          <div class="panel-heading">Missing que sigo</div>
             <div ng-if="misSeguidos.length > 0">
                   <div class="panel-body">
-                      <div class="input-group">
+                     <!-- <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-search"></i></span>
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />
-                      </div>
+                      </div>-->
                          <ul class="list-group">
-                            <li class="paginationclass list-group-item" style="font-weight:bold;"><span>Nombre</span></li>
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misSeguidos | filter:Mibuscador | pagination: curPageSig * pageSizeSig | limitTo: pageSizeSig"
                             data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
                                <span>{{ data.nombre_objeto }}</span>
@@ -164,13 +165,12 @@
     </div>
     </div>
   </div>
-
 </div>
-  </div>
-  <div class="col-md-8">
-    <div id="map">
+</div>
+  <div class="col-md-8 container-maps">
+    <div id="map" class="google-maps">
         <img class="loader" src="img/gif/ajax-loader.gif">
-      </div>
+    </div>
   </div>
 </div>   
 <!-- Modal Confirm delete -->

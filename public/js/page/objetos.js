@@ -26,7 +26,7 @@
 		});
 
 		$(this).addClass('active');
-		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: 'my 2nd title'});
+		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: ''});
 		map.panTo(marker2.getPosition());
 		});
 
@@ -69,12 +69,44 @@
 	//############### Google Map Initialize ##############
 	function map_initialize(mapCenter,lat,lng){
 
+			// Create an array of styles.
+			  var styles = [
+			    {
+			      stylers: [
+			        { hue: "#00ffe6" },
+			        { saturation: -20 }
+			      ]
+			    },{
+			      featureType: "road",
+			      elementType: "geometry",
+			      stylers: [
+			        { lightness: 100 },
+			        { visibility: "simplified" }
+			      ]
+			    },{
+			      featureType: "road",
+			      elementType: "labels",
+			      stylers: [
+			        { visibility: "off" }
+			      ]
+			    }
+			  ];
+
+			  // Create a new StyledMapType object, passing it the array of styles,
+			  // as well as the name to be displayed on the map type control.
+			  var styledMap = new google.maps.StyledMapType(styles,
+			    {name: "Styled Map"});
+
+
 			var googleMapOptions = 
 			{ 
 				center: mapCenter, // map center
 				zoom: 17, //zoom level, 0 = earth view to higher value
 				maxZoom: 18,
 				minZoom: 10,
+				mapTypeControlOptions: {
+			      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+			    },
 				zoomControlOptions: {
 				style: google.maps.ZoomControlStyle.SMALL //zoom control size
 			},
@@ -82,7 +114,11 @@
 				mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
 			};
 		
-		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);		
+		   	map = new google.maps.Map(document.getElementById("map"), googleMapOptions);	
+		   	//Associate the styled map with the MapTypeId and set it to display.
+			  map.mapTypes.set('map_style', styledMap);
+			  map.setMapTypeId('map_style');
+
 			jQuery.get(jQuery('#baseurl').val()+"/obtenerTodosMissing", function (data) {
 				//json
 				jsondata = eval(data);
