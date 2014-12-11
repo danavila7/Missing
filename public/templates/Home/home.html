@@ -50,7 +50,7 @@
                       </div>
                          <ul class="list-group">
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in datosProximos | filter:Mibuscador | pagination: curPageProx * pageSizeProx | limitTo: pageSizeProx"
-                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}">
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" data-nombre="{{ data.nombre_objeto }}" data-desc="{{ data.descripcion_objeto }}" data-tipo="{{ data.tipo }}" data-img="{{ data.path }}" data-id="{{ data.id }}" data-usuario-id="{{ data.usuario_id }}">
                               <h4 class="list-group-item-heading">{{ data.nombre_objeto }}</h4>
                                <span>{{ data.tipo }}</span>
                                <button ng-show="isLoggin" ng-if="data.seguido == 1" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
@@ -169,10 +169,20 @@
 </div>
   <div class="col-md-8 container-maps">
     <div id="map" class="google-maps">
-        <img class="loader" src="img/gif/ajax-loader.gif">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4 loader ">
+        <img class="col-md-10 " src="img/gif/loading-blue.gif">
+      </div>
+      <div class="col-md-4">
+      </div>
     </div>
   </div>
-</div>   
+</div>  
+<!-- Html Show Info -->
+<div ng-include="showCreateInfo"></div> 
+<!-- Html Show Info -->
+<div ng-include="showBasicInfo"></div> 
 <!-- Modal Confirm delete -->
 <div ng-include="modalconfirmdelete"></div>
 <!-- Modal Share Missing -->

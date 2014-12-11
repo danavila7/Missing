@@ -15,7 +15,6 @@ class HomeController extends BaseController {
     	$UltimosMissingPorUsuario = DB::table('objetos')
                     ->where('usuario_id', $id)
                     ->where('estado' , 0)
-                    //->take(5)
                     ->orderBy('created_at', 'desc')
                     ->get();
 		}
@@ -131,11 +130,18 @@ class HomeController extends BaseController {
 	}
 
 	//obtener los ultimos missing por filtro ordenados por fecha
-	public function ObtenerTodosMissingPorFiltro($objeto,$animal,$persona){
+	public function ObtenerTodosMissingPorFiltro($objeto,$animal,$persona,$lat,$lng,$radio){
 
-
+		$object = array();
 		$query = DB::table('objetos')
-					->where('estado', 0);
+					->select(DB::raw("objetos.*, 
+				( 3959 * acos( cos( radians(".$lat.") ) * cos( radians( latitud_objeto ) ) 
+	            * cos( radians(longitud_objeto) - radians(".$lng.")) + sin(radians(".$lat.")) 
+	            * sin( radians(latitud_objeto)))) AS distance,
+				CASE objetos.tipoobjeto_id WHEN 1 THEN 'Objeto' WHEN 2 THEN 'Animal' WHEN 3 THEN 'Persona' END AS tipo"))
+				->where('estado', '0')
+				->having('distance', '<', $radio)
+				->orderBy('distance', 'desc');
 
 		$datos = array();
 		if($objeto == 1){
@@ -153,12 +159,45 @@ class HomeController extends BaseController {
 		}
 		
 		$result = $query->take(10)
-			   			->orderBy('created_at', 'desc')
+			   			->orderBy('tipo', 'desc')
                			->get();
+
+         $siguiendo = array();
+        if (Auth::check())
+		{
+		$id = Auth::id();
+        $siguiendo = DB::table('siguiendo')
+                    ->where('usuario_id', $id)
+                    ->lists('objeto_id');
+        }       		
+        $obj = new Objeto; 
+        foreach($result as $objeto){
+        	$path = '';
+        	if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
+				$path = $objeto->foto_objeto;
+			}else{
+				$path = "default.png";
+			}
+			$seguido = 0;
+			if(in_array($objeto->id, $siguiendo)){
+				$seguido = 1;
+			} 
+        	$object[] = array("id"=>$objeto->id,
+        				"usuario_id"=>$objeto->usuario_id,
+        				"nombre_objeto"=>$objeto->nombre_objeto,
+        				"latitud_objeto"=>$objeto->latitud_objeto,
+        				"longitud_objeto"=>$objeto->longitud_objeto,
+        				"descripcion_objeto"=>$objeto->descripcion_objeto,
+        				"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
+        				"tipoobjeto_id"=>$objeto->tipoobjeto_id,
+        				"seguido"=>$seguido,
+        				"path"=>$path
+        		);       
+        }
 
 
     	return Response::json(array(
-        "objetos"=>$result
+        "objetos"=>$object
     	));
 	}
 

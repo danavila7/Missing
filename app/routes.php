@@ -74,7 +74,7 @@ Route::get("obtenerTodosMissing/", 'HomeController@ObtenerTodosMissing');
  //Obtiene los ultimos Missing
 Route::get("obtenerObjetosMapaProximos/{lat}/{lng}/{radio}", 'HomeController@ObtenerTodosMissingMapaProximos');
  //Obtiene los ultimos Missing por Filtro
-Route::get("obtenerobjetosporfiltro/{objeto}/{animal}/{persona}", 'HomeController@ObtenerTodosMissingPorFiltro');
+Route::get("obtenerobjetosporfiltro/{objeto}/{animal}/{persona}/{lat}/{lng}/{radio}", 'HomeController@ObtenerTodosMissingPorFiltro');
 //Obtiene los missing por Usuario
 Route::get("obtenerMissingPorUsuario", 'HomeController@ObtenerMissingPorUsuario');
 //Obtiene los missing seguidos por Usuario

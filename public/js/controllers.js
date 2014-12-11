@@ -25,6 +25,10 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
   	//cargo los missing proximos
   	ShowDatosService.showDataProximos(lat,lng);
 
+  	//asignar las ventanas de info con nginclude
+  	$scope.showCreateInfo = 'templates/Home/showCreateInfo.html';
+  	$scope.showBasicInfo = 'templates/Home/showBasicInfo.html';
+
 	 //asignar modales con nginclude
     $scope.modallogin = 'templates/Modal/modal-login.html';
     $scope.modalagregadatos = 'templates/Modal/modal-agrega-datos.html';
@@ -113,6 +117,22 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	
 
 	 $scope.checkPin = function(){
+
+	 	/**** si el usuario permite la localidad del navegador ****/
+		var lat = -33.437118;
+		var lng = -70.650544;
+		if(navigator.geolocation) {
+	    browserSupportFlag = true;
+	    	navigator.geolocation.getCurrentPosition(function(position) {
+	      	var currentMapCenter = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+	      	lat = position.coords.latitude;
+	      	lng = position.coords.longitude;
+	    	}, function() {
+
+	    	});
+	  	}
+
+	 	var radio = 100;
 	 	var objeto = jQuery('#check-objeto').prop('checked');
 	 	var animal = jQuery('#check-animal').prop('checked');
 	 	var persona = jQuery('#check-persona').prop('checked');
@@ -126,7 +146,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 		persona = 1;
 	 	}
 	 	//cargar datos por pin
-	 	$http.get(jQuery('#baseurl').val()+'/obtenerobjetosporfiltro/'+objeto+'/'+animal+'/'+persona).success(function(data){
+	 	$http.get(jQuery('#baseurl').val()+'/obtenerobjetosporfiltro/'+objeto+'/'+animal+'/'+persona+'/'+lat+'/'+lng+'/'+radio).success(function(data){
         	$scope.datosProximos = data.objetos;
    		});
 

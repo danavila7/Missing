@@ -1,4 +1,5 @@
 	var map;
+	var infowindow = new google.maps.InfoWindow();
 	jQuery(document).ready(function() {
 
 		$('#modal-loading').modal();
@@ -19,15 +20,76 @@
 
 		/***** click y buscar en el mapa ***/
 		$(document).on("click", ".buscamissing", function() {
+		var baseurl = $('#baseurl').val().replace('index.php','');
   		var lat = $(this).attr('data-lat');
 		var lng = $(this).attr('data-lng');
+		var nombre = $(this).attr('data-nombre');
+		var desc = $(this).attr('data-desc');
+		var img_path = $(this).attr('data-img');
+		var tipo = $(this).attr('data-tipo');
+		var Id = $(this).attr('data-id');
+		var usuario_id = $(this).attr('data-usuario-id');
 		$(".buscamissing").each(function( index ) {
 			$(this).removeClass('active');
 		});
-
 		$(this).addClass('active');
-		var marker2 = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng), map: map, title: ''});
-		map.panTo(marker2.getPosition());
+
+		if (infowindow) {
+        	infowindow.close();
+    	}
+
+    	switch(tipo) {
+				case 'Objeto':
+				   	pin = baseurl+"/img/pin-1_blue.png"
+				break;
+				case 'Animal':
+				    pin = baseurl+"/img/pin-1_green.png"
+				break;
+				case 'Persona':
+				   	pin = baseurl+"/img/pin-1_orange.png"
+				break;
+				default:
+					pin = baseurl+"/img/pin-1_blue.png"
+		}
+
+
+
+		var marker = new google.maps.Marker({ 
+			position: new google.maps.LatLng(lat, lng), 
+			map: map,
+			icon: pin
+		});
+
+
+		//Create una nueva ventana de informacion
+		var contentString = muestraInfo(
+							nombre,
+							tipo,
+							baseurl+"/uploads/"+img_path,
+							desc
+							);
+
+		
+
+		//Find remove button in infoWindow
+		var showDetalle 	= contentString.find('button#show-detalle')[0];
+		
+		if($('#isLoggin').val() == 'true'){
+			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
+			var removeBtn 	= contentString.find('.remove-marker');
+			removeBtn.removeClass('hide');
+			//add click listner to remove marker button
+			google.maps.event.addDomListener(removeBtn, "click", function(event) {
+				remove_marker(Id,nombre,marker);
+			});
+			}
+		}
+		google.maps.event.addDomListener(showDetalle, "click", function(event) {
+			cargaDatos(Id);
+		});
+		//agregarle el contenido
+		infowindow.setContent(contentString[0]);
+		infowindow.open(map,marker); //abre la ventana de info/**/
 		});
 
 
@@ -127,7 +189,7 @@
 						var id = info.id;
 						var  usuario_id = info.usuario_id;
 						var nombre_objeto 	= info.nombre_objeto;
-					  	var descripcion_objeto 	= '<p>'+ info.descripcion_objeto +'</p>';
+					  	var descripcion_objeto 	= info.descripcion_objeto;
 					  	var tipo 		= info.tipo;
 					  	var tipoobjeto_id 	= info.tipoobjeto_id;
 					  	var path      =  info.foto_objeto;
@@ -163,10 +225,9 @@
 	}
 
 
-	//############### Create Marker Function ##############
-	function createMarker(MapPos, iconPath)
-	{
-		//new marker
+	//############### crea el Marker con la info ##############
+	function createMarker(MapPos, iconPath){
+		//nuevo marker
 		var marker = new google.maps.Marker({
 			position: MapPos,
 			map: map,
@@ -175,42 +236,17 @@
 			icon: iconPath
 		});
 
-		var contentString = $('<div class="marker-edit">'+
-				'<h4>Missing<small> Ingresar datos </small><button type="button" class="mas-datos btn btn-primary btn-xs">Más Datos</button> </h4>'+
-                '<form role="form" enctype="multipart/form-data" name="SaveMarker" id="SaveMarker" >'+
-                  '<div class="form-group nombre-alert">'+
-                    '<label>Nombre*</label>'+
-                    '<input type="text" class="form-control save-name" name="pName" placeholder="Ingresar Nombre" maxlength="40" required>'+
-                  '</div>'+
-                  '<div class="form-group desc-alert">'+
-                    '<label>Descripci&oacute;n*</label>'+
-                    '<textarea type="text" class="form-control save-desc" name="pDesc" placeholder="Ingresar Descripci&oacute;n" maxlength="250" required>'+
-                    '</textarea>'+
-                  '</div>'+
-                  '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">Tipo*</label>'+
-                    '<div class="col-sm-10">'+
-                    '<select name="pType" class="save-type form-control tipo-alert" required><option value="0">Selecciona una opción</option><option value="1">Objeto</option><option value="2">Animal</option><option value="3">Persona</option>'+
-                    '</select>'+
-                  '</div>'+
-                  '</div>'+
-                '</form>'+
-                '<br/>'+
-                '<div class="btn-group">'+
-				  '<button type="button" class="save-marker btn btn-default">Guardar</button>'+
-				  '<button type="button" class="remove-marker btn btn-default">Cancelar</button>'+
-				'</div>'+
-        		'</div>');
-		
-		//Create an infoWindow
+		var content = $('.marker-edit').clone();
+		//busco el contenido
+		content.removeClass('hide');
+		//Creo la ventana de info
 		var infowindow = new google.maps.InfoWindow();
-		//set the content of infoWindow
-		infowindow.setContent(contentString[0]);
+		infowindow.setContent(content[0]);
 
 		//Find remove button in infoWindow
-		var removeBtn 	= contentString.find('button.remove-marker')[0];
-		var saveBtn 	= contentString.find('button.save-marker')[0];
-		var datosBtn 	= contentString.find('button.mas-datos')[0];
+		var removeBtn 	= content.find('button.remove-marker')[0];
+		var saveBtn 	= content.find('button.save-marker')[0];
+		var datosBtn 	= content.find('button.mas-datos')[0];
 
 		//add click listner to remove marker button
 		google.maps.event.addDomListener(removeBtn, "click", function(event) {
@@ -236,10 +272,10 @@
 		{
 			//add click listner to save marker button
 			google.maps.event.addDomListener(saveBtn, "click", function(event) {
-				var mReplace = contentString.find('div.pepe'); //html to be replaced after success
-				var mName = contentString.find('input.save-name')[0].value; //name input field value
-				var mDesc  = contentString.find('textarea.save-desc')[0].value; //description input field value
-				var mType = contentString.find('select.save-type')[0].value; //type of marker
+				var mReplace = content.find('div.pepe'); //html to be replaced after success
+				var mName = content.find('input.save-name')[0].value; //name input field value
+				var mDesc  = content.find('textarea.save-desc')[0].value; //description input field value
+				var mType = content.find('select.save-type')[0].value; //type of marker
 				var mTipo = '';
 				switch(mType) {
 						    case '1':
@@ -254,7 +290,7 @@
 						    default:
 						        mTipo = "Objeto"
 						}
-				//var mImage = contentString.find('input.save-image')[0].value; //type of marker
+				//var mImage = content.find('input.save-image')[0].value; //type of marker
 				$('.nombre-alert').removeClass('has-error');
 				$('.desc-alert').removeClass('has-error');
 				$('.tipo-alert').removeClass('has-error');
@@ -283,7 +319,6 @@
 		google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map,marker); // click on marker opens info window 
 	    });
-
 		  infowindow.open(map,marker);
 	}
 
@@ -292,10 +327,9 @@
 	
 	
 	//############### Create Marker Function ##############
-	function showMarkers(Id, MapPos, MapTitle, Path,  MapDesc, Type, iconPath, usuario_id)
-	{
+	function showMarkers(Id, MapPos, MapTitle, Path,  MapDesc, Type, iconPath, usuario_id){
 		var baseurl = $('#baseurl').val().replace('index.php','');
-		//Marker del xml
+		//crea el marker
 		var marker = new google.maps.Marker({
 			position: MapPos,
 			map: map,
@@ -303,47 +337,23 @@
 			animation: google.maps.Animation.DROP,
 			icon: iconPath
 		});
-		var contentString = '';
-		//Content structure of info Window for the Markers
-		var button = '';
-		if($('#isLoggin').val() == 'true'){
-			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
-				button = '<button type="button" class="remove-marker btn btn-default">Borrar</button>';
-			}
-		}
-		contentString = 
-		$('<div class="marker-info-win">'+
-		'<div class="row">'+
-		'<div class="col-sm-5 col-sm-offset-2">'+
-		'<h4> '+MapTitle+' <small> '+Type+' </small></h4>'+
-		'</div>'+
-		'</div>'+
-		'<div class="row">'+
-		'<div class="col-sm-2 col-sm-offset-1">'+
-		'<img src ="'+baseurl+'/uploads/'+Path+'" alt="'+MapTitle+'" class="img-rounded" height="70" width="70" />'+
-		'</div>'+
-		'<div class="col-sm-6 col-sm-offset-1">'+
-		'<p class="bg-info">'+MapDesc+'</p>'+
-		'</div>'+
-		'</div>'+
-		'<div class="row">'+
-		'<div class="btn-group col-sm-offset-5">'+
-		'<button type="button" id="show-detalle" class="save-marker btn btn-default">Detalles</button>'+
-		button+
-		'</div>'+
-		'</div>'+
-		'</div>');	
+
+		//Content con la estructura html de la ventana q aparecera
+		var contentString = muestraInfo(
+							MapTitle,
+							Type,
+							baseurl+'/uploads/'+Path,
+							MapDesc
+							);
 		
-		//Create an infoWindow
+		//Create una nueva ventana de informacion
 		var infowindow = new google.maps.InfoWindow();
-		//set the content of infoWindow
+		//agregarle el contenido
 		infowindow.setContent(contentString[0]);
 
 		//Find remove button in infoWindow
 		var showDetalle 	= contentString.find('button#show-detalle')[0];
 		if($('#isLoggin').val() == 'true'){
-			//alert($('#usuario_id').val())
-			//alert(usuario_id)
 			if($('#usuario_id').val() == usuario_id){
 			var removeBtn 	= contentString.find('button.remove-marker')[0];
 			//add click listner to remove marker button
@@ -356,9 +366,12 @@
 			cargaDatos(Id);
 		});
 		
-		//add click listner to save marker button		 
+		//accion al hacer click en un pin
 		google.maps.event.addListener(marker, 'click', function() {
-				infowindow.open(map,marker); // click on marker opens info window 
+				if (infowindow) {
+        			infowindow.close();
+    			}
+				infowindow.open(map,marker); // abre la ventana de informacion
 	    });
 	}
 
@@ -462,8 +475,7 @@
 	}); 
 	
 	//############### Save Marker Function ##############
-	function save_marker(Marker, mName, mDesc, mType, mTipo, replaceWin)
-	{
+	function save_marker(Marker, mName, mDesc, mType, mTipo, replaceWin){
 		//Save new marker using jQuery Ajax
 		 var mLatLang = Marker.getPosition().toUrlValue(); //get marker position
 
@@ -501,30 +513,16 @@
 				 dataType:'json',
 				  success:function(data){
 				  		id = eval(data.id);
-				  		var html = $('<div class="marker-info-win">'+
-						'<div class="row">'+
-						'<div class="col-sm-5 col-sm-offset-2">'+
-						'<h4> '+mName+' <small> '+mTipo+' </small></h4>'+
-						'</div>'+
-						'</div>'+
-						'<div class="row">'+
-						'<div class="col-sm-2 col-sm-offset-1">'+
-						'<img src ="http://appmissing.missing.cl/Missing/public/uploads/default.png" alt="'+mName+'" class="img-rounded" height="70" width="70" />'+
-						'</div>'+
-						'<div class="col-sm-6 col-sm-offset-1">'+
-						'<p>'+mDesc+'</p>'+
-						'</div>'+
-						'</div>'+
-						'<div class="row">'+
-						'<div class="btn-group col-sm-offset-5">'+
-						'<button type="button" id="show-detalle-succes" class="save-marker btn btn-default">Detalles</button>'+
-						'<button type="button" class="remove-marker btn btn-default">Borrar</button>'+
-						'</div>'+
-						'</div>'+
-						'</div>');
+				  		//Content con la estructura html de la ventana q aparecera
+						var contentString = muestraInfo(
+							mName,
+							mTipo,
+							'http://appmissing.missing.cl/Missing/public/uploads/default.png',
+							mDesc
+							);
 				  		$('#modal-share').modal();
 				  		$('#modal-share').find('.share').attr('data-id', id);
-						 $('.marker-edit').html(html); //replace info window with new html
+						 $('.marker-edit').html(contentString); // reemplazo el html con el nuevo html
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
 						    case '1':
@@ -548,7 +546,7 @@
 
 		             },
 		             error:function (xhr, ajaxOptions, thrownError){
-		                 alert('error al guardar'+thrownError); //throw any errors
+		                // alert('error al guardar'+thrownError); //throw any errors
 		             },
 		             complete: function(){
 		             	
@@ -558,6 +556,16 @@
     			error: function(response){
     			}
    				});	 
+	}
+
+	var muestraInfo = function(nombre, tipo, img_path, desc){
+		var contentString = $('.marker-info-win').clone();	
+		contentString.removeClass('hide');
+		contentString.find('.title-info').html(nombre+'<small>'+tipo+'</small>');
+		contentString.find('.img-info').attr('alt',nombre);
+		contentString.find('.img-info').attr('src', img_path);
+		contentString.find('.desc-info').text(desc);
+		return contentString;
 	}
 });
 
