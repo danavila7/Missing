@@ -83,6 +83,8 @@ Route::get("obtenerMissingSeguidosPorUsuario", 'HomeController@ObtenerMissingSeg
 Route::get('datosMissing/{id}', 'HomeController@ObtieneMissingPorId');
 //Ruta Crear Objeto
 Route::post('/createObject','ObjetoController@CrearObjeto');
+//Ruta Crear Objeto
+Route::post('/creaobjetosimple','ObjetoController@CreaObjetoSimple');
 //Ruta Seguir Objeto
 Route::post('/seguirObjeto','ObjetoController@SeguirObjeto');
 //Ruta Dejar Seguir Objeto
@@ -275,41 +277,6 @@ Route::post('borrarObjeto/', function(){
 		}
 });
 
-Route::post('objetos/', function()
+Route::post('Crearobjetos/', function()
 {
-	if(Request::ajax()){
-		$objeto = new Objeto;
-		list($lat, $long) = explode(",", (Input::get('latlang')));
-		
-		
-		$objeto->nombre_objeto = (Input::get('name'));
-		$objeto->descripcion_objeto = (Input::get('desc'));
-		$objeto->direccion_objeto = (Input::get('address'));
-		$objeto->tipoobjeto_id = (Input::get('type'));
-		$objeto->latitud_objeto = $lat;
-		$objeto->longitud_objeto = $long;
-		$objeto->tipopublicacion_id = 1;
-		$objeto->foto_objeto = '';
-		$objeto->usuario_id = Auth::user()->id;
-		$objeto->estado = 0;
-		
-		$objeto->save();
-		$LastInsertId = $objeto->id;
-		return Response::json(array('id'=>$LastInsertId));
-		//echo "{'nombre':'".$objeto->nombre_objeto."', 'tipo':'".$objeto->tipoobjeto_id."'}";
-		/*
-		//ingresar una imagen (mejorar el metodo)
-		//$file = Input::file('image');
-		$destinationPath = 'uploads';
-		// If the uploads fail due to file system, you can try doing public_path().'/uploads' 
-		$filename = $objeto->nombre_objeto.'_'.$objeto->id;
-		//$filename = $file->getClientOriginalName();
-		//$extension =$file->getClientOriginalExtension(); 
-		//$upload_success = Input::file('image')->move($destinationPath, $filename);
-		if( $upload_success ) {
-		
-		}else{
-		echo "Quedo la caga";	
-		}*/
-	}
 });

@@ -21,9 +21,12 @@ class UsuarioController extends BaseController
         'email' => Input::json('email'),
         'password' => Input::json('password'));
         if(Auth::attempt($credentials)){
-            return Response::json(array('flash'=>Auth::user()->usuario));
+            return Response::json(array(
+                        'msg'=>Auth::user()->usuario,
+                        'usuario_id'=>Auth::user()->id
+                        ));
         }else{
-        	return Response::json(array('flash'=>'Credenciales no validas'),500);
+        	return Response::json(array('msg'=>'Credenciales no validas'),500);
         }   
     }
 
@@ -33,7 +36,7 @@ class UsuarioController extends BaseController
             $perfil = DB::table('perfiles')
                     ->where('usuario_id', Auth::user()->id)
                     ->first();
-            return Response::json(array('isloggin'=>Auth::user()->usuario,
+            return Response::json(array('isloggin'=>Auth::user()->usuario,'usuario_id'=>Auth::user()->id,
                 'esCreado'=>Auth::user()->esCreado,'email'=>Auth::user()->email,'avatar'=>$perfil->avatar_path));
         }else{
         	return Response::json(array('isloggin'=>'false'));

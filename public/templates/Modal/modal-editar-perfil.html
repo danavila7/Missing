@@ -5,8 +5,8 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
         <h4 class="modal-title" id="myModalLabel">Edita tu perfil</h4>
       </div>
+      <form role="form" ng-submit="EditarPerfil()">
       <div class="modal-body">
-        <form role="form" ng-submit="EditarPerfil()">
               <div class="form-group">
                 <label for="exampleInputEmail1">Nombre</label>
                 <input type="text" class="form-control" name="nombre" id="perfil_nombre" placeholder="Ingresa tu nombre" ng-model="user.nombre" required/>
@@ -15,10 +15,12 @@
                 <label for="exampleInputEmail1">Email</label>
                 <input type="email" class="form-control" id="perfil_email" placeholder="Ingresa tu correo" ng-model="user.email" required/>
               </div>
-              <button type="submit" class="btn btn-success close">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
-        </form>
       </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+      </form>
     </div>
   </div>
 </div>

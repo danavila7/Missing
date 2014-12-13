@@ -5,7 +5,7 @@
   <ul id="myTab" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="pointer active">
       <a data-active="ult-missing" id="tab-ult-miss" role="tab" data-toggle="tab">
-      <i class="fa fa-arrows-alt"></i> Cercanos 
+      <i class="fa fa-arrows-alt"></i> Cercanos
       </a>
     </li>
     <li role="presentation" class="pointer">
@@ -26,7 +26,6 @@
     <nav  class="" role="navigation">
           <div class="panel panel-default">
             <div class="panel-heading">Missing Cercanos a tu ubicación</div>
-            <div ng-if="datosProximos.length > 0">
                   <div class="panel-body">
                     <div class="input-group">
                         <div class="checkbox">
@@ -44,6 +43,7 @@
                           </label>
                         </div>
                     </div>
+                    <div ng-if="datosProximos.length > 0">
                       <div class="input-group">
                          <!-- <span class="input-group-addon">Buscar</span>
                           <input type="text" class="form-control" placeholder="Nombre a buscar..." ng-model="Mibuscador" />-->
@@ -51,10 +51,13 @@
                          <ul class="list-group">
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in datosProximos | filter:Mibuscador | pagination: curPageProx * pageSizeProx | limitTo: pageSizeProx"
                             data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" data-nombre="{{ data.nombre_objeto }}" data-desc="{{ data.descripcion_objeto }}" data-tipo="{{ data.tipo }}" data-img="{{ data.path }}" data-id="{{ data.id }}" data-usuario-id="{{ data.usuario_id }}">
-                              <h4 class="list-group-item-heading">{{ data.nombre_objeto }}</h4>
+
+                              <h4 class="list-group-item-heading">
+                                
+                                {{ data.nombre_objeto }}</h4>
                                <span>{{ data.tipo }}</span>
                                <button ng-show="isLoggin" ng-if="data.seguido == 1" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
-                               <button ng-show="isLoggin" ng-if="data.seguido == 0" class="btn btn-xs btn-default pull-right btn-seguir" id="btn-{{data.id}}" title="Seguir" ng-click="seguir(data.id)"><i class="fa fa-check-square-o"></i>  Seguir </button>
+                               <button ng-show="isLoggin" ng-if="data.seguido == 0 && data.usuario_id != usuario_id" class="btn btn-xs btn-default pull-right btn-seguir" id="btn-{{data.id}}" title="Seguir" ng-click="seguir(data.id)"><i class="fa fa-check-square-o"></i>  Seguir </button>
                              </li>
                           </ul>
                           <div class="btn-group" role="group" aria-label="..." ng-show="datosProximos.length > pageSizeMios">
@@ -88,8 +91,10 @@
                       </div>
                          <ul class="list-group">
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misDatos | filter:Mibuscador | pagination: curPageMios * pageSizeMios | limitTo: pageSizeMios"
-                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
-                               <span>{{ data.nombre_objeto }}</span>
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" data-nombre="{{ data.nombre_objeto }}" data-desc="{{ data.descripcion_objeto }}" data-tipo="{{ data.tipo }}" data-img="{{ data.path }}" data-id="{{ data.id }}" data-usuario-id="{{ data.usuario_id }}">
+                               <h4 class="list-group-item-heading">
+                                {{ data.nombre_objeto }}</h4>
+                               <span>{{ data.tipo }}</span>
                              </li>
                           </ul>
                           <div class="btn-group" role="group" aria-label="..." ng-show="misDatos.length > pageSizeMios">
@@ -132,8 +137,10 @@
                       </div>-->
                          <ul class="list-group">
                             <li class="paginationclass buscamissing pointer list-group-item" ng-repeat="data in misSeguidos | filter:Mibuscador | pagination: curPageSig * pageSizeSig | limitTo: pageSizeSig"
-                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}"> 
-                               <span>{{ data.nombre_objeto }}</span>
+                            data-lat="{{ data.latitud_objeto }}" data-lng="{{ data.longitud_objeto }}" data-nombre="{{ data.nombre_objeto }}" data-desc="{{ data.descripcion_objeto }}" data-tipo="{{ data.tipo }}" data-img="{{ data.path }}" data-id="{{ data.id }}" data-usuario-id="{{ data.usuario_id }}">
+                                <h4 class="list-group-item-heading">
+                                {{ data.nombre_objeto }}</h4>
+                               <span>{{ data.tipo }}</span>
                                <button ng-show="isLoggin" class="btn btn-xs btn-info pull-right btn-siguiendo" id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)">Siguiendo</button>
                              </li>
                           </ul>
@@ -167,7 +174,15 @@
   </div>
 </div>
 </div>
-  <div class="col-md-8 container-maps">
+<div class="panel panel-info">
+  <div class="panel-heading">
+      Mapa con Missing perdidos
+      <div class="btn-group pull-right">
+        <a class="btn btn-info btn-sm" id="reload_map"><i class="fa fa-refresh" id="icon-btn-map"></i> Recargar Mapa</a>
+      </div>
+    </div>
+  <div class="panel-body">
+    <div class="col-md-8 container-maps">
     <div id="map" class="google-maps">
       <div class="col-md-4">
       </div>
@@ -178,7 +193,11 @@
       </div>
     </div>
   </div>
+  </div>
+  </div>
 </div>  
+<!-- html Editar Perfil -->
+<div ng-include="modaleditarperfil"></div> 
 <!-- Html Show Info -->
 <div ng-include="showCreateInfo"></div> 
 <!-- Html Show Info -->

@@ -13,6 +13,13 @@ class HomeController extends BaseController {
 		{
 		$id = Auth::id();
     	$UltimosMissingPorUsuario = DB::table('objetos')
+    				->select(DB::raw("objetos.*, 
+					CASE objetos.tipoobjeto_id 
+					WHEN 1 THEN 'Objeto' 
+					WHEN 2 THEN 'Animal' 
+					WHEN 3 THEN 'Persona' 
+					END AS tipo,
+					objetos.foto_objeto AS path"))
                     ->where('usuario_id', $id)
                     ->where('estado' , 0)
                     ->orderBy('created_at', 'desc')
@@ -30,9 +37,18 @@ class HomeController extends BaseController {
                     ->where('usuario_id', $id)
                     ->orderBy('created_at', 'desc')
                     ->lists('objeto_id');
-		$MissingSeguidosPorUsuario = DB::table('objetos')
+                    if(count($siguiendo) != 0){
+				$MissingSeguidosPorUsuario = DB::table('objetos')
+					->select(DB::raw("objetos.*, 
+					CASE objetos.tipoobjeto_id 
+					WHEN 1 THEN 'Objeto' 
+					WHEN 2 THEN 'Animal' 
+					WHEN 3 THEN 'Persona' 
+					END AS tipo,
+					objetos.foto_objeto AS path"))
                     ->whereIn('id', $siguiendo)
                     ->get();
+                }
 		}
 		return Response::json(array('Missing'=>$MissingSeguidosPorUsuario));
 	}
@@ -235,6 +251,7 @@ class HomeController extends BaseController {
 			"contacto_objeto"=>$objeto->contacto_objeto,
 			"recompensa_objeto"=>$objeto->recompensa_objeto,
 			"fecha_perdida"=>$objeto->fecha_perdida,
+			"tipo_objeto"=>$objeto->tipoobjeto_id,
 			"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
 			"estado"=>$obj->GetStatus($objeto->estado),
 			"fecha"=>$date,

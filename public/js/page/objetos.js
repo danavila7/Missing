@@ -87,6 +87,13 @@
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
 			cargaDatos(Id);
 		});
+		//accion al hacer click en un pin
+		google.maps.event.addListener(marker, 'click', function() {
+				if (infowindow) {
+        			infowindow.close();
+    			}
+				infowindow.open(map,marker); // abre la ventana de informacion
+	    });
 		//agregarle el contenido
 		infowindow.setContent(contentString[0]);
 		infowindow.open(map,marker); //abre la ventana de info/**/
@@ -113,18 +120,28 @@
 			}
 
 	/**** si el usuario permite la localidad del navegador ****/
-	if(navigator.geolocation) {
-    browserSupportFlag = true;
-    	navigator.geolocation.getCurrentPosition(function(position) {
-      	var currentMapCenter = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-      	map_initialize(currentMapCenter,position.coords.latitude,position.coords.longitude);
-    	}, function() {
-
-    	});
-  	}else{
-  		var mapCenter = new google.maps.LatLng(-33.437118,-70.650544); //Google map Coordinates	
-  		map_initialize(mapCenter,-33.437118,-70.650544); // initialize google map
+	function load_map(){
+		if(navigator.geolocation) {
+	    browserSupportFlag = true;
+	    	navigator.geolocation.getCurrentPosition(function(position) {
+	      	var currentMapCenter = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+	      	map_initialize(currentMapCenter,position.coords.latitude,position.coords.longitude);
+	    	}, function() {
+	    	});
+	  	}else{
+	  		var mapCenter = new google.maps.LatLng(-33.437118,-70.650544); //Google map Coordinates	
+	  		map_initialize(mapCenter,-33.437118,-70.650544); // initialize google map
+	  	}
+	  	$('#icon-btn-map').addClass('fa-refresh');
+  		$('#icon-btn-map').removeClass('fa-spinner');
   	}
+  	load_map();
+
+  	$(document).on("click", "#reload_map", function() {
+  		$('#icon-btn-map').removeClass('fa-refresh');
+  		$('#icon-btn-map').addClass('fa-spinner');
+  		load_map();
+  	})
 	
 	
 	
@@ -182,6 +199,7 @@
 			  map.setMapTypeId('map_style');
 
 			jQuery.get(jQuery('#baseurl').val()+"/obtenerTodosMissing", function (data) {
+				var baseurl = $('#baseurl').val().replace('index.php','');
 				//json
 				jsondata = eval(data);
 				for(i=0; i< jsondata['objetos'].length;i++){
@@ -197,16 +215,16 @@
 					  	var pin = "/img/pin-1_blue.png";
 					  	switch(tipoobjeto_id) {
 						    case '1':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
+				    			pin = baseurl+"/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png"
-				    			break;;
+				    			pin = baseurl+"/img/pin-1_green.png"
+				    			break;
 				    		case '3':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_orange.png"
+				    			pin = baseurl+"/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
+						        pin = baseurl+"/img/pin-1_blue.png"
 						}
 						showMarkers(id, point, nombre_objeto, path, descripcion_objeto, tipo, pin, usuario_id);
 				}
@@ -219,9 +237,13 @@
 				if($('#isLoggin').val() == 'false'){
 						$('#modal-login').modal();
 					}else{
-					createMarker(event.latLng, "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png");
+					baseurl = $('#baseurl').val().replace('index.php','');
+					createMarker(event.latLng, baseurl+"/img/pin-1_green.png");
 					}
-			});				
+			});		
+
+			
+
 	}
 
 
@@ -354,8 +376,9 @@
 		//Find remove button in infoWindow
 		var showDetalle 	= contentString.find('button#show-detalle')[0];
 		if($('#isLoggin').val() == 'true'){
-			if($('#usuario_id').val() == usuario_id){
-			var removeBtn 	= contentString.find('button.remove-marker')[0];
+			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
+			var removeBtn 	= contentString.find('button.remove-marker');
+			removeBtn.removeClass('hide');
 			//add click listner to remove marker button
 			google.maps.event.addDomListener(removeBtn, "click", function(event) {
 				remove_marker(Id,MapTitle,marker);
@@ -385,17 +408,17 @@
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);
-				$('#desc_objeto').text(missing.descripcion_objeto);
-				$('#fecha_objeto').text(missing.fecha);
-				$('#dir_objeto').text(missing.direccion_objeto);
-				$('#tipo').text(missing.tipo);
-				$('#usuario_objeto').text(missing.usuario);
+				$('#desc_objeto').text("Descripción: "+missing.descripcion_objeto);
+				$('#fecha_objeto').text("Fecha: "+missing.fecha);
+				$('#dir_objeto').text("Dirección: "+missing.direccion_objeto);
+				$('#tipo').text("Tipo: "+missing.tipo);
+				$('#usuario_objeto').text("Creado por: "+missing.usuario);
 			});
 		$('#modal-detalles').modal();
 	}
 
 
-	function cargaPerfil(Id){
+	$(document).on("click", "#carga_perfil", function() {
 		var baseurl = $('#baseurl').val().replace('index.php','');
 		/*jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+Id, function (data) {
 				jsondata = eval(data);
@@ -413,7 +436,7 @@
 				$('#usuario_objeto').text(missing.usuario);
 			});*/
 		$('#modal-editar-perfil').modal();
-	}
+	});
 	
 	//############### Remove Marker Function ##############
 	function remove_marker(Id,nombre,Marker)
@@ -478,7 +501,7 @@
 	function save_marker(Marker, mName, mDesc, mType, mTipo, replaceWin){
 		//Save new marker using jQuery Ajax
 		 var mLatLang = Marker.getPosition().toUrlValue(); //get marker position
-
+		 var baseurl = $('#baseurl').val().replace('index.php','');
 		 var elem = mLatLang.split(',');
 			var lat = elem[0];
 			var lng = elem[1];
@@ -508,7 +531,7 @@
 		    	 var myData = {name : mName, desc : mDesc, address : address, latlang : mLatLang, type : mType }; //post variables	
 				 $.ajax({
 				 type: "POST",
-				 url: $('#baseurl').val()+"/objetos",
+				 url: baseurl+"/creaobjetosimple",
 				 data: myData,
 				 dataType:'json',
 				  success:function(data){
@@ -517,7 +540,7 @@
 						var contentString = muestraInfo(
 							mName,
 							mTipo,
-							'http://appmissing.missing.cl/Missing/public/uploads/default.png',
+							baseurl+'/uploads/default.png',
 							mDesc
 							);
 				  		$('#modal-share').modal();
@@ -526,16 +549,16 @@
 						 $('.marker-edit').removeClass('marker-edit');
 						 switch(mType) {
 						    case '1':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
+				    			pin = baseurl+"/img/pin-1_blue.png"
 				    			break;
 				    		case '2':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_green.png"
+				    			pin = baseurl+"/img/pin-1_green.png"
 				    			break;
 				    		case '3':
-				    			pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_orange.png"
+				    			pin = baseurl+"/img/pin-1_orange.png"
 				    			break;
 						    default:
-						        pin = "http://appmissing.missing.cl/Missing/public/img/pin-1_blue.png"
+						        pin = baseurl+"/img/pin-1_blue.png"
 						}
 						 Marker.setDraggable(false); //set marker to fixed
 						 Marker.setIcon(pin); //replace icon
@@ -561,7 +584,7 @@
 	var muestraInfo = function(nombre, tipo, img_path, desc){
 		var contentString = $('.marker-info-win').clone();	
 		contentString.removeClass('hide');
-		contentString.find('.title-info').html(nombre+'<small>'+tipo+'</small>');
+		contentString.find('.title-info').html(nombre+' <small>'+tipo+'</small>');
 		contentString.find('.img-info').attr('alt',nombre);
 		contentString.find('.img-info').attr('src', img_path);
 		contentString.find('.desc-info').text(desc);

@@ -5,8 +5,8 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
         <h4 class="modal-title" id="myModalLabel">Mientras más datos, más posibilidades de encontrar lo que buscas.</h4>
       </div>
+      <form role="form" ng-submit="CrearObjeto()">
       <div class="modal-body">
-        <form role="form" ng-submit="CrearObjeto()">
           <input type="hidden" ng-model="obj.longitud" id="modal_long_obj" />
           <input type="hidden" ng-model="obj.latitud" id="modal_lat_obj" />
               <div class="form-group">
@@ -25,10 +25,6 @@
                 <label for="inputDescripcion">Descripción</label>
                 <textarea class="form-control" id="descripcion-obj" rows="3" ng-model="obj.descripcion" placeholder="Descripción"></textarea>
               </div>
-
-
-
-
               <div class="form-group">
                 <label for="inputFoto">Agrega Fotos</label>
                 <input class="form-control" accept="image/*" id="imagen-obj" type="file" file-model="myFile"/>
@@ -36,11 +32,6 @@
                 <li class="list-group-item list-group-item-info" ng-repeat="file in files">{{file.name}}</li>
               </ul>
               </div>
-              
-
-
-
-
                <div class="form-group">
                 <label for="inputTipoObjeto">Tipo Objeto</label>
                 <select class="form-control" id="tipo-obj" required>
@@ -49,7 +40,6 @@
                   <option value="2">Animal</option>
                   <option value="3">Persona</option>
                 </select>
-
               </div>
               <div class="form-group">
                 <label for="inputRecompensa">¿Agregar Recompensa?</label>
@@ -60,12 +50,12 @@
                 <input type="text" class="form-control" id="recompensa_text" ng-model="obj.recompensa" placeholder="Ingresa un monto" />
               </div>
               <div class="alert alert-success hide" id="alert-obj-creado" role="alert">Missing creado con exito!!!</div>
-              <button type="submit" class="btn btn-success">Guardar</button>
-        </form>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
+      </form>
     </div>
   </div>
 </div>

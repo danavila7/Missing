@@ -30,6 +30,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
   	$scope.showBasicInfo = 'templates/Home/showBasicInfo.html';
 
 	 //asignar modales con nginclude
+	$scope.modaleditarperfil = 'templates/Modal/modal-editar-perfil.html';
     $scope.modallogin = 'templates/Modal/modal-login.html';
     $scope.modalagregadatos = 'templates/Modal/modal-agrega-datos.html';
     $scope.modalconfirmdelete = 'templates/Modal/modal-confirm-delete.html';
@@ -159,28 +160,31 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
 			$location.path("/");
+			jQuery('#reload_map').click();
 		});
 	}
 
 	$scope.logout = function(){
 	 	AuthenticationService.logout().success(function(){
 			$location.path("/");
+			jQuery('#reload_map').click();
 		});
 	 }
 });
 
-app.factory("FlashService", function($rootScope){
+/*app.factory("FlashService", function($rootScope){
 	//Solo para el login
 	return{
 		show: function(message){
 			jQuery('#flash').html(message);
 			$rootScope.flash = message;
+			//$rootScope.usuario_id = 
 		},
 		clear: function(){
 			$rootScope.flash = "";
 		}
 	}
-});
+});*/
 
 app.factory("ShowDatosService", function($rootScope, $http){
 	return{
@@ -228,10 +232,11 @@ app.factory("ShowDatosService", function($rootScope, $http){
 
 app.factory("ShowService", function($rootScope, $http){
 	return{
-		showDataUser: function(message, avatar){
+		showDataUser: function(message, avatar, usuario_id){
 			//muestra nombre de usuario
 			jQuery('#username').html("Bienvenido "+message);
 			jQuery('.avatar').attr('src', avatar);
+			$rootScope.usuario_id = usuario_id;
 			//Mostrar el logout
 			//debugger;
 			jQuery('.logout-home').removeClass('hide');
@@ -306,7 +311,7 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 				if(data.isloggin != 'false'){
         			SessionService.set('authenticated', true);
 					SessionService.setuser('username', data.isloggin);
-					ShowService.showDataUser(data.isloggin, data.avatar);
+					ShowService.showDataUser(data.isloggin, data.avatar, data.usuario_id);
 					ShowDatosService.showDataSiguiendo();
 					ShowDatosService.showDataMios();
 					jQuery('#isLoggin').val(true);
@@ -454,10 +459,10 @@ app.factory("CreateObjetoService", function($http, $location, ShowDatosService){
 });
 
 
-app.factory("AuthenticationService", function($http, $location, SessionService, FlashService, ShowService, ShowDatosService){
+app.factory("AuthenticationService", function($http, $location, SessionService, ShowService, ShowDatosService){
 	var cacheSession = function(response){
 		SessionService.set('authenticated', true);
-		SessionService.setuser('username', response.flash);
+		SessionService.setuser('username', response.msg);
 	};
 	var uncacheSession = function(){
 		SessionService.unset('authenticated');
@@ -465,10 +470,10 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 	};
 	var loginError = function(response){
 		ShowService.errorLogin();
-		FlashService.show(response.flash);
+		//FlashService.show(response.flash);
 	}
 	var loginSuccess = function(response){
-		ShowService.showDataUser(response.flash);
+		ShowService.showDataUser(response.msg);
 		ShowDatosService.showDataSiguiendo();
 		ShowDatosService.showDataMios();
 	}
@@ -479,7 +484,7 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 			var login = $http.post(jQuery('#baseurl').val()+"/login", credentials);
 			login.success(cacheSession);
 			login.success(loginSuccess);
-			login.success(FlashService.clear);
+			//login.success(FlashService.clear);
 			login.error(loginError);
 			return login;
 		},

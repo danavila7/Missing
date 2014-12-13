@@ -22,6 +22,30 @@ class ObjetoController extends BaseController
 		return View::make('users.create');
 	}
 
+	public function CreaObjetoSimple(){
+		if(Request::ajax()){
+			$objeto = new Objeto;
+			list($lat, $long) = explode(",", (Input::get('latlang')));
+			
+			
+			$objeto->nombre_objeto = (Input::get('name'));
+			$objeto->descripcion_objeto = (Input::get('desc'));
+			$objeto->direccion_objeto = (Input::get('address'));
+			$objeto->tipoobjeto_id = (Input::get('type'));
+			$objeto->latitud_objeto = $lat;
+			$objeto->longitud_objeto = $long;
+			$objeto->tipopublicacion_id = 1;
+			$objeto->foto_objeto = '';
+			$objeto->usuario_id = Auth::user()->id;
+			$objeto->estado = 0;
+			$objeto->foto_objeto = 'default.png';
+			
+			$objeto->save();
+			$LastInsertId = $objeto->id;
+			return Response::json(array('id'=>$LastInsertId));
+		}
+	}
+
 
 	
 	public function CrearObjeto(){

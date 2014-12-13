@@ -61,6 +61,16 @@ color: #fff;
     top: 150px;
 }
 
+.img-missing{
+    width: 15%;
+    height: 15%;
+}
+
+#modal-detalles .large {
+    width: 80%; /* respsonsive width */
+    margin-left:-40%; /* width/2) */ 
+}
+
 
 
 

@@ -7,7 +7,7 @@
 <!-- AGREGANDO EL MODULO APP (ANGULARJS) -->
 <html ng-app="app">
 <head>
-<title>Missing | El Waze de los objetos perdidos.</title>
+<title>Missing @if (Auth::check()) | {{Auth::user()->usuario}} @endif</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -126,8 +126,8 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
             <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li class="pointer" onclick="cargaPerfil(@if (Auth::check()) {{Auth::user()->id}} @endif)">
-                <a class="dropdown-menu-text">Editar Perfil</a>
+              <li class="pointer">
+                <a class="dropdown-menu-text" id="carga_perfil">Editar Perfil</a>
               </li>
               <li class="pointer dropdown-menu-text"><a class="dropdown-menu-text">Configuración</a></li>
               <li class="divider"></li>

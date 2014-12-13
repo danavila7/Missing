@@ -50,23 +50,26 @@ jQuery(document).ready(function() {
 
 	$(document).on("click", ".share-fb", function() {	
 		var id = $(this).attr('data-id');
-		var baseurl = jQuery('#baseurl').val();
+		var baseurl = $('#baseurl').val().replace('index.php','');
+		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+id, function (data) {
+				jsondata = eval(data);
+				missing = eval(jsondata.missing);
 		var share_url = baseurl+"/share/"+id;
-		var tipo_objeto = $(this).parents('#modal-detalles').find('#tipo').text();
+		var tipo_objeto = missing.tipo;
 		var frase = '';
-		if(tipo_objeto == 'Persona'){
+		if(missing.tipo_objeto == '3'){
 			frase = 'Ayudame a encontrar a esta Persona llamada ';
 		}
-		if(tipo_objeto == 'Objeto'){
+		if(missing.tipo_objeto == '1'){
 			frase = 'Ayudame a encontrar este objeto ';
 		}
-		if(tipo_objeto == 'Animal'){
+		if(missing.tipo_objeto == '2'){
 			frase = 'Ayudame a encontrar esta mascota llamada ';
 		}
-		var share_text = frase+'"'+$(this).parents('#modal-detalles').find('#nom_objeto').text()+'"';
+		var share_text = frase+'"'+missing.nombre_objeto+'"';
 		var share_subtitle = "Comparte esta publicación para que más gente me pueda ayudar.";
-		var share_description = $(this).parents('#modal-detalles').find('#desc_objeto').text();
-		var share_imagen = $(this).parents('#modal-detalles').find('#img_objeto').attr('src');
+		var share_description = missing.descripcion_objeto;
+		var share_imagen = baseurl+'/uploads/'+missing.path;
 		postToFacebookDialog(
 			baseurl, 
 			share_text, 
@@ -76,24 +79,34 @@ jQuery(document).ready(function() {
 			baseurl, 
 			''
 			);
+			});
 	});
 
 	$(document).on("click", ".share-tw", function() {	
-		var share_url = escape(window.location.href)+"share/"+id;
-		var tipo_objeto = $(this).parents('#modal-detalles').find('#tipo').text();
-		var frase = '';
-		if(tipo_objeto == 'Persona'){
-			frase = 'Ayudame a encontrar a esta Persona llamada ';
-		}
-		if(tipo_objeto == 'Objeto'){
-			frase = 'Ayudame a encontrar este objeto ';
-		}
-		if(tipo_objeto == 'Animal'){
-			frase = 'Ayudame a encontrar esta mascota llamada ';
-		}
-		var share_text = frase+'"'+$(this).parents('#modal-detalles').find('#nom_objeto').text()+'"';
+		
 		var id = $(this).attr('data-id');
-		window.open("https://twitter.com/share?url="+escape(window.location.href)+"share/"+id+"&text="+share_text+'&via=missing_app', '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+
+		var baseurl = $('#baseurl').val().replace('index.php','');
+		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+id, function (data) {
+				jsondata = eval(data);
+				missing = eval(jsondata.missing);
+				var share_url = escape(window.location.href)+"share/"+id;
+				var frase = '';
+				if(missing.tipo_objeto == '3'){
+					frase = 'Ayudame a encontrar a esta Persona llamada ';
+				}
+				if(missing.tipo_objeto == '1'){
+					frase = 'Ayudame a encontrar este objeto ';
+				}
+				if(missing.tipo_objeto == '2'){
+					frase = 'Ayudame a encontrar esta mascota llamada ';
+				}
+				var share_text = frase+'"'+missing.nombre_objeto+'"';
+					window.open("https://twitter.com/share?url="+share_url+
+						"&text="+share_text+'&via=missing_app', 
+						'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+				});
 	});
 
 	$(document).on("click", ".share-go", function() {	
