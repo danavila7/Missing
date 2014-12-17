@@ -18,6 +18,10 @@ body {
 	
 }
 
+.progress-bar.animate {
+   width: 100%;
+}
+
 .dropdown-menu-text{
 	color: #0BACC9!important;
 }

@@ -84,6 +84,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 		//deshabilitar boton
 			setTimeout(function(){
 			$('#modal-datos').modal('hide');
+			jQuery('#reload_map').click();
 			}, 3000);
 		});
 	}
@@ -160,7 +161,7 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
 			$location.path("/");
-			jQuery('#reload_map').click();
+
 		});
 	}
 
@@ -448,8 +449,8 @@ app.factory("CreateObjetoService", function($http, $location, ShowDatosService){
 				.error(function(){
 					//alert('no cargo la imagen');
 				});
-			})
-			.error(function(){
+				
+			}).error(function(){
 				//alert('error no cargo');
 			});
 			
@@ -484,6 +485,9 @@ app.factory("AuthenticationService", function($http, $location, SessionService, 
 			var login = $http.post(jQuery('#baseurl').val()+"/login", credentials);
 			login.success(cacheSession);
 			login.success(loginSuccess);
+			login.success(function(){
+			jQuery('#reload_map').click();
+			})
 			//login.success(FlashService.clear);
 			login.error(loginError);
 			return login;

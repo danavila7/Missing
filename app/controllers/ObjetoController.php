@@ -111,6 +111,17 @@ class ObjetoController extends BaseController
 		return Response::json(array('msg'=>'ok'));
 	}
 
+	public function BorrarObjeto(){
+		if(Request::ajax()){
+		$id	=  Input::get('id');
+		$objeto = Objeto::find($id);
+		//0 normal, 1 eliminado, 2 encontrado
+		$objeto->estado = 1;
+		$objeto->save();
+		echo $objeto->nombre_objeto;
+		}
+	}
+
 	public function get_delete($id){
 		$objeto = Objeto::find($id);
 		

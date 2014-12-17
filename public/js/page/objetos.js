@@ -2,7 +2,12 @@
 	var infowindow = new google.maps.InfoWindow();
 	jQuery(document).ready(function() {
 
-		$('#modal-loading').modal();
+		//modal loading
+  		$('#modal-loading').modal({
+  			backdrop: 'static',
+	  		show: false,
+	  		closable: false
+  		});
 		/**** datepicker para la fecha de perdida ****/
 		$(".input-date").datepicker({
 	   			 todayHighlight: true
@@ -73,17 +78,18 @@
 
 		//Find remove button in infoWindow
 		var showDetalle 	= contentString.find('button#show-detalle')[0];
+		var removeBtn 	= contentString.find('.remove-marker')[0];
 		
 		if($('#isLoggin').val() == 'true'){
 			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
-			var removeBtn 	= contentString.find('.remove-marker');
-			removeBtn.removeClass('hide');
-			//add click listner to remove marker button
-			google.maps.event.addDomListener(removeBtn, "click", function(event) {
-				remove_marker(Id,nombre,marker);
-			});
+			contentString.find('.remove-marker').removeClass('hide');
 			}
 		}
+
+		google.maps.event.addDomListener(removeBtn, "click", function(event) {
+				remove_marker(Id,nombre,marker);
+			});
+
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
 			cargaDatos(Id);
 		});
@@ -121,6 +127,10 @@
 
 	/**** si el usuario permite la localidad del navegador ****/
 	function load_map(){
+		var $modal = $('#modal-loading'),
+	    $bar = $modal.find('.progress-bar');
+		$modal.modal('show');
+		$bar.addClass('animate');
 		if(navigator.geolocation) {
 	    browserSupportFlag = true;
 	    	navigator.geolocation.getCurrentPosition(function(position) {
@@ -137,12 +147,17 @@
   	}
   	load_map();
 
+  	
+
   	$(document).on("click", "#reload_map", function() {
   		$('#icon-btn-map').removeClass('fa-refresh');
   		$('#icon-btn-map').addClass('fa-spinner');
+  		
   		load_map();
-  	})
-	
+  	});
+
+
+		 
 	
 	
 	//############### Google Map Initialize ##############
@@ -230,7 +245,7 @@
 				}
 			});
 			//escondemos el loader
-			//$('#modal-loading').modal('hide')
+			$('#modal-loading').modal('hide');
 			jQuery('.loader').hide();
 			//Right Click
 			google.maps.event.addListener(map, 'rightclick', function(event) {
@@ -375,16 +390,15 @@
 
 		//Find remove button in infoWindow
 		var showDetalle 	= contentString.find('button#show-detalle')[0];
+		var removeBtn 	= contentString.find('.remove-marker')[0];
 		if($('#isLoggin').val() == 'true'){
 			if(parseInt($('#usuario_id').val()) == parseInt(usuario_id)){
-			var removeBtn 	= contentString.find('button.remove-marker');
-			removeBtn.removeClass('hide');
-			//add click listner to remove marker button
-			google.maps.event.addDomListener(removeBtn, "click", function(event) {
-				remove_marker(Id,MapTitle,marker);
-			});
+			contentString.find('.remove-marker').removeClass('hide');
 			}
 		}
+		google.maps.event.addDomListener(removeBtn, "click", function(event) {
+				remove_marker(Id,MapTitle,marker);
+		});
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
 			cargaDatos(Id);
 		});
@@ -450,7 +464,7 @@
 		}
 		else
 		{
-			if (confirm('¿Esta seguro que desea borrar este Missing?')) {
+			/*if (confirm('¿Esta seguro que desea borrar este Missing?')) {
 			var myData = { id : Id };
 			$.ajax({
 			  type: "POST",
@@ -463,11 +477,10 @@
 					alert('error al borrar '+thrownError); //throw any errors
 				}
 			});
-			}
-			/*$('.confirma-borrar').attr('data-marker',Marker);
+			}*/
 			$('.confirma-borrar').attr('data-id',Id);
 			$('.nombre_missing').text(nombre);
-			$('#confirm-delete-share').modal();*/
+			$('#confirm-delete-share').modal();
 		}
 	}
 
@@ -482,14 +495,13 @@
 	$(document).on("click", ".confirma-borrar", function() {
 		var Id = $(this).attr('data-id');	
 		var myData = { id : Id };
-		var Marker = $(this).data('marker');	
 		$.ajax({
 			  type: "POST",
-			  url: $('#baseurl').val()+"/borrarObjeto",
+			  url: $('#baseurl').val()+"/borrarobjeto",
 			  data: myData,
 			  success:function(data){
-			  	alert(Marker)
-					Marker.setMap(null); 
+			  	$('#confirm-delete-share').modal('hide');
+			  		jQuery('#reload_map').click();
 				},
 				error:function (xhr, ajaxOptions, thrownError){
 					alert('error al borrar '+thrownError); //throw any errors

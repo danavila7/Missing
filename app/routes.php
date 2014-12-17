@@ -91,6 +91,8 @@ Route::post('/seguirObjeto','ObjetoController@SeguirObjeto');
 Route::post('/dejarSeguirObjeto','ObjetoController@DejarSeguirObjeto');
 //Ruta Carga Imagen
 Route::post('/cargaImagen','ObjetoController@CargaImagen');
+//Ruta borra un objeto
+Route::post('borrarobjeto/','ObjetoController@BorrarObjeto');
 
 
 
@@ -214,69 +216,3 @@ return Redirect::to('');
 });
 
 
-/************ RUTA DE OBJETOS ***************/
-
-Route::get('objetos/', function()
-{
-	
-	//Create a new DOMDocument object
-	$dom = new DOMDocument("1.0");
-	$node = $dom->createElement("markers"); //Create new element node
-	$parnode = $dom->appendChild($node); //make the node show up
-	
-	// Select all the rows in the markers table  DB::table('objetos')->where('tipoobjeto_id', '2');
-	$objetos = Objeto::where('estado', '=', 1)->get();
-
-
-	if (!$objetos) {
-		header('HTTP/1.1 500 Error: no se encontraron objetos!');
-		exit();
-	}
-	
-	//set document header to text/xml
-	header("Content-type: text/xml");
-	
-	// Iterate through the rows, adding XML nodes for each
-	foreach($objetos as $objeto)
-	{	
-		$obj = new Objeto;
-		$node = $dom->createElement("marker");
-		$newnode = $parnode->appendChild($node);
-		$newnode->setAttribute("id", $objeto->id);
-		$newnode->setAttribute("usuario_id", $objeto->usuario_id);
-		$newnode->setAttribute("name",$objeto->nombre_objeto);
-		$newnode->setAttribute("lat", $objeto->latitud_objeto);
-		$newnode->setAttribute("lng", $objeto->longitud_objeto);
-		$newnode->setAttribute("desc", $objeto->descripcion_objeto);
-		$newnode->setAttribute("type", $obj->GetType($objeto->tipoobjeto_id));
-		$newnode->setAttribute("typeid", $objeto->tipoobjeto_id);
-		if(isset($objeto->foto_objeto) && $objeto->foto_objeto != ""){
-			$newnode->setAttribute("path", $objeto->foto_objeto);
-		}else{
-			$newnode->setAttribute("path", "default.png");
-		}
-
-		
-	}
-	
-	echo $dom->saveXML();
-	
-	
-	
-});
-
-Route::post('borrarObjeto/', function(){
-	if(Request::ajax()){
-		
-		$id	=  Input::get('id');
-		$objeto = Objeto::find($id);
-		//0 borrado, 1 activo, 2 encontrado
-		$objeto->estado = 0;
-		$objeto->save();
-		echo $objeto->nombre_objeto;
-		}
-});
-
-Route::post('Crearobjetos/', function()
-{
-});

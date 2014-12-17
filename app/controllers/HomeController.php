@@ -47,6 +47,7 @@ class HomeController extends BaseController {
 					END AS tipo,
 					objetos.foto_objeto AS path"))
                     ->whereIn('id', $siguiendo)
+                    ->where('estado','0')
                     ->get();
                 }
 		}
@@ -83,11 +84,7 @@ class HomeController extends BaseController {
 				->take($num)
 				->orderBy('distance', 'desc')
 				->get();
-
-		//INNER JOIN objetos on objetos.id = location.from_id
-
 		return Response::json(array('missing'=>$objetos));
-
 	}
 
 	//obtener los ultimos missing pordenados por fecha

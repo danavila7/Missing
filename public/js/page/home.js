@@ -70,13 +70,14 @@ jQuery(document).ready(function() {
 		var share_subtitle = "Comparte esta publicación para que más gente me pueda ayudar.";
 		var share_description = missing.descripcion_objeto;
 		var share_imagen = baseurl+'/uploads/'+missing.path;
+		var share_url = baseurl+'/#/share/'+id;
 		postToFacebookDialog(
-			baseurl, 
+			share_url, 
 			share_text, 
 			share_subtitle, 
 			share_description, 
 			share_imagen, 
-			baseurl, 
+			share_url, 
 			''
 			);
 			});
