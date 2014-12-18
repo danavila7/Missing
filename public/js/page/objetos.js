@@ -71,7 +71,8 @@
 							nombre,
 							tipo,
 							baseurl+"/uploads/"+img_path,
-							desc
+							desc,
+							Id
 							);
 
 		
@@ -87,7 +88,7 @@
 		}
 
 		google.maps.event.addDomListener(removeBtn, "click", function(event) {
-				remove_marker(Id,nombre,marker);
+				remove_marker(Id,nombre);
 			});
 
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
@@ -380,7 +381,8 @@
 							MapTitle,
 							Type,
 							baseurl+'/uploads/'+Path,
-							MapDesc
+							MapDesc,
+							Id
 							);
 		
 		//Create una nueva ventana de informacion
@@ -397,7 +399,7 @@
 			}
 		}
 		google.maps.event.addDomListener(removeBtn, "click", function(event) {
-				remove_marker(Id,MapTitle,marker);
+				remove_marker(Id,MapTitle);
 		});
 		google.maps.event.addDomListener(showDetalle, "click", function(event) {
 			cargaDatos(Id);
@@ -453,35 +455,10 @@
 	});
 	
 	//############### Remove Marker Function ##############
-	function remove_marker(Id,nombre,Marker)
-	{
-		
-		/* determine whether marker is draggable 
-		new markers are draggable and saved markers are fixed */
-		if(Marker.getDraggable()) 
-		{
-			Marker.setMap(null); //just remove new marker
-		}
-		else
-		{
-			/*if (confirm('¿Esta seguro que desea borrar este Missing?')) {
-			var myData = { id : Id };
-			$.ajax({
-			  type: "POST",
-			  url: $('#baseurl').val()+"/borrarObjeto",
-			  data: myData,
-			  success:function(data){
-					Marker.setMap(null); 
-				},
-				error:function (xhr, ajaxOptions, thrownError){
-					alert('error al borrar '+thrownError); //throw any errors
-				}
-			});
-			}*/
+	function remove_marker(Id,nombre){
 			$('.confirma-borrar').attr('data-id',Id);
 			$('.nombre_missing').text(nombre);
 			$('#confirm-delete-share').modal();
-		}
 	}
 
 	/*$(document).on("click", ".btn-seguir", function(){
@@ -491,6 +468,13 @@
 		$('#confirm-seguir').find('#missing-id').val(id);
 		$('#confirm-seguir').modal();
 	});*/
+
+	$(document).on("click", ".btn-remove", function(){
+		var nom_objeto = $(this).attr('data-nombre');
+		var id = $(this).attr('data-id');
+		remove_marker(id, nom_objeto);
+	});
+	
 
 	$(document).on("click", ".confirma-borrar", function() {
 		var Id = $(this).attr('data-id');	
@@ -553,7 +537,8 @@
 							mName,
 							mTipo,
 							baseurl+'/uploads/default.png',
-							mDesc
+							mDesc,
+							id
 							);
 				  		$('#modal-share').modal();
 				  		$('#modal-share').find('.share').attr('data-id', id);
@@ -593,9 +578,10 @@
    				});	 
 	}
 
-	var muestraInfo = function(nombre, tipo, img_path, desc){
+	var muestraInfo = function(nombre, tipo, img_path, desc, id){
 		var contentString = $('.marker-info-win').clone();	
 		contentString.removeClass('hide');
+		contentString.find('.show-foto').attr('data-id', id);
 		contentString.find('.title-info').html(nombre+' <small>'+tipo+'</small>');
 		contentString.find('.img-info').attr('alt',nombre);
 		contentString.find('.img-info').attr('src', img_path);

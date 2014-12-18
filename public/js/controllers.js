@@ -40,6 +40,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modalcrearusuario = 'templates/Modal/modal-crear-usuario.html';
     $scope.modalcrearusuarioescreado = 'templates/Modal/modal-crear-usuario-es-creado.html';
     $scope.modalcrearusuarioescreado = 'templates/Modal/modal-confirm-seguir.html';
+    $scope.modalfoto = 'templates/Modal/modal-foto.html';
 
     //upload fotos
     $scope.upload = function(){
@@ -282,6 +283,8 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 				var missing = eval(data.missing);
 				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&markers=color:blue%7Clabel:S%"+missing.latitud_objeto+","+missing.longitud_objeto+"&sensor=false";
 				$('.back-app').attr('href', baseurl);
+				$('.share').attr('data-id', Id);
+				$('.show-foto').attr('data-id', Id);
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
 				$('#ubicacion').attr('src', src);
 				$('#nom_objeto').text(missing.nombre_objeto);

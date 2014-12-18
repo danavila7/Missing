@@ -95,6 +95,10 @@
                                  <h4 class="list-group-item-heading">
                                   {{ data.nombre_objeto }}</h4>
                                  <span>{{ data.tipo }}</span>
+                                 <div class="btn-group pull-right" role="group" aria-label="...">
+                                 <button ng-show="isLoggin" class="btn btn-xs btn-info btn-remove" title="Seguir" data-id="{{ data.id }}" data-nombre="{{ data.nombre_objeto }}"><i class="fa fa-times"></i></button> 
+                                 <button ng-show="isLoggin" class="btn btn-xs btn-info " id="btn-{{data.id}}" title="Seguir" ng-click="dejarSeguir(data.id)"><i class="fa fa-pencil-square-o"></i></button>
+                               </div>
                                </li>
                             </ul>
                             <div class="btn-group" role="group" aria-label="..." ng-show="misDatos.length > pageSizeMios">
@@ -195,7 +199,9 @@
       </div>
     </div>
     </div>
-</div>  
+</div> 
+<!-- html Foto-->
+<div ng-include="modalfoto"></div>  
 <!-- html Editar Perfil -->
 <div ng-include="modaleditarperfil"></div> 
 <!-- Html Show Info -->

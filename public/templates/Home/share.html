@@ -1,41 +1,79 @@
 <div id="create-user-logged" class="row" class="col-md-12">
-  <a href="" class="btn btn-default btn-lg active back-app" role="button">Ir a la app</a>
-    <div class="col-md-6 col-md-offset-3 loader">
-        <h3>Detalles del Missing.</h3>
-           <table class="table table-bordered">
-            <tr>
-              <td>Imagen</td>
+  <div class="col-md-12"><h3 class="text-center">Detalles del Missing.</h3></div>
+  <div class="col-md-4">
+  <a href="" class="btn btn-default btn-lg active show-foto" data-id="" role="button">
+    <img id="img_objeto" class="img-rounded"  height="300" width="300" />
+  </a>
+  <table>
+    <tr>
+      <td>
+        Ayuda a encontrarlo, Comparte:
+      </td>
+    </tr>
+    <tr>
+    <td>
+      <div class="form-group">
+        <a data-id="" class="btn btn-primary share share-fb" target="_blank" alt="Share on Facebook"><i class="fa fa-facebook"></i> Facebook</a>
+      </div>
+    </td>
+    <td>
+      <div class="form-group">
+        <a data-id="" class="btn btn-info share share-tw" target="_blank" alt="Share on Twitter"><i class="fa fa-twitter"></i> Twitter</a>
+      </div>
+    </td>
+    <td>
+      <div class="form-group">
+        <a data-id="" class="btn btn-danger share share-go" target="_blank" alt="Share on Google+"><i class="fa fa-google-plus"></i> Google+</a>
+      </div>
+    </td>
+    </tr>
+  </table>
+  </div>
+  <div class="col-md-4">
+    <table class="table">
+            <tr class="info">
               <td>
-                <img id="img_objeto" class="img-rounded" height="200" width="200" />
+                Creado Por:
               </td>
-            </tr> 
-            <tr>
-              <td>Ubicación</td>
-              <td>
-              <img src="" id="ubicacion" class="img-rounded" height="200" width="200" />
-              </td>
-            </tr> 
-            <tr>
-              <td>Descripción</td>
-              <td id="desc_objeto"></td>
-            </tr> 
-            <tr>
-              <td>Creado por</td>
               <td id="usuario_objeto"></td>
+            </tr>
+            <tr>
+            </tr>
+              <td>
+                <table class="table">
+                <tr>
+                  <td id="desc_objeto"></td>
+                </tr>
+                <tr>
+                  
+                </tr>
+                <tr>
+                  <td id="tipo"></td>
+                </tr>
+                 <tr>
+                   <td id="dir_objeto"></td>
+                </tr>
+                <tr>
+                  <td id="fecha_objeto"></td>
+                </tr>
+              </table>
+              </td>
+              <td>
+                
+              </td>
             </tr> 
-            <tr>
-              <td>Tipo</td>
-               <td id="tipo"></td>
-            </tr>
-            <tr>
-              <td>Dirección</td>
-               <td id="dir_objeto"></td>
-            </tr>
-            <tr>
-              <td>Fecha</td>
-              <td id="fecha_objeto"></td>
-            </tr>
           </table>
-          <div class="fb-comments" data-href="" data-numposts="5" data-colorscheme="light"></div>
+        </div>
+        <div class="col-md-4">
+          Click para ver en el mapa
+          <a href="" class="btn btn-default btn-lg active back-app" role="button">  
+            <img src="" id="ubicacion" class="img-rounded" height="200" width="200" />
+          </a>
+        </div>
+    <div class="col-md-12 col-md-offset-3 loader">
+           <div class="fb-comments" data-href="" data-numposts="5" data-colorscheme="light"></div>
     </div>
 </div>
+
+<!-- html Foto-->
+<div ng-include="modalfoto"></div>  

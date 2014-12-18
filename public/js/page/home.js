@@ -37,6 +37,18 @@ jQuery(document).ready(function() {
 		$('#modal-login').modal();
 	}); 
 
+	$(document).on("click", ".show-foto", function() {	
+		id = $(this).attr('data-id');
+		jQuery.get(jQuery('#baseurl').val()+"/datosMissing/"+id, function (data) {
+			jsondata = eval(data);
+			missing = eval(jsondata.missing);
+			var share_imagen = baseurl+'/uploads/'+missing.path;
+			$('#modal-foto').find('#foto_imagen').attr('src', share_imagen);
+			$('#nombre_objero').text(missing.nombre_objeto);
+		});
+		$('#modal-foto').modal();
+	}); 
+
 	$(document).on("click", ".sing-up", function() {	
 		$('#modal-create-usuario').modal();
 	});
@@ -58,16 +70,16 @@ jQuery(document).ready(function() {
 		var tipo_objeto = missing.tipo;
 		var frase = '';
 		if(missing.tipo_objeto == '3'){
-			frase = 'Ayudame a encontrar a esta Persona llamada ';
+			frase = 'Ayúdame a encontrar a esta Persona llamada ';
 		}
 		if(missing.tipo_objeto == '1'){
-			frase = 'Ayudame a encontrar este objeto ';
+			frase = 'Ayúdame a encontrar este objeto ';
 		}
 		if(missing.tipo_objeto == '2'){
-			frase = 'Ayudame a encontrar esta mascota llamada ';
+			frase = 'Ayúdame a encontrar esta mascota llamada ';
 		}
 		var share_text = frase+'"'+missing.nombre_objeto+'"';
-		var share_subtitle = "Comparte esta publicación para que más gente me pueda ayudar.";
+		var share_subtitle = "Haz click en la foto para conocer más detalles.";
 		var share_description = missing.descripcion_objeto;
 		var share_imagen = baseurl+'/uploads/'+missing.path;
 		var share_url = baseurl+'/#/share/'+id;
