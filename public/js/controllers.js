@@ -1,13 +1,11 @@
 app.controller("homeController", function($scope, $http, $location, AuthenticationService, CreateUserService, CreateObjetoService, SeguirObjetoService, ShowDatosService) {
 	
-	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	if( esMobile() == true ) {
  		$('#tab-ult-miss').html('<i class="fa fa-arrows-alt"></i>');
  		$('#tab-mis-miss').html('<i class="fa fa-th-large"></i>');
  		$('#tab-sig-miss').html('<i class="fa fa-check-square-o"></i>');
-	}else{
+ 		$('#reload_map').html('<i class="fa fa-refresh"></i>');
 	}
-
-
 	/**** si el usuario permite la localidad del navegador ****/
 	var lat = -33.437118;
 	var lng = -70.650544;
@@ -21,6 +19,8 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 
     	});
   	}
+
+
 
   	//cargo los missing proximos
   	ShowDatosService.showDataProximos(lat,lng);
@@ -43,6 +43,7 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
     $scope.modalfoto = 'templates/Modal/modal-foto.html';
 
     //upload fotos
+
     $scope.upload = function(){
     	$http.post('')
     }
@@ -75,10 +76,27 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 		}
 	}
 
+	$scope.EditarPerfil = function(){
+		this.usuario.nombre = jQuery("#perfil_nombre").val();
+		this.usuario.email = jQuery("#perfil_email").val();
+		var file = this.myFile;
+
+		alert(this.usuario.nombre)
+		alert(this.usuario.email)
+
+		/*CreateUserService.edit(file, this.user).success(function(){
+		$('#alert-user-editado').removeClass("hide");
+			setTimeout(function(){
+			$('#modal-editar-perfil').modal('hide');
+			}, 3000);
+		});*/
+	}
+
 	$scope.CrearObjeto = function(){
 		this.obj.longitud = jQuery("#modal_long_obj").val();
 		this.obj.latitud = jQuery("#modal_lat_obj").val();
 		this.obj.tipo_objeto = jQuery("#tipo-obj").val();
+		this.obj.direccion_objeto = obtieneDireccion(jQuery("#modal_lat_obj").val(),jQuery("#modal_long_obj").val());
 		var file = this.myFile;
 		CreateObjetoService.create(file, this.obj).success(function(){
 		$('#alert-obj-creado').removeClass("hide");
@@ -156,9 +174,8 @@ app.controller("homeController", function($scope, $http, $location, Authenticati
 	 }
 });
  
-app.controller("loginController", function($scope, $location, AuthenticationService){
+app.controller("loginController", function($scope, $http, $location, AuthenticationService){
 	$scope.credentials = { username:'', password:'' };
-
 	$scope.login = function(){
 		AuthenticationService.login($scope.credentials).success(function(){
 			$location.path("/");
@@ -172,21 +189,21 @@ app.controller("loginController", function($scope, $location, AuthenticationServ
 			jQuery('#reload_map').click();
 		});
 	 }
-});
 
-/*app.factory("FlashService", function($rootScope){
-	//Solo para el login
-	return{
-		show: function(message){
-			jQuery('#flash').html(message);
-			$rootScope.flash = message;
-			//$rootScope.usuario_id = 
-		},
-		clear: function(){
-			$rootScope.flash = "";
-		}
-	}
-});*/
+	 $scope.showModalEditarPerfil = function(){
+	 	$http.get(jQuery('#baseurl').val()+'/getUser').success(function(data){
+				if(data.msg == 'true'){
+					if(data.nombre != null){
+						jQuery('#perfil_nombre').val(data.nombre);
+					}
+					if(data.email != null){
+						jQuery('#perfil_email').val(data.email);
+					}
+				}
+   		});
+	 	$('#modal-editar-perfil').modal();
+	 }
+});
 
 app.factory("ShowDatosService", function($rootScope, $http){
 	return{
@@ -235,6 +252,8 @@ app.factory("ShowDatosService", function($rootScope, $http){
 app.factory("ShowService", function($rootScope, $http){
 	return{
 		showDataUser: function(message, avatar, usuario_id){
+			//datos modal
+			$rootScope.email_user = message;
 			//muestra nombre de usuario
 			jQuery('#username').html("Bienvenido "+message);
 			jQuery('.avatar').attr('src', avatar);
@@ -282,7 +301,10 @@ app.run(function($rootScope, $http, $location, $routeParams, AuthenticationServi
 			$http.get(baseurl+"/datosMissing/"+Id).success(function(data){
 				var missing = eval(data.missing);
 				var src = "http://maps.googleapis.com/maps/api/staticmap?center="+missing.latitud_objeto+","+missing.longitud_objeto+"&zoom=16&size=200x200&markers=color:blue%7Clabel:S%"+missing.latitud_objeto+","+missing.longitud_objeto+"&sensor=false";
-				$('.back-app').attr('href', baseurl);
+				var streersrc = 'http://maps.googleapis.com/maps/api/streetview?size=300x300&location='+missing.latitud_objeto+','+missing.longitud_objeto+'&fov=90&heading=235&pitch=10&sensor=false';
+				$('#img_street').attr('src', streersrc);
+				$('.back-app').attr('data-lat', missing.latitud_objeto);
+				$('.back-app').attr('data-lng', missing.longitud_objeto);
 				$('.share').attr('data-id', Id);
 				$('.show-foto').attr('data-id', Id);
 				$('#img_objeto').attr('src', baseurl+'/uploads/'+missing.path);
@@ -397,6 +419,26 @@ app.factory("CreateUserService", function($http, $location, SessionService, Show
 	var createError = function(response){
 	};
 	return{
+		edit: function (file, user){
+			var fd = new FormData();
+        	fd.append('file', file);
+			var editar = $http.post(jQuery('#baseurl').val()+"/editarusuario", user)
+			.success(function(){
+				var saveImage = $http.post(jQuery('#baseurl').val()+"/cargaImagenPerfil", fd,{ 
+				transformRequest:angular.identity,
+				headers:{'Content-type':undefined}
+				})
+				.success(function(){
+					alert('cargo la imagen');
+				})
+				.error(function(){
+					alert('no cargo la imagen');
+				});
+				
+			}).error(function(){
+				alert('error no cargo');
+			});
+		},
 		create: function (user){
 			var create = $http.post(jQuery('#baseurl').val()+"/createUser", user);
 			create.success(createSuccess);

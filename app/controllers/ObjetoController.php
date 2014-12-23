@@ -42,6 +42,17 @@ class ObjetoController extends BaseController
 			
 			$objeto->save();
 			$LastInsertId = $objeto->id;
+
+			$imgmap = new Imagenes;
+			$imgmap->to_id = $LastInsertId;
+			$imgmap->url = "http://maps.googleapis.com/maps/api/staticmap?center=".Input::json("latitud").",".Input::json("longitud")."&zoom=16&size=200x200&sensor=false";
+			$imgmap->save();
+
+			$imgstreetv = new Imagenes;
+			$imgstreetv->to_id = $LastInsertId;
+			$imgstreetv->url = 'http://maps.googleapis.com/maps/api/streetview?size=300x300&location='.Input::json("latitud").','.Input::json("longitud").'&fov=90&heading=235&pitch=10&sensor=false';
+			$imgstreetv->save();
+
 			return Response::json(array('id'=>$LastInsertId));
 		}
 	}
@@ -58,12 +69,26 @@ class ObjetoController extends BaseController
 		$obj->tipoobjeto_id = Input::json("tipo_objeto");
 		$obj->contacto_objeto = Input::json("contacto");
 		$obj->recompensa_objeto = Input::json("recompensa");
+		$obj->direccion_objeto = Input::json("direccion_objeto");
 		$obj->tipopublicacion_id = 1;
 		$obj->estado = 0;
 		$obj->usuario_id = Auth::user()->id;
 		$obj->save();
 
 		$LastInsertId = $obj->id;
+
+		$imgmap = new Imagenes;
+		$imgmap->to_id = $LastInsertId;
+		$imgmap->tipo = 1;
+		$imgmap->url = "http://maps.googleapis.com/maps/api/staticmap?center=".Input::json("latitud").",".Input::json("longitud")."&zoom=16&size=200x200&sensor=false";
+		$imgmap->save();
+
+		$imgstreetv = new Imagenes;
+		$imgstreetv->to_id = $LastInsertId;
+		$imgstreetv->tipo = 2;
+		$imgstreetv->url = 'http://maps.googleapis.com/maps/api/streetview?size=300x300&location='.Input::json("latitud").','.Input::json("longitud").'&fov=90&heading=235&pitch=10&sensor=false';
+		$imgstreetv->save();
+
 		$valida = false;
 		if(isset($LastInsertId)){
 			$valida = true;
@@ -107,6 +132,13 @@ class ObjetoController extends BaseController
 			$objeto->foto_objeto = $filename;
 			$objeto->save();
 			$upload_success = $file->move($destinationPath, $filename);
+			
+			$url = asset('/');
+			$img = new Imagenes;
+			$img->to_id = $id;
+			$img->tipo = 3;
+			$img->url = $url.'public/uploads/'.$filename;
+			$img->save();
 		}
 		return Response::json(array('msg'=>'ok'));
 	}

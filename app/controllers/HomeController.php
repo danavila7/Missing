@@ -133,6 +133,7 @@ class HomeController extends BaseController {
         				"descripcion_objeto"=>$objeto->descripcion_objeto,
         				"tipo"=>$obj->GetType($objeto->tipoobjeto_id),
         				"tipoobjeto_id"=>$objeto->tipoobjeto_id,
+        				"foto_objeto"=>$objeto->foto_objeto,
         				"seguido"=>$seguido,
         				"path"=>$path
         		);       

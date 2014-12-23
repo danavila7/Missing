@@ -62,27 +62,23 @@ class UsuarioController extends BaseController
         }  
     }
 
-    public function showProfile($id)
-    {
+    public function showProfile($id){
         $user = Usuario::find($id);
 
         return View::make('usuarios.profile', array('user' => $user));
     }
     
-    public function ListaUsuarios()
-    {
+    public function ListaUsuarios(){
         $usuarios = Usuario::all();
         return View::make('usuarios.listausuarios', array('usuarios'=>$usuarios));
     }
     
-	public function get_index()
-	{
+	public function get_index(){
 		$users = Usuario::all();
 		return View::make('users.index')->with('users', $users);
 	}
     
-    public function post_index()
-    {
+    public function post_index(){
         $credentials = array(
         'username' => Input::get('email'),
         'password' => Input::get('password'));
@@ -97,15 +93,8 @@ class UsuarioController extends BaseController
         }   
     }
 	
-	public function get_create()
-	{
-		return View::make('users.create');
-	}
-	
     //Crea el User desde login Facebook
-	public function CreateUserEsCreado()
-	{
-
+	public function CreateUserEsCreado(){
 		$user = Usuario::find(Auth::user()->id);
         $user->usuario = Input::json("usuario");
         $user->email = Input::json("email");
@@ -118,9 +107,7 @@ class UsuarioController extends BaseController
 	}
 
     //Crea el User desde 0
-    public function CreateUser()
-    {
-
+    public function CreateUser(){
         $user = new Usuario;
         $user->usuario = Input::json("nombre");
         $user->email = Input::json("email");
@@ -138,6 +125,33 @@ class UsuarioController extends BaseController
         Auth::loginUsingId($LastInsertId);
         return Response::json(array('isloggin'=>Auth::user()->usuario,
         'esCreado'=>Auth::user()->esCreado,'email'=>Auth::user()->email,'avatar'=>$perfil->avatar_path));
+    }
+
+    //Crea el User desde 0
+    public function EditarUsuario(){
+        $user = Usuario::find(Auth::user()->id);
+        $user->usuario = Input::json("usuario");
+        $user->email = Input::json("email");
+        $user->save();
+        return Response::json(array('msg'=>'ok'));
+    }
+
+    //cambia la imagen del perfil
+    public function CargaImagenPerfil(){
+        if (Input::hasFile('file')){
+            $perfil = DB::table('perfiles')
+                    ->where('usuario_id', Auth::user()->id)
+                    ->first();
+            $file = Input::file('file');
+            $destinationPath = '../public/perfil';
+            $extension =$file->getClientOriginalExtension(); 
+            $file_name = $file->getClientOriginalName();
+            $filename = $file_name.'.'.$extension;
+            $perfil->avatar_path = $filename;
+            $perfil->save();
+            $upload_success = $file->move($destinationPath, $filename);
+        }
+        return Response::json(array('msg'=>'ok'));
     }
 	
 	public function get_delete($user_id)

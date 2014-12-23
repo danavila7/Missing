@@ -27,20 +27,21 @@ Chile, niños, perdida, encontrar, buscar, publicar, compartir, busca, encuentra
  
 
   <!-- JS -->
+  {{ HTML::script('js/lib/jquery.js') }}
+  {{ HTML::script('js/page/home.js') }}
   {{ HTML::script('js/lib/underscore.js') }}
   {{ HTML::script('js/AngularJS/angular.js') }}
   {{ HTML::script('js/AngularJS/angular-route.js') }}
   {{ HTML::script('js/app.js') }}
+  {{ HTML::script('js/page/map.js') }}
   {{ HTML::script('js/controllers.js') }}
-  {{ HTML::script('js/lib/jquery.js') }}
   {{ HTML::script('js/lib/bootstrap.js') }}
   {{ HTML::script('js/lib/jasny-bootstrap.min.js') }}
   {{ HTML::script('js/lib/bootstrap-datepicker.js') }}
   {{ HTML::script('js/lib/bootstrap-fileupload.js') }}
-  <!--{{ HTML::script('js/lib/jquery.mobile.js') }}-->
   {{ HTML::script('js/page/login.js') }}
-  {{ HTML::script('js/page/home.js') }}
   {{ HTML::script('js/page/objetos.js') }}
+
 
   <!-- CSS -->
   {{ HTML::style('css/jasny-bootstrap.min.css'); }}
@@ -127,9 +128,9 @@ window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.ge
             </a>
             <ul class="dropdown-menu" role="menu">
               <li class="pointer">
-                <a class="dropdown-menu-text" id="carga_perfil">Editar Perfil</a>
+                <a class="dropdown-menu-text" id="carga_perfil" ng-click="showModalEditarPerfil()">Editar Perfil</a>
               </li>
-              <li class="pointer dropdown-menu-text"><a class="dropdown-menu-text">Configuración</a></li>
+              <li class="pointer dropdown-menu-text"><a href="http://www.missing.cl" class="dropdown-menu-text">Más Información</a></li>
               <li class="divider"></li>
               <li><a ng-click="logout()" class="pointer dropdown-menu-text">Cerrar Sesión</a></li>
           </ul>

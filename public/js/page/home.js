@@ -1,5 +1,14 @@
 jQuery(document).ready(function() {
 
+
+	$(document).on("click", ".back-app", function() {	
+		var lat = $(this).attr('data-lat');
+		var lng = $(this).attr('data-lng');
+		sessionStorage.setItem('lat',lat);
+		sessionStorage.setItem('lng',lng);
+		sessionStorage.setItem('location',true);
+		window.location = jQuery('#baseurl').val();
+	});
 	
 
 	$(document).on("click", '#myTab a', function(e) {	
@@ -128,3 +137,13 @@ jQuery(document).ready(function() {
 
 	});
 });
+
+
+
+function esMobile(){
+	var valida = false;
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ 		valida = true;
+	}
+	return valida;
+}

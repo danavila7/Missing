@@ -98,6 +98,10 @@ Route::post('borrarobjeto/','ObjetoController@BorrarObjeto');
 
 
 //USUARIO
+//Ruta Carga Imagen
+Route::post('/cargaImagenPerfil','UsuarioController@CargaImagenPerfil');
+//Ruta Editar Usuario
+Route::post('/editarusuario','UsuarioController@EditarUsuario');
 //Ruta Crear Usuario
 Route::post('/createUser','UsuarioController@CreateUser');
 //Ruta Crear Usuario Facebook
